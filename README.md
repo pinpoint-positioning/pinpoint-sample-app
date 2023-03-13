@@ -5,12 +5,12 @@
 ## Getting started
 
 
-#Instantiate BluetoothManager
+# Instantiate BluetoothManager
 
 `btManager = BluetoothManager()`
 
 
-#UUIDs
+# UUIDs
 - Find/adjust UUIDs in `UUIDs.swift`.
 
 
