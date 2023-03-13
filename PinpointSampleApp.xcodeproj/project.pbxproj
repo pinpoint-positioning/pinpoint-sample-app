@@ -21,7 +21,6 @@
 		D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8D29BA109B00D0E578 /* Buttons.swift */; };
 		D1569D9429BB445B00D0E578 /* SDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1569D9329BB445B00D0E578 /* SDK.xcframework */; };
 		D1569D9529BB445B00D0E578 /* SDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D1569D9329BB445B00D0E578 /* SDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D1569D9829BB46AA00D0E578 /* DataReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D9729BB46AA00D0E578 /* DataReader.swift */; };
 		D1FE233D29BF691E002F1049 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FE233C29BF691E002F1049 /* Decoder.swift */; };
 		D1FE233F29BF6D11002F1049 /* ProtocolConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FE233E29BF6D11002F1049 /* ProtocolConstants.swift */; };
 /* End PBXBuildFile section */
@@ -55,7 +54,6 @@
 		D1569D8929BA0B8D00D0E578 /* SpinnerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		D1569D8D29BA109B00D0E578 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		D1569D9329BB445B00D0E578 /* SDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDK.xcframework; path = ../../AndroidStudioProjects/pinpointkmmsdk/SDK/build/XCFrameworks/release/SDK.xcframework; sourceTree = "<group>"; };
-		D1569D9729BB46AA00D0E578 /* DataReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataReader.swift; sourceTree = "<group>"; };
 		D1FE233B29BF5D25002F1049 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		D1FE233C29BF691E002F1049 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
 		D1FE233E29BF6D11002F1049 /* ProtocolConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConstants.swift; sourceTree = "<group>"; };
@@ -129,7 +127,6 @@
 			isa = PBXGroup;
 			children = (
 				D1569D8329BA07C500D0E578 /* BluetoothManager.swift */,
-				D1569D9729BB46AA00D0E578 /* DataReader.swift */,
 				D1FE233C29BF691E002F1049 /* Decoder.swift */,
 			);
 			path = Controller;
@@ -232,7 +229,6 @@
 				D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
 				D1569D8429BA07C500D0E578 /* BluetoothManager.swift in Sources */,
-				D1569D9829BB46AA00D0E578 /* DataReader.swift in Sources */,
 				D1569D8A29BA0B8E00D0E578 /* SpinnerViewController.swift in Sources */,
 				D1FE233D29BF691E002F1049 /* Decoder.swift in Sources */,
 				D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */,

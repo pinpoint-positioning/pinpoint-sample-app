@@ -13,6 +13,14 @@
 # UUIDs
 - Find/adjust UUIDs in `UUIDs.swift`.
 
+# ProtocolConstants
+- All neccessary protocol commands are store in `ProtocolConstants.swift`.
+
+
+# Get ByteArray from UART-Message
+```
+let byteArray = decoder.getByteArray(from: data)
+```
 
 # Get Tracelet Position
 
