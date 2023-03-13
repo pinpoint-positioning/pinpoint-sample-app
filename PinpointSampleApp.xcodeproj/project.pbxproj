@@ -54,6 +54,7 @@
 		D1569D8D29BA109B00D0E578 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		D1569D9329BB445B00D0E578 /* SDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDK.xcframework; path = ../../AndroidStudioProjects/pinpointkmmsdk/SDK/build/XCFrameworks/release/SDK.xcframework; sourceTree = "<group>"; };
 		D1569D9729BB46AA00D0E578 /* DataReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataReader.swift; sourceTree = "<group>"; };
+		D1FE233B29BF5D25002F1049 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				D112270729B9EF8B00E49993 /* PinpointSampleApp */,
+				D1FE233B29BF5D25002F1049 /* README.md */,
 				D112270629B9EF8B00E49993 /* Products */,
 				D1569D9229BB445A00D0E578 /* Frameworks */,
 			);
