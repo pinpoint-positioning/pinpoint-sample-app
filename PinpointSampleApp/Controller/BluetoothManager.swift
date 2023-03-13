@@ -25,15 +25,16 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     @Published var serviceFound = false
     @Published var recievingData = false
     @Published var deviceName = ""
-
-        
+    
+    
     var centralManager: CBCentralManager!
     var peripheral: CBPeripheral!
     var tracelet: CBPeripheral? = nil
+    let decoder = Decoder()
     
- 
     
-
+    
+    
     override init() {
         super.init()
         
@@ -43,7 +44,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         
     }
     
-
+    
     func scan()
     {
         isScanning = true
@@ -73,7 +74,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         centralManager.cancelPeripheralConnection(tracelet!)
         peripheral = nil
         
-        }
+    }
     
     
     
@@ -137,7 +138,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         // Sometimes RSSI returns max value 127. Excluded it for now.
         
         
-
+        
         if (peripheral.identifier == UUIDs.traceletDummyUUID && inProximity(RSSI)) {
             
             
@@ -161,7 +162,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         }
     }
     
-
+    
     
     // Delegate - Called when connection was successful
     
@@ -174,7 +175,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             
             // Discover UART Service
             peripheral.discoverServices([UUIDs.traceletNordicUARTService])
-
+            
             
         }
     }
@@ -234,101 +235,24 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             return
         }
         print(data) // Just to remove the "unused" error
+        
+        
         // Get TX  value
         if characteristic.uuid == UUIDs.traceletTxChar {
             recievingData = true
             
-// Print RAW Hex data as String to Console:
-//print((characteristic.value!.hexEncodedString() ))
-            
-       // Raw bytes reading TEST
-            
-            
-            withUnsafeBytes(of: data) { pointerBuffer in
-                for byte in pointerBuffer {
-                    print(byte)
-                }
-            }
-            
-//        Byte0: 7F // START_BYTE
-//        Byte1: 97
-//        Byte2: 55
-//        Byte3: 00
-//        Byte4: 1D
-//        Byte5: 00
-//        Byte6: 0A
-//        Byte7: 00
-//        Byte8: 00
-//        Byte9: 00
-//        Byte10: 00
-//        Byte11: 00
-//        Byte12: 00
-//        Byte13: 00
-//        Byte14: 00
-//        Byte15: 00
-//        Byte16: 00
-//        Byte17: 00
-//        Byte18: 00
-//        Byte19: 00
-//        Byte20: 7E
-//        Byte21: 51
-//        Byte22: FD
-//        Byte23: BB
-//        Byte24: 01
-//        Byte25: B2
-//        Byte26: 38
-//        Byte27: 4D
-//        Byte28: 21
-//        Byte29: 53
-//        Byte30: 8F // END_BYTE
-//PREFIX_BYTE: 1B
-            
-//XOR_BYTE_MASK = 0x20
-//     COMMAND_ACTIVATE(0x01),
-//     COMMAND_DEACTIVATE(COMMAND_ACTIVATE.hexValue),
-
-//     COMMAND_ACTIVATE_TAG30(0x05),
-
-//     COMMAND_GET_STATUS(0x12),
-//     COMMAND_GET_STATUS_RESPONSE(0x92.toByte()),
-
-//     COMMAND_DISTANCE(0x81.toByte()),
-//     COMMAND_POSITION(0x97.toByte())
-            
-            
-            var hexArray: [String] = []
-
-            for i in characteristic.value!.indices {
-                let intToHex = String(format:"%02X", characteristic.value![i])
-                hexArray.append(intToHex)
-            }
-            
-            if (hexArray[0] == "7F"){
+            guard let byteArray = decoder.getByteArray(from: data) else {
+                // something is nil
+                return
                 
-                print ( "Message starting with Start Byte: Continue \n\n")
-            
-                if (hexArray.last == "8F")
-                {
-                    print( "Message ending with End Byte: Continue \n\n")
-                    if (hexArray.count == 31)
-                    {
-                        print("Message has \(hexArray.count) Bytes")
-                    }
-                    else if (hexArray.count == 32)
-                    {
-                        print("Message has \(hexArray.count) Bytes")
-                    }
-                    
-                    hexArray.remove(at: 0)
-                    hexArray.remove(at: hexArray.count-1)
-                    self.textOutput = "\(hexArray)\n\n"
-                    print ("\(hexArray)\n\n")
-                }else{
-                    print("Message has no End Byte: ignoring")
-                }
-            }else{
-                print( "Message has no Start Byte: ignoring")
             }
+            let xPos = decoder.getTraceletPosition(byteArray: byteArray).0
+            let yPos = decoder.getTraceletPosition(byteArray: byteArray).1
+            let zPos = decoder.getTraceletPosition(byteArray: byteArray).2
+            
+            textOutput = "X: \(xPos)  Y: \(yPos)  Z: \(zPos) \n\n"
+            
+            
         }
     }
     
@@ -349,7 +273,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         textOutput = Strings.CONNECTION_FAILED
     }
-
+    
 }
 
 

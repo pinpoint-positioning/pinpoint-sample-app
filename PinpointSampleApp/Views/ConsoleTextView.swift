@@ -10,13 +10,12 @@ import SwiftUI
 struct ConsoleTextView: UIViewRepresentable {
     
     var text = ""
-    var textStyle: UIFont.TextStyle
     var autoScroll: Bool
     
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
         
-        textView.font = UIFont.preferredFont(forTextStyle: textStyle)
+        textView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
         textView.autocapitalizationType = .sentences
         textView.backgroundColor = .lightGray
         textView.isEditable = false
@@ -29,11 +28,12 @@ struct ConsoleTextView: UIViewRepresentable {
     
     func updateUIView(_ uiView: UITextView, context: Context) {
         uiView.text += text
-        uiView.font = UIFont.preferredFont(forTextStyle: textStyle)
+        uiView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
         // Scroll to last line, when filled (Autoscroll)
         if (autoScroll)
         {
-        if (uiView.text.count > 400) {
+            // Estimated number of chars. Needs to be made in better way
+        if (uiView.text.count > 250) {
             let point = CGPoint(x: 0.0, y: (uiView.contentSize.height - uiView.bounds.height))
             uiView.setContentOffset(point, animated: true)
         }
@@ -53,7 +53,7 @@ struct ConsoleTextView: UIViewRepresentable {
 
 struct ConsoleTextView_Previews: PreviewProvider {
     static var previews: some View {
-        ConsoleTextView(textStyle: UIFont.TextStyle.body, autoScroll: false)
+        ConsoleTextView(autoScroll: false)
             .previewLayout(.sizeThatFits)
     }
 }

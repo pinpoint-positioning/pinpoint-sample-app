@@ -14,9 +14,8 @@ struct ContentView: View {
     @ObservedObject var btManager = BluetoothManager()
     @State var scanButtonLabel = ""
     @State var autoScroll = true
-    //TextStyle
-    let consoleTextStye = UIFont.TextStyle.body
-    
+
+    //MARK: - Body
     var body: some View {
         
         ZStack
@@ -97,7 +96,7 @@ struct ContentView: View {
 
                 ZStack
                 {
-                    ConsoleTextView(text: btManager.textOutput ?? "", textStyle: consoleTextStye, autoScroll: autoScroll)
+                    ConsoleTextView(text: btManager.textOutput ?? "", autoScroll: autoScroll)
                         .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
 
                     if (btManager.isScanning) {
@@ -146,6 +145,7 @@ struct ContentView: View {
     }
 }
 
+//MARK: - Preview
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
@@ -154,6 +154,7 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 
+//MARK: - Additional views
 
 struct BusyIndicator: View {
     var body: some View {
