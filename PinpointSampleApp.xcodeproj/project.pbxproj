@@ -15,24 +15,20 @@
 		D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D112271329B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld */; };
 		D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112272129BA005D00E49993 /* ConsoleTextView.swift */; };
 		D1569D8429BA07C500D0E578 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8329BA07C500D0E578 /* BluetoothManager.swift */; };
-		D1569D8629BA0B7700D0E578 /* UUUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8529BA0B7700D0E578 /* UUUIDs.swift */; };
-		D1569D8829BA0B8500D0E578 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8729BA0B8500D0E578 /* Strings.swift */; };
 		D1569D8A29BA0B8E00D0E578 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8929BA0B8D00D0E578 /* SpinnerViewController.swift */; };
 		D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8D29BA109B00D0E578 /* Buttons.swift */; };
-		D1569D9429BB445B00D0E578 /* SDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1569D9329BB445B00D0E578 /* SDK.xcframework */; };
-		D1569D9529BB445B00D0E578 /* SDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D1569D9329BB445B00D0E578 /* SDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D1FE233D29BF691E002F1049 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FE233C29BF691E002F1049 /* Decoder.swift */; };
-		D1FE233F29BF6D11002F1049 /* ProtocolConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FE233E29BF6D11002F1049 /* ProtocolConstants.swift */; };
+		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
+		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D1569D9629BB445B00D0E578 /* Embed Frameworks */ = {
+		D1FE238229C07027002F1049 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D1569D9529BB445B00D0E578 /* SDK.xcframework in Embed Frameworks */,
+				D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -49,14 +45,10 @@
 		D112271429B9EF8C00E49993 /* PinpointSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PinpointSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		D112272129BA005D00E49993 /* ConsoleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTextView.swift; sourceTree = "<group>"; };
 		D1569D8329BA07C500D0E578 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
-		D1569D8529BA0B7700D0E578 /* UUUIDs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UUUIDs.swift; sourceTree = "<group>"; };
-		D1569D8729BA0B8500D0E578 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		D1569D8929BA0B8D00D0E578 /* SpinnerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		D1569D8D29BA109B00D0E578 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
-		D1569D9329BB445B00D0E578 /* SDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDK.xcframework; path = ../../AndroidStudioProjects/pinpointkmmsdk/SDK/build/XCFrameworks/release/SDK.xcframework; sourceTree = "<group>"; };
+		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1FE233B29BF5D25002F1049 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		D1FE233C29BF691E002F1049 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
-		D1FE233E29BF6D11002F1049 /* ProtocolConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1569D9429BB445B00D0E578 /* SDK.xcframework in Frameworks */,
+				D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				D1569D8329BA07C500D0E578 /* BluetoothManager.swift */,
-				D1FE233C29BF691E002F1049 /* Decoder.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -135,9 +126,6 @@
 		D1569D9129BA217600D0E578 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D1569D8529BA0B7700D0E578 /* UUUIDs.swift */,
-				D1569D8729BA0B8500D0E578 /* Strings.swift */,
-				D1FE233E29BF6D11002F1049 /* ProtocolConstants.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -145,7 +133,7 @@
 		D1569D9229BB445A00D0E578 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D1569D9329BB445B00D0E578 /* SDK.xcframework */,
+				D15D05DF29C07A3200B670A1 /* SDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -160,7 +148,7 @@
 				D112270129B9EF8B00E49993 /* Sources */,
 				D112270229B9EF8B00E49993 /* Frameworks */,
 				D112270329B9EF8B00E49993 /* Resources */,
-				D1569D9629BB445B00D0E578 /* Embed Frameworks */,
+				D1FE238229C07027002F1049 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -221,18 +209,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1569D8629BA0B7700D0E578 /* UUUIDs.swift in Sources */,
 				D112271229B9EF8C00E49993 /* Persistence.swift in Sources */,
-				D1569D8829BA0B8500D0E578 /* Strings.swift in Sources */,
 				D112270B29B9EF8B00E49993 /* ContentView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
 				D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
 				D1569D8429BA07C500D0E578 /* BluetoothManager.swift in Sources */,
 				D1569D8A29BA0B8E00D0E578 /* SpinnerViewController.swift in Sources */,
-				D1FE233D29BF691E002F1049 /* Decoder.swift in Sources */,
 				D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */,
-				D1FE233F29BF6D11002F1049 /* ProtocolConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,7 +361,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample.PinpointSampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -409,7 +393,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample.PinpointSampleApp;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

@@ -17,11 +17,12 @@ struct Buttons {
         func makeBody(configuration: Configuration) -> some View {
             configuration
                 .label
-                .foregroundColor(configuration.isPressed ? .gray : .white)
                 .padding()
-                .background(isEnabled ? Color.accentColor : .gray)
+                .background(isEnabled ? Color(red: 253/255, green: 158/255, blue: 27/255): .gray)
                 .cornerRadius(8)
                 .scaleEffect(configuration.isPressed ? 1.1 : 1.0)
+            
+          
         }
     }
 }

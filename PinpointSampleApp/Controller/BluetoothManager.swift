@@ -10,7 +10,7 @@ import CoreBluetooth
 import SDK
 
 
-class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, ObservableObject {
+ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, ObservableObject {
     
     
     
@@ -31,6 +31,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     var peripheral: CBPeripheral!
     var tracelet: CBPeripheral? = nil
     let decoder = Decoder()
+
     
     
     
@@ -40,6 +41,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
         
         centralManager = CBCentralManager(delegate: self, queue: nil)
         centralManager.delegate = self
+
         
         
     }
@@ -87,7 +89,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             return true
         } else {
             return false
-        } 
+        }
     }
     
     
@@ -102,11 +104,9 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
-            textOutput = Strings.BLUETOOTH_IS_ON
             powerOn = true
             break
         case .poweredOff:
-            textOutput = Strings.BLUETOOTH_IS_OFF
             powerOn = false
             break
         case .resetting:
@@ -225,36 +225,40 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     
     // Delegate - Called when char value has updated for defined char
     
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,error: Error?) {
-        
-        
-        guard let data = characteristic.value else {
-            // no data transmitted, handle if needed
-            
-            print("no data") // Just to remove the error
-            return
-        }
-        print(data) // Just to remove the "unused" error
-        
-        
-        // Get TX  value
-        if characteristic.uuid == UUIDs.traceletTxChar {
-            recievingData = true
-            
-            guard let byteArray = decoder.getByteArray(from: data) else {
-                // something is nil
-                return
-                
-            }
-            let xPos = decoder.getTraceletPosition(byteArray: byteArray).0
-            let yPos = decoder.getTraceletPosition(byteArray: byteArray).1
-            let zPos = decoder.getTraceletPosition(byteArray: byteArray).2
-            
-            textOutput = "X: \(xPos)  Y: \(yPos)  Z: \(zPos) \n\n"
-            
-            
-        }
-    }
+     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,error: Error?) {
+         
+         
+         guard let data = characteristic.value else {
+             // no data transmitted, handle if needed
+             print("no data")
+             return
+         }
+         
+         // Get TX  value
+         if characteristic.uuid == UUIDs.traceletTxChar {
+             // Set State
+             recievingData = true
+             
+             do {
+                 let validatedMessage = try decoder.ValidateMessage(of: data)
+                 let localPosition = try TagPositionResponse(of: validatedMessage)
+                 
+                 let xPos = localPosition.xCoord
+                 let yPos = localPosition.yCoord
+                 let zPos = localPosition.zCoord
+                 let covXx = localPosition.covXx
+                 let covXy = localPosition.covXy
+                 let covYy = localPosition.covYy
+                 let siteId = localPosition.siteID
+                 
+                 textOutput = "X: \(xPos) Y: \(yPos) Z: \(zPos) siteID: \(siteId)\n\n"
+                 
+             }catch{
+                 print (error)
+                 textOutput = "\(error) \n"
+             }
+         }
+     }
     
     
     
