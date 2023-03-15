@@ -21,7 +21,7 @@ struct ContentView: View {
     
     //MARK: - Body
     var body: some View {
-
+        
         ZStack
         {
             VStack {
@@ -48,7 +48,7 @@ struct ContentView: View {
                         {
                             Image(systemName: btManager.powerOn ? SFSymbols.CHECKMARK : SFSymbols.XMARK )
                                 .foregroundColor(btManager.powerOn ? Color(.green) : Color(.red) )
-                            Text("Bluetooth is on")
+                            Text("Bluetooth available")
                             Spacer()
                         }
                         // Checkmark for: isScanning
@@ -56,7 +56,7 @@ struct ContentView: View {
                         {
                             Image(systemName: btManager.isScanning ? SFSymbols.CHECKMARK : SFSymbols.CHECKMARK_NOT_FILLED )
                                 .foregroundColor(btManager.isScanning ? Color(.green) : Color(.red) )
-                            Text("Scanning...")
+                            Text("Scanning... (\(btManager.remainingTimer))")
                             Spacer()
                         }
                         // Checkmark for: Tracelet in Range
@@ -89,6 +89,13 @@ struct ContentView: View {
                             Image(systemName: btManager.serviceFound ? SFSymbols.CHECKMARK : SFSymbols.XMARK )
                                 .foregroundColor(btManager.serviceFound ? Color(.green) : Color(.red) )
                             Text("UART-service found")
+                            
+                            Spacer()
+                            Image(systemName: btManager.serviceFound ? SFSymbols.CHECKMARK : SFSymbols.XMARK )
+                                .foregroundColor(btManager.serviceFound ? Color(.green) : Color(.red) )
+                            
+                            Text("notify")
+                            
                             Spacer()
                         }
                         
@@ -100,8 +107,6 @@ struct ContentView: View {
                             Text("Receiving data")
                             Spacer()
                         }
-                        
-                        
                     }
                     .padding(EdgeInsets(top:5, leading: 10, bottom:5, trailing: 5))
                     
@@ -111,13 +116,11 @@ struct ContentView: View {
                 // Console Output
                 ZStack
                 {
-
                     ConsoleTextView(text: btManager.textOutput , autoScroll: autoScroll)
                         .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
                     
                     if (btManager.isScanning) {
                         BusyIndicator()
-                        
                     }
                 }
                 
@@ -141,7 +144,6 @@ struct ContentView: View {
                     Button ("Disconnect")
                     {
                         btManager.disconnect()
-                        
                     }
                     .buttonStyle(Buttons.FilledButton())
                     .disabled(!btManager.isConnected)

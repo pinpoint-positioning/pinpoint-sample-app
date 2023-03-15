@@ -18,11 +18,11 @@ struct Buttons {
             configuration
                 .label
                 .padding()
+                
                 .background(isEnabled ? Color(red: 253/255, green: 158/255, blue: 27/255): .gray)
-                .cornerRadius(8)
-                .scaleEffect(configuration.isPressed ? 1.1 : 1.0)
-            
-          
+                .opacity(configuration.isPressed ? 0.5 : 1.0)
+                .cornerRadius(25)
+     
         }
     }
 }

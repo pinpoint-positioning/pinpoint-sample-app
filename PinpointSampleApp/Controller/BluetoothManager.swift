@@ -10,7 +10,7 @@ import CoreBluetooth
 import SDK
 
 
- class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, ObservableObject {
+class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, ObservableObject {
     
     
     
@@ -25,22 +25,27 @@ import SDK
     @Published var serviceFound = false
     @Published var recievingData = false
     @Published var deviceName = ""
+    @Published var subscribedToNotifiy = false
+    
     
     
     var centralManager: CBCentralManager!
     var peripheral: CBPeripheral!
     var tracelet: CBPeripheral? = nil
     let decoder = Decoder()
-
     
-    
+    // Variables for Scan-Timeout-Timer
+    var timer: Timer?
+    var runCount = 0
+    var timeout = 30
+    @Published var remainingTimer = 0
     
     
     override init() {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
         centralManager.delegate = self
-
+        
         
         
     }
@@ -54,8 +59,19 @@ import SDK
         
         //Initiate BT Scan and start spinner
         centralManager.scanForPeripherals(withServices: nil, options: options)
-        textOutput = Strings.SCAN_STARTED
+        
+        
+        //Start Timer
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
+        
+
+        //Start async timer thread for scan-timeout
+        // Stop scanning afer X seconds
+       // DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+        //    self.stopScan()
+       // }
     }
+    
     
     
     func stopScan() {
@@ -66,6 +82,7 @@ import SDK
     
     func connect() {
         
+        // Make sure the device the should be connected is the identified tracelet
         if let foundTracelet = tracelet{
             centralManager.connect(foundTracelet, options: nil)
         }
@@ -92,8 +109,19 @@ import SDK
     }
     
     
-    
-    
+ // Scan-Timeout Timer settings
+    @objc func fireTimer() {
+        runCount += 1
+        remainingTimer = timeout - runCount
+
+//1 Run = 1 sec.  30 runs = 30 secs
+        if (runCount == timeout || !isScanning) {
+            timer?.invalidate()
+            remainingTimer = timeout
+            stopScan()
+            if (!isScanning) {runCount = 0}
+        }
+    }
     
     
     
@@ -132,28 +160,23 @@ import SDK
         peripheral.delegate = self
         
         
-        // If tracelet is found, enable connect Button and save object in "peripheral"
-        // Use RSSI to connect only when close ( > -50 db).
-        // Sometimes RSSI returns max value 127. Excluded it for now.
         
         
-        
-        if (peripheral.identifier == UUIDs.traceletDummyUUID && inProximity(RSSI)) {
+        // Needs to be improved!!
+        // Connect either to Dummy(df2b) or "black Tracelet" (6ec6)
+        if (peripheral.name?.contains("df2b") ?? false && inProximity(RSSI) || peripheral.name?.contains("6ec6") ?? false && inProximity(RSSI))
+        {
+            //   if (peripheral.identifier == UUIDs.traceletDummyUUID && inProximity(RSSI)) {
             
             
             //Set State
             traceletInRange = true
-            // Save tracelet object
+            // / If tracelet is found,save object in "peripheral"
             tracelet = peripheral
             
+            //Stop Scan
             centralManager.stopScan()
-            
             isScanning = false
-            
-            
-            // ### Debug part ### //
-            textOutput = Strings.TRACELET_FOUND
-            // ### Debug part end ### //
             
             //Attempt to connect
             connect()
@@ -169,7 +192,6 @@ import SDK
         if peripheral == tracelet {
             // Set State
             isConnected = true
-            textOutput = Strings.DEVICE_CONNECTED
             deviceName = peripheral.name ?? "unkown"
             
             // Discover UART Service
@@ -187,9 +209,7 @@ import SDK
                 
                 // Discover UART Service
                 if service.uuid == UUIDs.traceletNordicUARTService{
-                    print(Strings.UART_SERVICE_FOUND)
                     serviceFound = true
-                    textOutput = Strings.UART_SERVICE_FOUND
                 }
                 
                 peripheral.discoverCharacteristics([UUIDs.traceletRxChar,UUIDs.traceletTxChar], for: service)
@@ -207,12 +227,12 @@ import SDK
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
                 
+                // Subscribe to notify of charateristic
                 if characteristic.uuid == UUIDs.traceletTxChar {
-                    print("TX characteristic found")
                     
                     if characteristic.properties.contains(.notify) {
-                        print("\(characteristic.uuid): properties contains .notify")
                         peripheral.setNotifyValue(true, for: characteristic)
+                        subscribedToNotifiy = true
                     }else{
                         print("Characteristic has no notify property")
                     }
@@ -224,50 +244,52 @@ import SDK
     
     // Delegate - Called when char value has updated for defined char
     
-     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,error: Error?) {
-         
-         guard let data = characteristic.value else {
-             // no data transmitted, handle if needed
-             print("no data")
-             return
-         }
-         
-         // Get TX  value
-         if characteristic.uuid == UUIDs.traceletTxChar {
-             // Set State
-             recievingData = true
-             
-             do {
-                 let validatedMessage = try decoder.ValidateMessage(of: data)
-                 let localPosition = try TagPositionResponse(of: validatedMessage)
-                 
-                 let xPos = localPosition.xCoord
-                 let yPos = localPosition.yCoord
-                 let zPos = localPosition.zCoord
-              // let covXx = localPosition.covXx
-              // let covXy = localPosition.covXy
-              // let covYy = localPosition.covYy
-                 let siteId = localPosition.siteID
-                 let signature = localPosition.signature
-  
-                 textOutput = "X: \(xPos) Y: \(yPos) Z: \(zPos) site: \(siteId) sig: \(signature)\n\n"
-   
-             }catch{
-
-                 textOutput = "\(error) \n"
-             }
-         }
-     }
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,error: Error?) {
+        
+        guard let data = characteristic.value else {
+            // no data transmitted, handle if needed
+            print("no data")
+            return
+        }
+        
+        // Get TX  value
+        if characteristic.uuid == UUIDs.traceletTxChar {
+            // Set State
+            recievingData = true
+            
+            do {
+                let validatedMessage = try decoder.ValidateMessage(of: data)
+                let localPosition = try TagPositionResponse(of: validatedMessage)
+                
+                let xPos = localPosition.xCoord
+                let yPos = localPosition.yCoord
+                let zPos = localPosition.zCoord
+                // let covXx = localPosition.covXx
+                // let covXy = localPosition.covXy
+                // let covYy = localPosition.covYy
+                let siteId = localPosition.siteID
+                // let signature = localPosition.signature
+                
+                textOutput = "X: \(xPos) Y: \(yPos) Z: \(zPos) site: \(siteId)\n\n"
+                
+            }catch{
+                
+                textOutput = "\(error) \n"
+            }
+        }
+    }
     
     
     
-    // Delegate - Called when disconneccted
+    // Delegate - Called when disconnected
+    // Improve: Reset all states
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         isConnected = false
         traceletInRange = false
         serviceFound = false
         recievingData = false
-        textOutput = Strings.DEVICE_DISCONNECTED
+        subscribedToNotifiy = false
+        deviceName = ""
     }
     
     
