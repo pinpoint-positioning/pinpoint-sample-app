@@ -31,6 +31,9 @@ struct ContentView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 50, height: 50)
+                        .onTapGesture {
+                            btManager.send(data: Encoder().encodeBytes(cmdByte: ProtocolConstants.cmdCodeShowMe))
+                        }
                     
                     Text("Tracelet Reader")
                         .font(.system(size: 40))
@@ -42,7 +45,7 @@ struct ContentView: View {
                 HStack{
                     
                     VStack{
-                        
+
                         // Checkmark for: Bluetooth available
                         HStack
                         {
@@ -91,12 +94,7 @@ struct ContentView: View {
                             Text("UART-service found")
                             
                             Spacer()
-                            Image(systemName: btManager.serviceFound ? SFSymbols.CHECKMARK : SFSymbols.XMARK )
-                                .foregroundColor(btManager.serviceFound ? Color(.green) : Color(.red) )
-                            
-                            Text("notify")
-                            
-                            Spacer()
+
                         }
                         
                         // Checkmark for: receiving data
@@ -108,6 +106,18 @@ struct ContentView: View {
                             Spacer()
                         }
                     }
+                    .padding(EdgeInsets(top:5, leading: 10, bottom:5, trailing: 5))
+                    
+                    // Continue here
+                    HStack
+                    {
+                          Image(systemName: btManager.serviceFound ? SFSymbols.CHECKMARK : SFSymbols.XMARK )
+                            .foregroundColor(btManager.serviceFound ? Color(.green) : Color(.red) )
+                        
+                        Text("notify")
+                        Spacer()
+                    }
+                    
                     .padding(EdgeInsets(top:5, leading: 10, bottom:5, trailing: 5))
                     
                 }

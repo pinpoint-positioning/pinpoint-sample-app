@@ -31,8 +31,9 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     
     var centralManager: CBCentralManager!
     var peripheral: CBPeripheral!
-    var tracelet: CBPeripheral? = nil
+    var connectedTracelet: CBPeripheral? = nil
     let decoder = Decoder()
+    var rxCharacteristic: CBCharacteristic? = nil
     
     // Variables for Scan-Timeout-Timer
     var timer: Timer?
@@ -83,15 +84,27 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     func connect() {
         
         // Make sure the device the should be connected is the identified tracelet
-        if let foundTracelet = tracelet{
+        if let foundTracelet = connectedTracelet{
             centralManager.connect(foundTracelet, options: nil)
         }
     }
     
     func disconnect() {
-        centralManager.cancelPeripheralConnection(tracelet!)
+        centralManager.cancelPeripheralConnection(connectedTracelet!)
         peripheral = nil
         
+        
+
+        
+    }
+    
+    func send(data: Data) {
+        
+        if let rxCharacteristic = rxCharacteristic {
+            connectedTracelet!.writeValue(data as Data, for: rxCharacteristic,type: CBCharacteristicWriteType.withoutResponse)
+        }
+        // Send data
+      
     }
     
     
@@ -172,7 +185,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
             //Set State
             traceletInRange = true
             // / If tracelet is found,save object in "peripheral"
-            tracelet = peripheral
+            connectedTracelet = peripheral
             
             //Stop Scan
             centralManager.stopScan()
@@ -189,7 +202,7 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
     // Delegate - Called when connection was successful
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        if peripheral == tracelet {
+        if peripheral == connectedTracelet {
             // Set State
             isConnected = true
             deviceName = peripheral.name ?? "unkown"
@@ -236,6 +249,10 @@ class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate
                     }else{
                         print("Characteristic has no notify property")
                     }
+                }
+                else if characteristic.uuid == UUIDs.traceletRxChar {
+                    print ("rxfound")
+                    rxCharacteristic = characteristic
                 }
             }
         }
