@@ -15,7 +15,6 @@
 		D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D112271329B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld */; };
 		D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112272129BA005D00E49993 /* ConsoleTextView.swift */; };
 		D1569D8429BA07C500D0E578 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8329BA07C500D0E578 /* BluetoothManager.swift */; };
-		D1569D8A29BA0B8E00D0E578 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8929BA0B8D00D0E578 /* SpinnerViewController.swift */; };
 		D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8D29BA109B00D0E578 /* Buttons.swift */; };
 		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
 		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -45,10 +44,8 @@
 		D112271429B9EF8C00E49993 /* PinpointSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PinpointSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		D112272129BA005D00E49993 /* ConsoleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTextView.swift; sourceTree = "<group>"; };
 		D1569D8329BA07C500D0E578 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
-		D1569D8929BA0B8D00D0E578 /* SpinnerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		D1569D8D29BA109B00D0E578 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D1FE233B29BF5D25002F1049 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				D112270729B9EF8B00E49993 /* PinpointSampleApp */,
-				D1FE233B29BF5D25002F1049 /* README.md */,
 				D112270629B9EF8B00E49993 /* Products */,
 				D1569D9229BB445A00D0E578 /* Frameworks */,
 			);
@@ -109,7 +105,6 @@
 			children = (
 				D112270A29B9EF8B00E49993 /* ContentView.swift */,
 				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
-				D1569D8929BA0B8D00D0E578 /* SpinnerViewController.swift */,
 				D1569D8D29BA109B00D0E578 /* Buttons.swift */,
 			);
 			path = Views;
@@ -215,7 +210,6 @@
 				D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
 				D1569D8429BA07C500D0E578 /* BluetoothManager.swift in Sources */,
-				D1569D8A29BA0B8E00D0E578 /* SpinnerViewController.swift in Sources */,
 				D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

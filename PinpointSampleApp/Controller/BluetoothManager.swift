@@ -15,7 +15,7 @@ import SDK
     
     
     // Properties
-    @Published var textOutput:String?
+    @Published var textOutput = String()
     
     //States -- Really false in init?
     @Published var isConnected = false
@@ -38,7 +38,6 @@ import SDK
     
     override init() {
         super.init()
-        
         centralManager = CBCentralManager(delegate: self, queue: nil)
         centralManager.delegate = self
 
@@ -227,7 +226,6 @@ import SDK
     
      func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,error: Error?) {
          
-         
          guard let data = characteristic.value else {
              // no data transmitted, handle if needed
              print("no data")
@@ -246,15 +244,16 @@ import SDK
                  let xPos = localPosition.xCoord
                  let yPos = localPosition.yCoord
                  let zPos = localPosition.zCoord
-                 let covXx = localPosition.covXx
-                 let covXy = localPosition.covXy
-                 let covYy = localPosition.covYy
+              // let covXx = localPosition.covXx
+              // let covXy = localPosition.covXy
+              // let covYy = localPosition.covYy
                  let siteId = localPosition.siteID
-                 
-                 textOutput = "X: \(xPos) Y: \(yPos) Z: \(zPos) siteID: \(siteId)\n\n"
-                 
+                 let signature = localPosition.signature
+  
+                 textOutput = "X: \(xPos) Y: \(yPos) Z: \(zPos) site: \(siteId) sig: \(signature)\n\n"
+   
              }catch{
-                 print (error)
+
                  textOutput = "\(error) \n"
              }
          }

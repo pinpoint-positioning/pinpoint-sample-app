@@ -18,9 +18,10 @@ struct ContentView: View {
     @State var scanButtonLabel = ""
     @State var autoScroll = true
     
+    
     //MARK: - Body
     var body: some View {
-        
+
         ZStack
         {
             VStack {
@@ -110,7 +111,8 @@ struct ContentView: View {
                 // Console Output
                 ZStack
                 {
-                    ConsoleTextView(text: btManager.textOutput ?? "", autoScroll: autoScroll)
+
+                    ConsoleTextView(text: btManager.textOutput , autoScroll: autoScroll)
                         .padding(EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5))
                     
                     if (btManager.isScanning) {
