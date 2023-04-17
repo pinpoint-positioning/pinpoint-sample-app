@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDK
 
 @main
 struct PinpointSampleAppApp: App {
@@ -15,6 +16,7 @@ struct PinpointSampleAppApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(API())
         }
     }
 }

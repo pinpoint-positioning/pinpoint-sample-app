@@ -14,7 +14,7 @@
 		D112271229B9EF8C00E49993 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112271129B9EF8C00E49993 /* Persistence.swift */; };
 		D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D112271329B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld */; };
 		D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112272129BA005D00E49993 /* ConsoleTextView.swift */; };
-		D1569D8429BA07C500D0E578 /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8329BA07C500D0E578 /* BluetoothManager.swift */; };
+		D139E79029ED334C00E6119E /* temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E78F29ED334C00E6119E /* temp.swift */; };
 		D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8D29BA109B00D0E578 /* Buttons.swift */; };
 		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
 		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -43,7 +43,7 @@
 		D112271129B9EF8C00E49993 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		D112271429B9EF8C00E49993 /* PinpointSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PinpointSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		D112272129BA005D00E49993 /* ConsoleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTextView.swift; sourceTree = "<group>"; };
-		D1569D8329BA07C500D0E578 /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
+		D139E78F29ED334C00E6119E /* temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = temp.swift; path = "/Users/christophscherbeck/XCode/ios-tracelet-reader/PinpointSampleApp/Views/temp.swift"; sourceTree = "<absolute>"; };
 		D1569D8D29BA109B00D0E578 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -106,6 +106,7 @@
 				D112270A29B9EF8B00E49993 /* ContentView.swift */,
 				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
 				D1569D8D29BA109B00D0E578 /* Buttons.swift */,
+				D139E78F29ED334C00E6119E /* temp.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -113,7 +114,6 @@
 		D1569D9029BA216100D0E578 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				D1569D8329BA07C500D0E578 /* BluetoothManager.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -150,6 +150,8 @@
 			dependencies = (
 			);
 			name = PinpointSampleApp;
+			packageProductDependencies = (
+			);
 			productName = PinpointSampleApp;
 			productReference = D112270529B9EF8B00E49993 /* PinpointSampleApp.app */;
 			productType = "com.apple.product-type.application";
@@ -178,6 +180,8 @@
 				Base,
 			);
 			mainGroup = D11226FC29B9EF8B00E49993;
+			packageReferences = (
+			);
 			productRefGroup = D112270629B9EF8B00E49993 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -209,7 +213,7 @@
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
 				D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
-				D1569D8429BA07C500D0E578 /* BluetoothManager.swift in Sources */,
+				D139E79029ED334C00E6119E /* temp.swift in Sources */,
 				D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

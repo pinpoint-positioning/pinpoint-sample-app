@@ -20,16 +20,13 @@ struct ConsoleTextView: UIViewRepresentable {
         textView.backgroundColor = .lightGray
         textView.isEditable = false
         textView.isSelectable = false
-        textView.layer.cornerRadius = 10
-        
-        
+        textView.layer.cornerRadius = 10        
         return textView
     }
     
     func updateUIView(_ uiView: UITextView, context: Context) {
         
         uiView.text += text
-        print("test aus update: \(text)")
         uiView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
         // Scroll to last line, when filled (Autoscroll)
         if (autoScroll)
@@ -39,17 +36,9 @@ struct ConsoleTextView: UIViewRepresentable {
                 let point = CGPoint(x: 0.0, y: (uiView.contentSize.height - uiView.bounds.height))
                 uiView.setContentOffset(point, animated: true)
             }
-        }
-        
-        
-        
+        }  
     }
-    
-    
-    
-    
-    
-    
+
     
     struct ConsoleTextView_Previews: PreviewProvider {
         static var previews: some View {

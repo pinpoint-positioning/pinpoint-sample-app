@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:/Users/christophscherbeck/XCode/ios-tracelet-reader/PinpointSampleApp/Views/temp.swift">
+   </FileRef>
+   <FileRef
       location = "group:../ios-sdk/SDK.xcodeproj">
    </FileRef>
    <FileRef
