@@ -41,7 +41,7 @@ struct ContentView: View {
                         .cornerRadius(10)
                         .shadow(radius: 5)
                     
-                    VersionView()
+                    CommandView()
                         .cornerRadius(10)
                         .shadow(radius: 5)
                 }
@@ -57,7 +57,7 @@ struct ContentView: View {
                         showingActions.toggle()
                     } label: {
                         HStack {
-                            Text("Actions")
+                            Text("Cmds")
                             Image(systemName: "chevron.up")
                         }
                     }
@@ -69,7 +69,7 @@ struct ContentView: View {
             .padding()
             // Actions menu
             .sheet(isPresented: $showingActions) {
-                ActionsView()
+                ActionsModalView()
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
@@ -135,7 +135,7 @@ struct CommandButtons:View {
 
 
 
-struct ActionsView: View {
+struct ActionsModalView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var api:API
     
@@ -198,6 +198,7 @@ struct Header: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 50, height: 50)
+                    .shadow(radius: 5)
                 
                 Text("Tracelet Reader")
                     .font(.system(size: 40))
@@ -244,12 +245,11 @@ struct PositionView: View {
             Divider()
             VStack {
                 ConsoleTextView(text: api.allResponses , autoScroll: true)
-                Divider()
             }
         }
         .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
-        .background(Color.teal.gradient)
+        .background(Color.orange.gradient)
     }
 }
 
@@ -302,7 +302,7 @@ struct DebugView: View {
         }
         .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
-        .background(Color.teal.gradient)
+        .background(Color.orange.gradient)
     }
 }
 
@@ -314,7 +314,7 @@ struct StatusView: View {
     
     var body: some View {
         let address = "Address: \(String(api.status.address))"
-        let version = "Site ID: \(String(api.version.version))"
+        let version = "Version: \(String(api.version.version))"
         let batLvl = "BatteryLevel: \(String(api.status.batteryLevel))"
         let role = "Role: \(String(api.status.role))"
         let siteID = "Site ID: \(String(api.status.siteIDe))"
@@ -338,6 +338,7 @@ struct StatusView: View {
                 Button()
                 {
                     api.requestStatus()
+                    api.requestVersion()
                 } label:
                 {
                     Image(systemName: "arrow.triangle.2.circlepath")
@@ -346,12 +347,12 @@ struct StatusView: View {
         }
         .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
-        .background(Color.teal.gradient)
+        .background(Color.orange.gradient)
     }
 }
 
 
-struct VersionView: View {
+struct CommandView: View {
     
     @EnvironmentObject var api:API
     
@@ -359,7 +360,7 @@ struct VersionView: View {
     var body: some View {
         
         VStack(alignment: .leading) {
-            Text("Actions Monitor")
+            Text("Commands")
                 .fontWeight(.semibold)
             Divider()
             
@@ -400,7 +401,7 @@ struct VersionView: View {
         }
         .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
-        .background(Color.teal.gradient)
+        .background(Color.orange.gradient)
         
     }
         
