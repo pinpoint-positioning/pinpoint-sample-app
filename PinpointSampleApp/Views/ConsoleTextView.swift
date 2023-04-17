@@ -13,26 +13,26 @@ struct ConsoleTextView: UIViewRepresentable {
     var autoScroll: Bool
     
     func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
-        
-        textView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
+        let textView = UITextView()        
+       // textView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
+        textView.font = UIFont.systemFont(ofSize: 12)
         textView.autocapitalizationType = .sentences
-        textView.backgroundColor = .lightGray
+        textView.backgroundColor = .clear
         textView.isEditable = false
         textView.isSelectable = false
-        textView.layer.cornerRadius = 10        
         return textView
     }
     
     func updateUIView(_ uiView: UITextView, context: Context) {
         
         uiView.text += text
-        uiView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
+       // uiView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
+        uiView.font = UIFont.systemFont(ofSize: 12)
         // Scroll to last line, when filled (Autoscroll)
         if (autoScroll)
         {
             // Estimated number of chars. Needs to be made in better way
-            if (uiView.text.count > 250) {
+            if (uiView.text.count > 200) {
                 let point = CGPoint(x: 0.0, y: (uiView.contentSize.height - uiView.bounds.height))
                 uiView.setContentOffset(point, animated: true)
             }

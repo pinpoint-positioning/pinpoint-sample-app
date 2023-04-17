@@ -15,7 +15,6 @@ struct ContentView: View {
     
     @State var scanButtonLabel = ""
     @State private var showingActions = false
-    @State private var consoleHeight = 600.0
     @EnvironmentObject var api:API
     
     //MARK: - Body
@@ -25,14 +24,33 @@ struct ContentView: View {
             VStack(alignment: .leading){
                 //Header
                 Header()
+                Divider()
+                HStack {
+                    PositionView()
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                    
+                    DebugView()
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                    
+                }
                 
-                // Console Output
-                ConsoleTextView(text: api.allResponses , autoScroll: true)
-                    .frame(height: consoleHeight)
-                    .opacity(0.7)
+                HStack{
+                    StatusView()
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                    
+                    VersionView()
+                        .cornerRadius(10)
+                        .shadow(radius: 5)
+                }
+                Spacer()
+                Divider()
                 
                 //Buttons
                 HStack {
+                    
                     CommandButtons()
                     Button
                     {
@@ -92,7 +110,7 @@ struct CommandButtons:View {
                 }
                 
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.bordered)
             .disabled(api.generalState == .CONNECTED)
             
             // ScanList menu
@@ -107,7 +125,7 @@ struct CommandButtons:View {
             {
                 api.disconnect()
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.bordered)
             .disabled(api.generalState == .CONNECTED ? false : true)
             Spacer()
         }
@@ -120,8 +138,7 @@ struct CommandButtons:View {
 struct ActionsView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var api:API
-    @State var showingResponse = false
-    @State var response = ""
+    
     
     var body: some View {
         NavigationStack{
@@ -131,46 +148,24 @@ struct ActionsView: View {
             {
                 Button("GetStatus")
                 {
-                    api.getStatusString { statusString in
-                        response = statusString
-                        showingResponse.toggle()
-                    }
+                    api.requestStatus()
                     dismiss()
                 }
                 
-                .sheet(isPresented: $showingResponse) {
-                    ResponseView(response:  response)
-                        .presentationDetents([.medium])
-                }
+                
                 Button("GetPosition")
                 {
-                    api.getOneTimePostion { position in
-                        response = """
-                                                            X: \(position.xCoord) \n \
-                                                            Y: \(position.yCoord) \n \
-                                                            Z: \(position.zCoord)
-                                                            """
-                        showingResponse.toggle()
+                    Task {
+                        api.requestPosition()
                     }
-                    dismiss()
-                }
-                
-                .sheet(isPresented: $showingResponse) {
-                    ResponseView(response:  response)
-                        .presentationDetents([.medium])
                 }
                 
                 Button("GetVersion")
                 {
-                    api.requestVersion { version in
-                        response = version
-                        showingResponse.toggle()
-                    }
                     dismiss()
                 }
-                .sheet(isPresented: $showingResponse) {
-                    ResponseView(response: response)
-                }
+                
+                
                 
                 Button("StopPosition")
                 {
@@ -184,13 +179,13 @@ struct ActionsView: View {
                         api.showMe(tracelet: tracelet)
                         dismiss()
                     }
-                    
                 }
             }
             .navigationTitle("Actions")
         }
     }
 }
+
 
 
 
@@ -208,13 +203,6 @@ struct Header: View {
                     .font(.system(size: 40))
                     .fontWeight(.bold)
             }
-            HStack {
-                Text("Connection state: ")
-                Image(systemName: "circle.fill")
-                    .foregroundColor(api.generalState == .CONNECTED ? Color.green : Color.red )
-                Spacer()
-            }
-
         }
     }
 }
@@ -242,19 +230,180 @@ struct BusyIndicator: View {
 
 
 
-// unsused
 
-struct ResponseView: View {
+struct PositionView: View {
     
-    @Environment(\.presentationMode) var presentationMode
-    let response: String
+    @EnvironmentObject var api:API
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("Position Monitor")
+                .fontWeight(.semibold)
+
+            Spacer()
+            Divider()
+            VStack {
+                ConsoleTextView(text: api.allResponses , autoScroll: true)
+                Divider()
+            }
+        }
+        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .padding()
+        .background(Color.teal.gradient)
+    }
+}
+
+
+
+struct DebugView: View {
+    
+    @EnvironmentObject var api:API
     
     var body: some View {
         
-        List{
-            Text(response)
+        VStack(alignment: .leading) {
+            Text("Debug Monitor")
+                .fontWeight(.semibold)
+
+            Spacer()
+            Divider()
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("Connection: ")
+                    Image(systemName: "circle.fill")
+                        .foregroundColor(api.generalState == .CONNECTED ? Color.green : Color.red )                   
+                }
+                HStack {
+                    Text("Device: ")
+                    Text(String(describing: api.deviceName))
+                }
+              Divider()
+                Text("States")
+                    .fontWeight(.semibold)
+                HStack {
+                    Text("Public: ")
+                    Text(String(describing: api.generalState))
+                }
+    
+                HStack {
+                    Text("Com: ")
+                    Text(String(describing: api.comState))
+                }
+                HStack {
+                    Text("Scan: ")
+                    Text(String(describing: api.scanState))
+                }
+                
+                Divider()
+   
+                Spacer()
+            }
+            .font(.system(size: 10))
         }
+        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .padding()
+        .background(Color.teal.gradient)
     }
+}
+
+
+
+struct StatusView: View {
+    
+    @EnvironmentObject var api:API
+    
+    var body: some View {
+        let address = "Address: \(String(api.status.address))"
+        let version = "Site ID: \(String(api.version.version))"
+        let batLvl = "BatteryLevel: \(String(api.status.batteryLevel))"
+        let role = "Role: \(String(api.status.role))"
+        let siteID = "Site ID: \(String(api.status.siteIDe))"
+        let panID = "Pan ID: \(String(api.status.panID))"
+        
+        
+        VStack(alignment: .leading) {
+            Text("Status Monitor")
+                .fontWeight(.semibold)
+            Divider()
+            Text(address)
+            Text(version)
+            Text(batLvl)
+            Text(role)
+            Text(panID)
+            Text(siteID)
+            Spacer()
+            
+            HStack {
+                Spacer()
+                Button()
+                {
+                    api.requestStatus()
+                } label:
+                {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                }
+            }
+        }
+        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .padding()
+        .background(Color.teal.gradient)
+    }
+}
+
+
+struct VersionView: View {
+    
+    @EnvironmentObject var api:API
+    
+    
+    var body: some View {
+        
+        VStack(alignment: .leading) {
+            Text("Actions Monitor")
+                .fontWeight(.semibold)
+            Divider()
+            
+            VStack (alignment: .leading,  spacing: 6) {
+                Button("GetStatus")
+                {
+                    api.requestStatus()
+                   }
+                
+                
+                Button("GetPosition")
+                {
+                    api.requestPosition()
+
+                }
+                
+                Button("GetVersion")
+                {
+                    api.requestVersion()
+                }
+                
+
+                Button("StopPosition")
+                {
+                    api.stopPositioning()
+                }
+                
+                Button("ShowMe")
+                {
+                    if let tracelet = api.connectedTracelet {
+                        api.showMe(tracelet: tracelet)
+                    }
+                }
+            }
+            
+            Spacer()
+
+        }
+        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .padding()
+        .background(Color.teal.gradient)
+        
+    }
+        
 }
 
 
@@ -265,21 +414,22 @@ struct DeviceListView: View {
     @EnvironmentObject var api:API
     
     var body: some View {
-
-            List{
-                ForEach(api.discoveredTracelets, id: \.self) { device in
-                    HStack{
-                        Button(device.name ?? "name not found") {
-                            api.connect(device: device)
-                            dismiss()
+        
+        List{
+            ForEach(api.discoveredTracelets, id: \.self) { device in
+                HStack{
+                    Button(device.name ?? "name not found") {
+                        api.connect(device: device)
+                        dismiss()
+                    }
+                    Spacer()
+                    Image(systemName: "eye")
+                        .onTapGesture {
+                            api.showMe(tracelet: device)
                         }
-                        Spacer()
-                        Image(systemName: "eye")
-                            .onTapGesture {
-                                api.showMe(tracelet: device)
-                            }
                 }
             }
         }
     }
 }
+
