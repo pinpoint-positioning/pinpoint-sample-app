@@ -16,7 +16,7 @@ struct PinpointSampleAppApp: App {
         WindowGroup {
             MainView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(API.shared)
+              
         }
     }
 }

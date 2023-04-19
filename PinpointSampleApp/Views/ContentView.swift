@@ -15,86 +15,89 @@ import Charts
 struct MainView: View {
     
     var body: some View {
-        TabView{
-            ContentView()
-                .tabItem{
-                    Label("Home", systemImage: "house")
-                }
-            
-            DebugView()
-                .tabItem {
-                    Label("Debug", systemImage: "ladybug.fill")
-                }
-            
+        VStack
+        {
+            Header()
+            TabView{
+                ContentView()
+                    .tabItem{
+                        Label("Home", systemImage: "house")
+                    }
+                
+                DebugView()
+                    .tabItem {
+                        Label("Debug", systemImage: "ladybug.fill")
+                    }
+                
+            }
+            .environmentObject(API.shared)
         }
+
     }
 }
 
 
 
 struct ContentView: View {
-    
-    @State var scanButtonLabel = ""
+
     @State private var showingActions = false
     @EnvironmentObject var api:API
     
     //MARK: - Body
     var body: some View {
 
-            ZStack{
-                VStack {
-                    Header()
-                    ScrollView {
-                        VStack(alignment: .leading){
-
-                            HStack {
-                                PositionChartView()
-                                    .cornerRadius(10)
-                                    .shadow(radius: 5)
-                            }
+            VStack {
+                ScrollView {
+                    VStack(alignment: .leading){
+                        HStack {
+                            PositionMonitor()
+                                .cornerRadius(10)
+                                .shadow(radius: 5)
+                        }                        
+                        HStack{
+                            StatusView()
+                                .blur(radius: api.generalState != .CONNECTED ? 1 : 0)
+                                .overlay(api.generalState != .CONNECTED ? Text("Not connected") : nil)
+                                .cornerRadius(10)
+                                .shadow(radius: 5)
+                                .disabled(api.generalState != .CONNECTED ? true : false )
                             
-                            HStack{
-                                StatusView()
-                                    .cornerRadius(10)
-                                    .shadow(radius: 5)
-                                
-                                CommandView()
-                                    .cornerRadius(10)
-                                    .shadow(radius: 5)
-                            }
-                            Spacer()
-
+                            CommandView()
+                                .blur(radius: api.generalState != .CONNECTED ? 1 : 0)
+                                .overlay(api.generalState != .CONNECTED ? Text("Not connected") : nil)
+                                .disabled(api.generalState != .CONNECTED ? true : false)
+                                .cornerRadius(10)
+                                .shadow(radius: 5)
                         }
-                        
+                        Spacer()
                     }
-                    
-                    //Buttons
-                    HStack {
-                        
-                        CommandButtons()
-                        Button
-                        {
-                            showingActions.toggle()
-                        } label: {
-                            HStack {
-                                Text("Cmds")
-                                Image(systemName: "chevron.up")
-                            }
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-
                 }
-            }
-            .padding()
-            // Actions menu
-            .sheet(isPresented: $showingActions) {
-                ActionsModalView()
-                    .presentationDetents([.medium, .large])
-                    .presentationDragIndicator(.visible)
+                
+                //Buttons
+                HStack {
+                    CommandButtons()
+                    Button
+                    {
+                        showingActions.toggle()
+                    } label: {
+                        HStack {
+                            Text("Cmds")
+                            Image(systemName: "chevron.up")
+                        }
+                }
+                .buttonStyle(.borderedProminent)
             }
         }
+            .padding()
+        
+        // Actions menu
+        .sheet(isPresented: $showingActions) {
+            ActionsModalView()
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+        }
     }
+}
 
 
 
@@ -114,8 +117,8 @@ struct ContentView_Previews: PreviewProvider {
 
 struct CommandButtons:View {
     @EnvironmentObject var api:API
-    @State var notify = false
     @State private var showingScanResults = false
+    @State private var discoveredDevices:[CBPeripheral] = []
     
     var body: some View {
         HStack {
@@ -126,7 +129,10 @@ struct CommandButtons:View {
                     api.stopScan()
                 } else {
                     showingScanResults.toggle()
-                    api.scan(timeout: 2.0)
+                    discoveredDevices = []
+                    api.scan(timeout: 5) { deviceList in
+                        discoveredDevices = deviceList
+                    }
                 }
                 
             }
@@ -135,7 +141,7 @@ struct CommandButtons:View {
             
             // ScanList menu
             .sheet(isPresented: $showingScanResults) {
-                DeviceListView()
+                DeviceListView(discoveredDevices: $discoveredDevices)
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
@@ -157,8 +163,7 @@ struct CommandButtons:View {
 
 struct ActionsModalView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var api:API
-    
+    @EnvironmentObject var api:API    
     
     var body: some View {
         NavigationStack{
@@ -229,46 +234,23 @@ struct Header: View {
 }
 
 
-struct BusyIndicator: View {
-    var body: some View {
-        ZStack{
-            Color(.systemBackground)
-                .ignoresSafeArea()
-                .opacity(0.5)
-            VStack {
-                Spacer()
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint:.gray))
-                    .scaleEffect(3)
-                Spacer()
-                    .frame(height: 50)
-                Text("Bring Tracelet closer to the phone")
-                    .fontWeight(.bold)
-                Spacer()
-            }
-        }
-    }
-}
-
-
-
 struct DebugView: View{
     
     @EnvironmentObject var api:API
     
     var body: some View {
         
-        HStack{
-            
+        VStack{
             PositionView()
                 .cornerRadius(10)
                 .shadow(radius: 5)
             StatesView()
                 .cornerRadius(10)
                 .shadow(radius: 5)
+            Spacer()
         }
         .padding()
-     
+        
     }
 }
 
@@ -283,7 +265,7 @@ struct PositionView: View{
         VStack(alignment: .leading) {
             Text("Position Monitor")
                 .fontWeight(.semibold)
-
+            
             Spacer()
             Divider()
             VStack {
@@ -307,27 +289,27 @@ struct StatesView: View {
         VStack(alignment: .leading) {
             Text("Debug Monitor")
                 .fontWeight(.semibold)
-
+            
             Spacer()
             Divider()
             VStack(alignment: .leading) {
                 HStack {
                     Text("Connection: ")
                     Image(systemName: "circle.fill")
-                        .foregroundColor(api.generalState == .CONNECTED ? Color.green : Color.red )                   
+                        .foregroundColor(api.generalState == .CONNECTED ? Color.green : Color.red )
                 }
                 HStack {
                     Text("Device: ")
                     Text(String(describing: api.deviceName))
                 }
-              Divider()
+                Divider()
                 Text("States")
                     .fontWeight(.semibold)
                 HStack {
                     Text("Public: ")
                     Text(String(describing: api.generalState))
                 }
-    
+                
                 HStack {
                     Text("Com: ")
                     Text(String(describing: api.comState))
@@ -338,7 +320,7 @@ struct StatesView: View {
                 }
                 
                 Divider()
-   
+                
                 Spacer()
             }
             .font(.system(size: 10))
@@ -351,125 +333,41 @@ struct StatesView: View {
 
 
 
-struct StatusView: View {
-    
-    @EnvironmentObject var api:API
-    
-    var body: some View {
-        let address = "Address: \(String(api.status.address))"
-        let version = "Version: \(String(api.version.version))"
-        let batLvl = "BatteryLevel: \(String(api.status.batteryLevel))"
-        let role = "Role: \(String(api.status.role))"
-        let siteID = "Site ID: \(String(api.status.siteIDe))"
-        let panID = "Pan ID: \(String(api.status.panID))"
-        
-        
-        VStack(alignment: .leading) {
-            Text("Status Monitor")
-                .fontWeight(.semibold)
-            Divider()
-            Text(address)
-            Text(version)
-            Text(batLvl)
-            Text(role)
-            Text(panID)
-            Text(siteID)
-            Spacer()
-            
-            HStack {
-                Spacer()
-                Button()
-                {
-                    api.requestStatus()
-                    api.requestVersion()
-                } label:
-                {
-                    Image(systemName: "arrow.triangle.2.circlepath")
-                }
-            }
-        }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
-        .padding()
-        .background(Color.orange.gradient)
-    }
-}
 
 
-struct CommandView: View {
-    
-    @EnvironmentObject var api:API
-    
-    
-    var body: some View {
-        
-        VStack(alignment: .leading) {
-            Text("Commands")
-                .fontWeight(.semibold)
-            Divider()
-            
-            VStack (alignment: .leading,  spacing: 6) {
-                Button("GetStatus")
-                {
-                    api.requestStatus()
-                   }
-                
-                
-                Button("GetPosition")
-                {
-                    api.requestPosition()
 
-                }
-                
-                Button("GetVersion")
-                {
-                    api.requestVersion()
-                }
-                
-
-                Button("StopPosition")
-                {
-                    api.stopPositioning()
-                }
-                
-                Button("ShowMe")
-                {
-                    if let tracelet = api.connectedTracelet {
-                        api.showMe(tracelet: tracelet)
-                    }
-                }
-            }
-            
-            Spacer()
-
-        }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
-        .padding()
-        .background(Color.orange.gradient)
-        
-    }
-        
-}
 
 
 struct DeviceListView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var api:API
+    @Binding var discoveredDevices:[CBPeripheral]
     
     var body: some View {
-        
-        List{
-            ForEach(api.discoveredTracelets, id: \.self) { device in
-                HStack{
-                    Button(device.name ?? "name not found") {
-                        api.connect(device: device)
-                        dismiss()
+        VStack {
+            Text("Available Tracelets")
+                .padding()
+                .font(.largeTitle)
+            if (api.scanState == .SCANNING) {
+                ProgressView("Scanning...")
+                    .padding()
+                
+            }
+            
+            List{
+                ForEach(discoveredDevices, id: \.self) { device in
+                    HStack{
+                        Button(device.name ?? "name not found") {
+                            api.connect(device: device)
+                            dismiss()
+                        }
+                        Spacer()
+                        Image(systemName: "eye")
+                            .onTapGesture {
+                                api.showMe(tracelet: device)
+                            }
                     }
-                    Spacer()
-                    Image(systemName: "eye")
-                        .onTapGesture {
-                            api.showMe(tracelet: device)
-                        }
                 }
             }
         }
@@ -478,51 +376,4 @@ struct DeviceListView: View {
 
 
 
-struct PositionChartView: View {
-   
-    @EnvironmentObject var api:API
-    let pos = PositionChartData.shared
 
-    var body: some View {
-   
-        VStack(alignment: .leading) {
-            HStack {
-                Text("Position Monitor")
-                    .fontWeight(.semibold)
-                VStack(alignment: .leading) {
-                    Text("Current X: \(api.localPosition.xCoord)")
-                    Text("Current Y: \(api.localPosition.yCoord)")
-                        .onChange(of: api.localPosition, perform: { newValue in
-                            pos.fillArray()
-                            print (pos.data)
-                        })
-             
-                            
-                        }
-
-                        
-                .font(.system(size: 9))
-            }
-
-               
-            Divider()
-
-            Chart(pos.data) {
-
-
-                    PointMark(
-                        x: .value("X", $0.x),
-                        y: .value("Y", $0.y)
-                    )
-
-                }
-                .chartYScale(domain: 0...10)
-                .chartXScale(domain: 0...10)
-                .frame(height: 250)
-
-        }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 260, maxHeight: 260)
-        .padding()
-        .background(Color.orange.gradient)
-    }
-}
