@@ -14,7 +14,8 @@
 		D112271229B9EF8C00E49993 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112271129B9EF8C00E49993 /* Persistence.swift */; };
 		D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D112271329B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld */; };
 		D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112272129BA005D00E49993 /* ConsoleTextView.swift */; };
-		D139E79029ED334C00E6119E /* temp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E78F29ED334C00E6119E /* temp.swift */; };
+		D139E79629EE7F8300E6119E /* CardFlip in Frameworks */ = {isa = PBXBuildFile; productRef = D139E79529EE7F8300E6119E /* CardFlip */; };
+		D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79729EEA56800E6119E /* PositionChartData.swift */; };
 		D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1569D8D29BA109B00D0E578 /* Buttons.swift */; };
 		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
 		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -43,7 +44,7 @@
 		D112271129B9EF8C00E49993 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		D112271429B9EF8C00E49993 /* PinpointSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PinpointSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		D112272129BA005D00E49993 /* ConsoleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTextView.swift; sourceTree = "<group>"; };
-		D139E78F29ED334C00E6119E /* temp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = temp.swift; path = "/Users/christophscherbeck/XCode/ios-tracelet-reader/PinpointSampleApp/Views/temp.swift"; sourceTree = "<absolute>"; };
+		D139E79729EEA56800E6119E /* PositionChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionChartData.swift; sourceTree = "<group>"; };
 		D1569D8D29BA109B00D0E578 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -54,6 +55,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */,
+				D139E79629EE7F8300E6119E /* CardFlip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,7 +108,6 @@
 				D112270A29B9EF8B00E49993 /* ContentView.swift */,
 				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
 				D1569D8D29BA109B00D0E578 /* Buttons.swift */,
-				D139E78F29ED334C00E6119E /* temp.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -114,6 +115,7 @@
 		D1569D9029BA216100D0E578 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D139E79729EEA56800E6119E /* PositionChartData.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -151,6 +153,7 @@
 			);
 			name = PinpointSampleApp;
 			packageProductDependencies = (
+				D139E79529EE7F8300E6119E /* CardFlip */,
 			);
 			productName = PinpointSampleApp;
 			productReference = D112270529B9EF8B00E49993 /* PinpointSampleApp.app */;
@@ -181,6 +184,7 @@
 			);
 			mainGroup = D11226FC29B9EF8B00E49993;
 			packageReferences = (
+				D139E79429EE7F8300E6119E /* XCRemoteSwiftPackageReference "CardFlip" */,
 			);
 			productRefGroup = D112270629B9EF8B00E49993 /* Products */;
 			projectDirPath = "";
@@ -211,9 +215,9 @@
 				D112271229B9EF8C00E49993 /* Persistence.swift in Sources */,
 				D112270B29B9EF8B00E49993 /* ContentView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
+				D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */,
 				D1569D8E29BA109B00D0E578 /* Buttons.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
-				D139E79029ED334C00E6119E /* temp.swift in Sources */,
 				D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -421,6 +425,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D139E79429EE7F8300E6119E /* XCRemoteSwiftPackageReference "CardFlip" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Mcrich23/CardFlip";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D139E79529EE7F8300E6119E /* CardFlip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D139E79429EE7F8300E6119E /* XCRemoteSwiftPackageReference "CardFlip" */;
+			productName = CardFlip;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		D112271329B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld */ = {

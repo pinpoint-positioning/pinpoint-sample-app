@@ -14,9 +14,9 @@ struct PinpointSampleAppApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .environmentObject(API())
+                .environmentObject(API.shared)
         }
     }
 }

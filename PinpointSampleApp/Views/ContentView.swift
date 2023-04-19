@@ -9,6 +9,27 @@ import SwiftUI
 import CoreData
 import CoreBluetooth
 import SDK
+import Charts
+
+
+struct MainView: View {
+    
+    var body: some View {
+        TabView{
+            ContentView()
+                .tabItem{
+                    Label("Home", systemImage: "house")
+                }
+            
+            DebugView()
+                .tabItem {
+                    Label("Debug", systemImage: "ladybug.fill")
+                }
+            
+        }
+    }
+}
+
 
 
 struct ContentView: View {
@@ -19,52 +40,51 @@ struct ContentView: View {
     
     //MARK: - Body
     var body: some View {
-        
-        ZStack{
-            VStack(alignment: .leading){
-                //Header
-                Header()
-                Divider()
-                HStack {
-                    PositionView()
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
+
+            ZStack{
+                VStack {
+                    Header()
+                    ScrollView {
+                        VStack(alignment: .leading){
+
+                            HStack {
+                                PositionChartView()
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                            }
+                            
+                            HStack{
+                                StatusView()
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                                
+                                CommandView()
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                            }
+                            Spacer()
+
+                        }
+                        
+                    }
                     
-                    DebugView()
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                    
-                }
-                
-                HStack{
-                    StatusView()
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                    
-                    CommandView()
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                }
-                Spacer()
-                Divider()
-                
-                //Buttons
-                HStack {
-                    
-                    CommandButtons()
-                    Button
-                    {
-                        showingActions.toggle()
-                    } label: {
-                        HStack {
-                            Text("Cmds")
-                            Image(systemName: "chevron.up")
+                    //Buttons
+                    HStack {
+                        
+                        CommandButtons()
+                        Button
+                        {
+                            showingActions.toggle()
+                        } label: {
+                            HStack {
+                                Text("Cmds")
+                                Image(systemName: "chevron.up")
+                            }
                         }
                     }
+                    .buttonStyle(.borderedProminent)
+
                 }
-                .buttonStyle(.borderedProminent)
-                
-                Spacer()
             }
             .padding()
             // Actions menu
@@ -75,14 +95,14 @@ struct ContentView: View {
             }
         }
     }
-}
+
 
 
 //MARK: - Preview
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        MainView()
             .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             .environmentObject(API())
     }
@@ -208,6 +228,7 @@ struct Header: View {
     }
 }
 
+
 struct BusyIndicator: View {
     var body: some View {
         ZStack{
@@ -231,8 +252,30 @@ struct BusyIndicator: View {
 
 
 
+struct DebugView: View{
+    
+    @EnvironmentObject var api:API
+    
+    var body: some View {
+        
+        HStack{
+            
+            PositionView()
+                .cornerRadius(10)
+                .shadow(radius: 5)
+            StatesView()
+                .cornerRadius(10)
+                .shadow(radius: 5)
+        }
+        .padding()
+     
+    }
+}
 
-struct PositionView: View {
+
+
+
+struct PositionView: View{
     
     @EnvironmentObject var api:API
     
@@ -247,7 +290,7 @@ struct PositionView: View {
                 ConsoleTextView(text: api.allResponses , autoScroll: true)
             }
         }
-        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
         .padding()
         .background(Color.orange.gradient)
     }
@@ -255,7 +298,7 @@ struct PositionView: View {
 
 
 
-struct DebugView: View {
+struct StatesView: View {
     
     @EnvironmentObject var api:API
     
@@ -300,7 +343,7 @@ struct DebugView: View {
             }
             .font(.system(size: 10))
         }
-        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
         .padding()
         .background(Color.orange.gradient)
     }
@@ -345,7 +388,7 @@ struct StatusView: View {
                 }
             }
         }
-        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
         .padding()
         .background(Color.orange.gradient)
     }
@@ -399,14 +442,13 @@ struct CommandView: View {
             Spacer()
 
         }
-        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
         .padding()
         .background(Color.orange.gradient)
         
     }
         
 }
-
 
 
 struct DeviceListView: View {
@@ -434,3 +476,53 @@ struct DeviceListView: View {
     }
 }
 
+
+
+struct PositionChartView: View {
+   
+    @EnvironmentObject var api:API
+    let pos = PositionChartData.shared
+
+    var body: some View {
+   
+        VStack(alignment: .leading) {
+            HStack {
+                Text("Position Monitor")
+                    .fontWeight(.semibold)
+                VStack(alignment: .leading) {
+                    Text("Current X: \(api.localPosition.xCoord)")
+                    Text("Current Y: \(api.localPosition.yCoord)")
+                        .onChange(of: api.localPosition, perform: { newValue in
+                            pos.fillArray()
+                            print (pos.data)
+                        })
+             
+                            
+                        }
+
+                        
+                .font(.system(size: 9))
+            }
+
+               
+            Divider()
+
+            Chart(pos.data) {
+
+
+                    PointMark(
+                        x: .value("X", $0.x),
+                        y: .value("Y", $0.y)
+                    )
+
+                }
+                .chartYScale(domain: 0...10)
+                .chartXScale(domain: 0...10)
+                .frame(height: 250)
+
+        }
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 260, maxHeight: 260)
+        .padding()
+        .background(Color.orange.gradient)
+    }
+}

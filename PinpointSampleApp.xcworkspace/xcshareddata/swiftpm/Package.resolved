@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "cardflip",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Mcrich23/CardFlip",
+      "state" : {
+        "branch" : "main",
+        "revision" : "969e5b2cab3ea1611b6055e0ef9416e0dde31927"
+      }
+    }
+  ],
+  "version" : 2
+}
