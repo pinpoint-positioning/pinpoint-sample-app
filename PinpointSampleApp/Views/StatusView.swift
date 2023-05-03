@@ -54,7 +54,7 @@ struct StatusView: View {
                 }
             }
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
         .background(Color.orange.gradient)
         .font(.system(size: 10))

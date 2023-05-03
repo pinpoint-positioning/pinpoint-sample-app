@@ -9,6 +9,8 @@ import SwiftUI
 import SDK
 
 struct CommandView: View {
+    @State var interval = ""
+    @State private var showAlert = false
     
     @EnvironmentObject var api:API
     
@@ -48,14 +50,38 @@ struct CommandView: View {
                         api.showMe(tracelet: tracelet)
                     }
                 }
+                
+                Button("SetInterval")
+                {
+                    showAlert = true
+                    
+                }
+                .alert("Interval in n x 250ms", isPresented: $showAlert) {
+                    TextField("n", text: $interval)
+                   
+
+                        Button("Set")
+                        {
+                            showAlert = false
+                            if let interval = Int8(interval) {
+                                api.setPositioningInterval(interval: Int8(interval))
+                            } else {
+                                print("Not an int value")
+                            }
+                            
+                        }
+      
+                    Button("Cancel", role: .cancel) { }
+                }
             }
             
             Spacer()
             
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
         .background(Color.orange.gradient)
+        .font(.system(size: 12))
         
     }
     

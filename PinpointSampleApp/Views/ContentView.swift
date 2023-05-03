@@ -10,10 +10,11 @@ import CoreData
 import CoreBluetooth
 import SDK
 import Charts
-
+import CoreLocation
+import MapKit
 
 struct MainView: View {
-    
+    let locations = AsyncLocationStream()
     var body: some View {
         VStack
         {
@@ -29,12 +30,37 @@ struct MainView: View {
                         Label("Debug", systemImage: "ladybug.fill")
                     }
                 
+                MapView()
+                    .tabItem {
+                        Label("Map", systemImage: "map.fill")
+                    }
+                
             }
             .environmentObject(API.shared)
+            .environmentObject(Wgs84Reference.shared)
         }
+        .padding()
 
     }
 }
+
+
+struct MapView: View {
+    
+    @EnvironmentObject var api:API
+    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 51.507222, longitude: -0.1275), span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
+    
+    //MARK: - Body
+    var body: some View {
+
+        
+        Map(coordinateRegion: $region)
+            
+    }
+}
+
+
+
 
 
 
@@ -45,56 +71,61 @@ struct ContentView: View {
     
     //MARK: - Body
     var body: some View {
-
-            VStack {
-                ScrollView {
-                    VStack(alignment: .leading){
-                        HStack {
-                            PositionMonitor()
-                                .cornerRadius(10)
-                                .shadow(radius: 5)
-                        }                        
-                        HStack{
-                            StatusView()
-                                .blur(radius: api.generalState != .CONNECTED ? 1 : 0)
-                                .overlay(api.generalState != .CONNECTED ? Text("Not connected") : nil)
-                                .cornerRadius(10)
-                                .shadow(radius: 5)
-                                .disabled(api.generalState != .CONNECTED ? true : false )
-                            
-                            CommandView()
-                                .blur(radius: api.generalState != .CONNECTED ? 1 : 0)
-                                .overlay(api.generalState != .CONNECTED ? Text("Not connected") : nil)
-                                .disabled(api.generalState != .CONNECTED ? true : false)
-                                .cornerRadius(10)
-                                .shadow(radius: 5)
-                        }
-                        Spacer()
-                    }
-                }
-                
-                //Buttons
-                HStack {
-                    CommandButtons()
-                    Button
-                    {
-                        showingActions.toggle()
-                    } label: {
-                        HStack {
-                            Text("Cmds")
-                            Image(systemName: "chevron.up")
-                        }
-                }
-                .buttonStyle(.borderedProminent)
-            }
-        }
-            .padding()
         
-        // Actions menu
-        .sheet(isPresented: $showingActions) {
-            ActionsModalView()
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
+        VStack {
+            ScrollView {
+                VStack(alignment: .leading){
+                    HStack {
+                        PositionMonitor()
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                    }
+                    HStack{
+                        StatusView()
+                            .blur(radius: api.generalState != .CONNECTED ? 1 : 0)
+                            .overlay(api.generalState != .CONNECTED ? Text("Not connected")
+                                .fontWeight(.semibold): nil)
+                            
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                            .disabled(api.generalState != .CONNECTED ? true : false )
+                        
+                        CommandView()
+                            .blur(radius: api.generalState != .CONNECTED ? 1 : 0)
+                            .overlay(api.generalState != .CONNECTED ? Text("Not connected")
+                                .fontWeight(.semibold): nil)
+                            .disabled(api.generalState != .CONNECTED ? true : false)
+                            .cornerRadius(10)
+                            .shadow(radius: 5)
+                    }
+                    Spacer()
+                }
+            }
+            
+            
+            //Buttons
+            //                HStack {
+            CommandButtons()
+            //
+            //                    Button
+            //                    {
+            //                        showingActions.toggle()
+            //                    } label: {
+            //                        HStack {
+            //                            Text("Cmds")
+            //                            Image(systemName: "chevron.up")
+            //                        }
+            //                }
+            //                .buttonStyle(.borderedProminent)
+            //            }
+            //        }
+            //            .padding()
+            //
+            //        // Actions menu
+            //        .sheet(isPresented: $showingActions) {
+            //            ActionsModalView()
+            //                .presentationDetents([.medium, .large])
+            //                .presentationDragIndicator(.visible)
         }
     }
 }
@@ -163,7 +194,8 @@ struct CommandButtons:View {
 
 struct ActionsModalView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var api:API    
+    @EnvironmentObject var api:API
+
     
     var body: some View {
         NavigationStack{
@@ -178,7 +210,7 @@ struct ActionsModalView: View {
                 }
                 
                 
-                Button("GetPosition")
+                Button("StartPositioning")
                 {
                     Task {
                         api.requestPosition()
@@ -192,12 +224,18 @@ struct ActionsModalView: View {
                 
                 
                 
-                Button("StopPosition")
+                Button("StopPositioning")
                 {
                     api.stopPositioning()
                     dismiss()
                 }
-                
+
+              Button("SetInterval")
+                {
+                 
+                }
+   
+
                 Button("ShowMe")
                 {
                     if let tracelet = api.connectedTracelet {
@@ -249,6 +287,7 @@ struct DebugView: View{
                 .shadow(radius: 5)
             Spacer()
         }
+        .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 400)
         .padding()
         
     }
@@ -263,7 +302,7 @@ struct PositionView: View{
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Position Monitor")
+            Text("Response Monitor")
                 .fontWeight(.semibold)
             
             Spacer()
@@ -272,7 +311,7 @@ struct PositionView: View{
                 ConsoleTextView(text: api.allResponses , autoScroll: true)
             }
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 500)
         .padding()
         .background(Color.orange.gradient)
     }
