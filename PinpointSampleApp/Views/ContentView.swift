@@ -185,6 +185,15 @@ struct CommandButtons:View {
             .buttonStyle(.bordered)
             .disabled(api.generalState == .CONNECTED ? false : true)
             Spacer()
+            
+            Button("scan")
+            {
+                Task {
+                    let a = await api.scan_new(timeout: 5)
+                    print (a)
+                }
+              
+            }
         }
         .padding()
     }

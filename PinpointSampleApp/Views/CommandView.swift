@@ -51,6 +51,8 @@ struct CommandView: View {
                     }
                 }
                 
+       
+                
                 Button("SetInterval")
                 {
                     showAlert = true
