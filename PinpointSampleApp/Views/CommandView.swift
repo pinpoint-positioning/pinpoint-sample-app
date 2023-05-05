@@ -11,6 +11,7 @@ import SDK
 struct CommandView: View {
     @State var interval = ""
     @State private var showAlert = false
+    @State var showingLogs = false
     
     @EnvironmentObject var api:API
     
@@ -50,6 +51,15 @@ struct CommandView: View {
                         api.showMe(tracelet: tracelet)
                     }
                 }
+                
+                Button(action: {
+                            showingLogs.toggle()
+                        }) {
+                            Text("Show Logger")
+                        }.sheet(isPresented: $showingLogs) {
+                            LogView()
+                        }
+                    
                 
        
                 

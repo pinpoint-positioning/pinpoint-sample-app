@@ -150,6 +150,7 @@ struct CommandButtons:View {
     @EnvironmentObject var api:API
     @State private var showingScanResults = false
     @State private var discoveredDevices:[CBPeripheral] = []
+
     
     var body: some View {
         HStack {
@@ -184,20 +185,51 @@ struct CommandButtons:View {
             }
             .buttonStyle(.bordered)
             .disabled(api.generalState == .CONNECTED ? false : true)
+            
+
             Spacer()
             
-//            Button("scan")
-//            {
-//                Task {
-//                    let a = await api.scan_new(timeout: 5)
-//                    print (a)
-//                }
-//              
-//            }
+  
         }
         .padding()
     }
 }
+
+
+struct BluetoothDeviceList: View {
+    @State var devices: [CBPeripheral] = []
+    @State var devicesTask: Task<[CBPeripheral], Never>?
+    @EnvironmentObject var api:API
+    
+    var body: some View {
+        VStack {
+            List(devices, id: \.self) { device in
+                Text(device.name ?? "Unknown device")
+            }
+            .task {
+                do {
+                    let discoveredDevices = try await api.scanForBluetoothDevices()
+                    DispatchQueue.main.async {
+                        self.devicesTask = nil
+                        self.devices = discoveredDevices
+                    }
+                } catch {
+                    print("Error: \(error)")
+                }
+            }
+            Button("Print Devices") {
+                if !devices.isEmpty {
+                    for device in devices {
+                        print(device)
+                    }
+                } else {
+                    print("No devices found.")
+                }
+            }
+        }
+    }
+}
+
 
 
 
