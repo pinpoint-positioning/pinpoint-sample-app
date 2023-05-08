@@ -101,31 +101,9 @@ struct ContentView: View {
                     Spacer()
                 }
             }
-            
-            
-            //Buttons
-            //                HStack {
+
             CommandButtons()
-            //
-            //                    Button
-            //                    {
-            //                        showingActions.toggle()
-            //                    } label: {
-            //                        HStack {
-            //                            Text("Cmds")
-            //                            Image(systemName: "chevron.up")
-            //                        }
-            //                }
-            //                .buttonStyle(.borderedProminent)
-            //            }
-            //        }
-            //            .padding()
-            //
-            //        // Actions menu
-            //        .sheet(isPresented: $showingActions) {
-            //            ActionsModalView()
-            //                .presentationDetents([.medium, .large])
-            //                .presentationDragIndicator(.visible)
+
         }
     }
 }
@@ -160,9 +138,11 @@ struct CommandButtons:View {
                 {
                     api.stopScan()
                 } else {
-                    showingScanResults.toggle()
                     discoveredDevices = []
+                    showingScanResults.toggle()
+                    
                     api.scan(timeout: 5) { deviceList in
+                        
                         discoveredDevices = deviceList
                     }
                 }
@@ -194,42 +174,6 @@ struct CommandButtons:View {
         .padding()
     }
 }
-
-
-struct BluetoothDeviceList: View {
-    @State var devices: [CBPeripheral] = []
-    @State var devicesTask: Task<[CBPeripheral], Never>?
-    @EnvironmentObject var api:API
-    
-    var body: some View {
-        VStack {
-            List(devices, id: \.self) { device in
-                Text(device.name ?? "Unknown device")
-            }
-            .task {
-                do {
-                    let discoveredDevices = try await api.scanForBluetoothDevices()
-                    DispatchQueue.main.async {
-                        self.devicesTask = nil
-                        self.devices = discoveredDevices
-                    }
-                } catch {
-                    print("Error: \(error)")
-                }
-            }
-            Button("Print Devices") {
-                if !devices.isEmpty {
-                    for device in devices {
-                        print(device)
-                    }
-                } else {
-                    print("No devices found.")
-                }
-            }
-        }
-    }
-}
-
 
 
 

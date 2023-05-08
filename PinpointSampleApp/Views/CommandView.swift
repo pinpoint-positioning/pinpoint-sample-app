@@ -11,7 +11,6 @@ import SDK
 struct CommandView: View {
     @State var interval = ""
     @State private var showAlert = false
-    @State var showingLogs = false
     
     @EnvironmentObject var api:API
     
@@ -52,17 +51,7 @@ struct CommandView: View {
                     }
                 }
                 
-                Button(action: {
-                            showingLogs.toggle()
-                        }) {
-                            Text("Show Logger")
-                        }.sheet(isPresented: $showingLogs) {
-                            LogView()
-                        }
-                    
-                
-       
-                
+
                 Button("SetInterval")
                 {
                     showAlert = true
