@@ -11,8 +11,9 @@ struct LogView: View {
     var body: some View {
         VStack {
             Spacer()
-            Text("Logfile content")
-                .font(.largeTitle)
+            Text("Logfile")
+                .fontWeight(.bold)
+            Divider()
             
             if logFileContents == "" {
                 Spacer()
@@ -46,8 +47,6 @@ struct LogView: View {
                 .foregroundColor(.red)
                 
             }
-            
-            
         }
         .padding()
         .task {

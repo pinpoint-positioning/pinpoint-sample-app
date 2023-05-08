@@ -6,15 +6,53 @@
 //
 
 import SwiftUI
+import SDK
 
-struct SwiftUIView: View {
+struct DebugView: View{
+    
+    @EnvironmentObject var api:API
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        VStack{
+            PositionView()
+                .cornerRadius(10)
+                .shadow(radius: 5)
+            StatesView()
+                .cornerRadius(10)
+                .shadow(radius: 5)
+        }
+        .padding()
+        
     }
 }
 
-struct SwiftUIView_Previews: PreviewProvider {
+
+struct LogPreview: View{
+    
+    @EnvironmentObject var api:API
+    @State private var logView = false
+    
+    var body: some View {
+
+        Button("Show Logfile")
+        {
+            api.openDir()
+            logView = true
+        }
+        .buttonStyle(.bordered)
+        .sheet(isPresented: $logView) {
+            LogView()
+                .presentationDragIndicator(.visible)
+                .presentationDetents([.medium, .large])
+        }
+    }
+}
+
+
+
+struct DebugView_Previews: PreviewProvider {
     static var previews: some View {
-        SwiftUIView()
+        DebugView()
     }
 }

@@ -128,7 +128,7 @@ struct CommandButtons:View {
     @EnvironmentObject var api:API
     @State private var showingScanResults = false
     @State private var discoveredDevices:[CBPeripheral] = []
-    @State private var logView = false
+
 
     
     var body: some View {
@@ -166,21 +166,7 @@ struct CommandButtons:View {
             }
             .buttonStyle(.bordered)
             .disabled(api.generalState == .CONNECTED ? false : true)
-            
 
-            Spacer()
-            
-            Button("Debug Log")
-            {
-                api.openDir()
-                logView = true
-            }
-            .buttonStyle(.bordered)
-            .sheet(isPresented: $logView) {
-                LogView()
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.medium, .large])
-            }
             
   
         }
@@ -270,26 +256,6 @@ struct Header: View {
 }
 
 
-struct DebugView: View{
-    
-    @EnvironmentObject var api:API
-    
-    var body: some View {
-        
-        VStack{
-            PositionView()
-                .cornerRadius(10)
-                .shadow(radius: 5)
-            StatesView()
-                .cornerRadius(10)
-                .shadow(radius: 5)
-            Spacer()
-        }
-        .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 400)
-        .padding()
-        
-    }
-}
 
 
 
@@ -320,14 +286,14 @@ struct PositionView: View{
 struct StatesView: View {
     
     @EnvironmentObject var api:API
+    @State private var logView = false
     
     var body: some View {
         
         VStack(alignment: .leading) {
             Text("Debug Monitor")
                 .fontWeight(.semibold)
-            
-            Spacer()
+
             Divider()
             VStack(alignment: .leading) {
                 HStack {
@@ -357,8 +323,19 @@ struct StatesView: View {
                 }
                 
                 Divider()
-                
-                Spacer()
+
+                Button("Show Logfile")
+                {
+                    api.openDir()
+                    logView = true
+                }
+                .buttonStyle(.bordered)
+                .sheet(isPresented: $logView) {
+                    LogView()
+                        .presentationDragIndicator(.visible)
+                        .presentationDetents([.medium, .large])
+                }
+               
             }
             .font(.system(size: 10))
         }
