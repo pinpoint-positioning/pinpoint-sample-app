@@ -11,6 +11,7 @@ import SDK
 struct CommandView: View {
     @State var interval = ""
     @State private var showAlert = false
+
     
     @EnvironmentObject var api:API
     
@@ -50,6 +51,8 @@ struct CommandView: View {
                         api.showMe(tracelet: tracelet)
                     }
                 }
+                
+ 
                 
 
                 Button("SetInterval")

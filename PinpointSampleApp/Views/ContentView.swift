@@ -128,6 +128,7 @@ struct CommandButtons:View {
     @EnvironmentObject var api:API
     @State private var showingScanResults = false
     @State private var discoveredDevices:[CBPeripheral] = []
+    @State private var logView = false
 
     
     var body: some View {
@@ -168,6 +169,18 @@ struct CommandButtons:View {
             
 
             Spacer()
+            
+            Button("Debug Log")
+            {
+                api.openDir()
+                logView = true
+            }
+            .buttonStyle(.bordered)
+            .sheet(isPresented: $logView) {
+                LogView()
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.medium, .large])
+            }
             
   
         }

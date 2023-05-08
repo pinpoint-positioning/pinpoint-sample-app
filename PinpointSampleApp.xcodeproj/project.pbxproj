@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1113C9D2A08EFF8002C4B35 /* LogView.swift */; };
 		D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112270829B9EF8B00E49993 /* PinpointSampleAppApp.swift */; };
 		D112270B29B9EF8B00E49993 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112270A29B9EF8B00E49993 /* ContentView.swift */; };
 		D112270D29B9EF8C00E49993 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D112270C29B9EF8C00E49993 /* Assets.xcassets */; };
@@ -39,6 +40,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D1113C9D2A08EFF8002C4B35 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		D112270529B9EF8B00E49993 /* PinpointSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinpointSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D112270829B9EF8B00E49993 /* PinpointSampleAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinpointSampleAppApp.swift; sourceTree = "<group>"; };
 		D112270A29B9EF8B00E49993 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				D139E79B29F00FF000E6119E /* CommandView.swift */,
 				D139E79D29F0101E00E6119E /* StatusView.swift */,
 				D1BDBA9E29FBAD3E00167E3F /* TestView.swift */,
+				D1113C9D2A08EFF8002C4B35 /* LogView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 				D1BDBA9F29FBAD3E00167E3F /* TestView.swift in Sources */,
 				D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
+				D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */,
 				D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
