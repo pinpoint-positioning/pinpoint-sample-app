@@ -10,7 +10,9 @@ import SDK
 
 struct CommandView: View {
     @State var interval = ""
-    @State private var showAlert = false
+    @State private var showIntervalSettings = false
+    @State private var showResponseAlert = false
+    @State private var version = ""
 
     
     @EnvironmentObject var api:API
@@ -42,9 +44,18 @@ struct CommandView: View {
                 
                 Button("GetVersion")
                 {
-                    api.requestVersion()
+                    api.requestVersion { version in
+                        self.version = version
+                        showResponseAlert = true
+                    }
+                    
+                  
                 }
-                
+                .alert("Version", isPresented: $showResponseAlert) {}
+                 message: {
+                    Text(version)
+                }
+           
                 Button("ShowMe")
                 {
                     if let tracelet = api.connectedTracelet {
@@ -57,16 +68,16 @@ struct CommandView: View {
 
                 Button("SetInterval")
                 {
-                    showAlert = true
+                    showIntervalSettings = true
                     
                 }
-                .alert("Interval in n x 250ms", isPresented: $showAlert) {
+                .alert("Interval in n x 250ms", isPresented: $showIntervalSettings) {
                     TextField("n", text: $interval)
                    
 
                         Button("Set")
                         {
-                            showAlert = false
+                            showIntervalSettings = false
                             if let interval = Int8(interval) {
                                 api.setPositioningInterval(interval: Int8(interval))
                             } else {

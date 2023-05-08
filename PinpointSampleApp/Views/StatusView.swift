@@ -46,8 +46,7 @@ struct StatusView: View {
                 Button()
                 {
                     api.requestStatus()
-                    print (api.status)
-                    api.requestVersion()
+
                 } label:
                 {
                     Image(systemName: "arrow.triangle.2.circlepath")
