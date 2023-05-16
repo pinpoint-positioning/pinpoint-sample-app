@@ -55,7 +55,8 @@ struct StatusView: View {
         }
         .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
-        .background(Color.orange.gradient)
+        .background(Color("pinpoint_background"))
+        .foregroundColor(Color("pinpoint_gray"))
         .font(.system(size: 10))
     }
 }

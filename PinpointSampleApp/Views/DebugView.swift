@@ -13,17 +13,18 @@ struct DebugView: View{
     @EnvironmentObject var api:API
     
     var body: some View {
-        
-        VStack{
-            PositionView()
-                .cornerRadius(10)
-                .shadow(radius: 5)
-            StatesView()
-                .cornerRadius(10)
-                .shadow(radius: 5)
+        NavigationStack{
+            VStack{
+                PositionView()
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
+                StatesView()
+                    .cornerRadius(10)
+                    .shadow(radius: 2)
+            }
+            .padding()
+            
         }
-        .padding()
-        
     }
 }
 
@@ -54,5 +55,6 @@ struct LogPreview: View{
 struct DebugView_Previews: PreviewProvider {
     static var previews: some View {
         DebugView()
+        LogPreview()
     }
 }

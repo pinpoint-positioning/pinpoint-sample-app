@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
-      "identity" : "cardflip",
+      "identity" : "filepicker",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Mcrich23/CardFlip",
+      "location" : "https://github.com/markrenaud/FilePicker",
       "state" : {
-        "branch" : "main",
-        "revision" : "969e5b2cab3ea1611b6055e0ef9416e0dde31927"
+        "revision" : "720f8cb5ca0c0efc982ed381afc84ba3e8b3214e",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "zipfoundation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/weichsel/ZIPFoundation",
+      "state" : {
+        "revision" : "43ec568034b3731101dbf7670765d671c30f54f3",
+        "version" : "0.9.16"
       }
     }
   ],

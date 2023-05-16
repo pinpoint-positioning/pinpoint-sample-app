@@ -20,8 +20,7 @@ struct PositionMonitor: View {
     @State var test = ""
     @State var xScale = 20
     @State var yScale = 20
-    
-    
+    @Binding var siteFile:SiteFile?
     
     
     var body: some View {
@@ -34,7 +33,6 @@ struct PositionMonitor: View {
                             let loc = AsyncLocationStream.shared
                             
                             for await location in loc.stream {
-                                print ("hier")
                                 print(location.xCoord)
                             }
                         }
@@ -67,10 +65,8 @@ struct PositionMonitor: View {
                     }
                     .alert("Graph settings", isPresented: $showAlert) {
                         
-      
-                            TextField("X-scale: \(xScale)", value: $xScale, format: .number)
-                
-                  
+                        
+                        TextField("X-scale: \(xScale)", value: $xScale, format: .number)
                         
                         TextField("Y-scale: \(yScale)", value: $yScale, format: .number)
                         
@@ -83,7 +79,6 @@ struct PositionMonitor: View {
                     
                 }
             }
-            
             
             
             Divider()
@@ -99,27 +94,27 @@ struct PositionMonitor: View {
             .chartYScale(domain: 0...yScale)
             .chartXScale(domain: 0...xScale)
             .frame(height: 250)
-            //            .overlay {
-            //                Image("roomplan")
-            //                    .resizable()
-            //                    .opacity(0.5)
-            //
-            //
-            //            }
+            .foregroundColor(Color("pinpoint_orange"))
+            .overlay(siteFile != nil ? Image(uiImage:SiteFileManager().getFloorImage()!).resizable() .opacity(0.5) : nil)
             
         }
+        
+        
+        
+        
         .frame(minWidth: 0, maxWidth: 400, minHeight: 260, maxHeight: 260)
         .padding()
-        .background(Color.orange.gradient)
+        .background(Color("pinpoint_background"))
+        .foregroundColor(Color("pinpoint_gray"))
+        
+        
     }
 }
 
 
-
-
-struct PositionMonitor_Previews: PreviewProvider {
-    static var previews: some View {
-        PositionMonitor()
-            .environmentObject(API())
-    }
-}
+//struct PositionMonitor_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PositionMonitor()
+//            .environmentObject(API())
+//    }
+//}

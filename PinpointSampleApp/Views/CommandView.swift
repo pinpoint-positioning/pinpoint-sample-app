@@ -13,6 +13,7 @@ struct CommandView: View {
     @State private var showIntervalSettings = false
     @State private var showResponseAlert = false
     @State private var version = ""
+  
 
     
     @EnvironmentObject var api:API
@@ -73,8 +74,6 @@ struct CommandView: View {
                 }
                 .alert("Interval in n x 250ms", isPresented: $showIntervalSettings) {
                     TextField("n", text: $interval)
-                   
-
                         Button("Set")
                         {
                             showIntervalSettings = false
@@ -89,15 +88,18 @@ struct CommandView: View {
                     Button("Cancel", role: .cancel) { }
                 }
             }
+ 
+         
             
             Spacer()
             
         }
         .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
         .padding()
-        .background(Color.orange.gradient)
+        .background(Color("pinpoint_background"))
+        .foregroundColor(Color("pinpoint_gray"))
         .font(.system(size: 12))
-        
+ 
     }
     
 }

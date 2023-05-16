@@ -9,6 +9,7 @@ struct LogView: View {
     @State private var isShowingMailView = false
     
     var body: some View {
+        
         VStack {
             Spacer()
             Text("Logfile")
@@ -28,15 +29,22 @@ struct LogView: View {
                 }
                 .padding()
             }
-   
+            
             
             
             HStack {
-                Button("Send LogFile via mail") {
+                ShareLink("Share logfile", item: logFileContents)
+                    .buttonStyle(.bordered)
+                
+                
+                Button("eMail logfile") {
                     isShowingMailView = true
-                    
                 }
                 .buttonStyle(.bordered)
+                
+                
+                
+                
                 
                 Button("Clear Log") {
                     
@@ -48,6 +56,7 @@ struct LogView: View {
                 
             }
         }
+        
         .padding()
         .task {
             do {

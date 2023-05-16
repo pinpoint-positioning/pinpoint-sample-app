@@ -10,19 +10,22 @@
 		D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1113C9D2A08EFF8002C4B35 /* LogView.swift */; };
 		D1113CA02A090793002C4B35 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1113C9F2A090793002C4B35 /* DebugView.swift */; };
 		D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112270829B9EF8B00E49993 /* PinpointSampleAppApp.swift */; };
-		D112270B29B9EF8B00E49993 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112270A29B9EF8B00E49993 /* ContentView.swift */; };
+		D112270B29B9EF8B00E49993 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112270A29B9EF8B00E49993 /* MainView.swift */; };
 		D112270D29B9EF8C00E49993 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D112270C29B9EF8C00E49993 /* Assets.xcassets */; };
 		D112271029B9EF8C00E49993 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D112270F29B9EF8C00E49993 /* Preview Assets.xcassets */; };
 		D112271229B9EF8C00E49993 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112271129B9EF8C00E49993 /* Persistence.swift */; };
 		D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D112271329B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld */; };
 		D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112272129BA005D00E49993 /* ConsoleTextView.swift */; };
-		D139E79629EE7F8300E6119E /* CardFlip in Frameworks */ = {isa = PBXBuildFile; productRef = D139E79529EE7F8300E6119E /* CardFlip */; };
+		D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12462A72A0B8DE900CCFF50 /* Colors.swift */; };
+		D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12462A92A0B948500CCFF50 /* ScanButton.swift */; };
+		D1381A192A0E416C00DF8141 /* FilePicker in Frameworks */ = {isa = PBXBuildFile; productRef = D1381A182A0E416C00DF8141 /* FilePicker */; };
 		D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79729EEA56800E6119E /* PositionChartData.swift */; };
 		D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79929F00F2D00E6119E /* PositionMonitor.swift */; };
 		D139E79C29F00FF000E6119E /* CommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79B29F00FF000E6119E /* CommandView.swift */; };
 		D139E79E29F0101E00E6119E /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79D29F0101E00E6119E /* StatusView.swift */; };
 		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
 		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B56BBA2A125B6B00C074F4 /* MapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,18 +47,21 @@
 		D1113C9F2A090793002C4B35 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		D112270529B9EF8B00E49993 /* PinpointSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinpointSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D112270829B9EF8B00E49993 /* PinpointSampleAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinpointSampleAppApp.swift; sourceTree = "<group>"; };
-		D112270A29B9EF8B00E49993 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D112270A29B9EF8B00E49993 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D112270C29B9EF8C00E49993 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D112270F29B9EF8C00E49993 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D112271129B9EF8C00E49993 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		D112271429B9EF8C00E49993 /* PinpointSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PinpointSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		D112272129BA005D00E49993 /* ConsoleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTextView.swift; sourceTree = "<group>"; };
+		D12462A72A0B8DE900CCFF50 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = PinpointSampleApp/Views/Colors.swift; sourceTree = SOURCE_ROOT; };
+		D12462A92A0B948500CCFF50 /* ScanButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanButton.swift; sourceTree = "<group>"; };
 		D139E79729EEA56800E6119E /* PositionChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionChartData.swift; sourceTree = "<group>"; };
 		D139E79929F00F2D00E6119E /* PositionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionMonitor.swift; sourceTree = "<group>"; };
 		D139E79B29F00FF000E6119E /* CommandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandView.swift; sourceTree = "<group>"; };
 		D139E79D29F0101E00E6119E /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19576BE29F7A6880072576F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D1B56BBA2A125B6B00C074F4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,8 +69,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1381A192A0E416C00DF8141 /* FilePicker in Frameworks */,
 				D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */,
-				D139E79629EE7F8300E6119E /* CardFlip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,13 +121,15 @@
 		D1569D8F29BA214F00D0E578 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D112270A29B9EF8B00E49993 /* ContentView.swift */,
+				D112270A29B9EF8B00E49993 /* MainView.swift */,
 				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
 				D139E79929F00F2D00E6119E /* PositionMonitor.swift */,
 				D139E79B29F00FF000E6119E /* CommandView.swift */,
 				D139E79D29F0101E00E6119E /* StatusView.swift */,
 				D1113C9D2A08EFF8002C4B35 /* LogView.swift */,
 				D1113C9F2A090793002C4B35 /* DebugView.swift */,
+				D12462A92A0B948500CCFF50 /* ScanButton.swift */,
+				D1B56BBA2A125B6B00C074F4 /* MapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -137,6 +145,7 @@
 		D1569D9129BA217600D0E578 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D12462A72A0B8DE900CCFF50 /* Colors.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -167,7 +176,7 @@
 			);
 			name = PinpointSampleApp;
 			packageProductDependencies = (
-				D139E79529EE7F8300E6119E /* CardFlip */,
+				D1381A182A0E416C00DF8141 /* FilePicker */,
 			);
 			productName = PinpointSampleApp;
 			productReference = D112270529B9EF8B00E49993 /* PinpointSampleApp.app */;
@@ -198,7 +207,7 @@
 			);
 			mainGroup = D11226FC29B9EF8B00E49993;
 			packageReferences = (
-				D139E79429EE7F8300E6119E /* XCRemoteSwiftPackageReference "CardFlip" */,
+				D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */,
 			);
 			productRefGroup = D112270629B9EF8B00E49993 /* Products */;
 			projectDirPath = "";
@@ -227,10 +236,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				D112271229B9EF8C00E49993 /* Persistence.swift in Sources */,
-				D112270B29B9EF8B00E49993 /* ContentView.swift in Sources */,
+				D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */,
+				D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */,
+				D112270B29B9EF8B00E49993 /* MainView.swift in Sources */,
 				D1113CA02A090793002C4B35 /* DebugView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
 				D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */,
+				D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */,
 				D139E79E29F0101E00E6119E /* StatusView.swift in Sources */,
 				D139E79C29F00FF000E6119E /* CommandView.swift in Sources */,
 				D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */,
@@ -362,6 +374,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PinpointSampleApp/Preview Content\"";
@@ -373,6 +386,7 @@
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "I need BT";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location needed for app to work";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Location needed for app to work";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -382,8 +396,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample2;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -395,6 +410,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PinpointSampleApp/Preview Content\"";
@@ -406,6 +422,7 @@
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "I need BT";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location needed for app to work";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Location needed for app to work";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -415,8 +432,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample2;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -447,21 +465,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		D139E79429EE7F8300E6119E /* XCRemoteSwiftPackageReference "CardFlip" */ = {
+		D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Mcrich23/CardFlip";
+			repositoryURL = "https://github.com/markrenaud/FilePicker";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D139E79529EE7F8300E6119E /* CardFlip */ = {
+		D1381A182A0E416C00DF8141 /* FilePicker */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D139E79429EE7F8300E6119E /* XCRemoteSwiftPackageReference "CardFlip" */;
-			productName = CardFlip;
+			package = D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */;
+			productName = FilePicker;
 		};
 /* End XCSwiftPackageProductDependency section */
 
