@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10FED9B2A14CD8300DC344E /* ConfigView.swift */; };
+		D10FED9E2A14F86500DC344E /* SitesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10FED9D2A14F86500DC344E /* SitesList.swift */; };
 		D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1113C9D2A08EFF8002C4B35 /* LogView.swift */; };
 		D1113CA02A090793002C4B35 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1113C9F2A090793002C4B35 /* DebugView.swift */; };
 		D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112270829B9EF8B00E49993 /* PinpointSampleAppApp.swift */; };
@@ -22,7 +24,7 @@
 		D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79729EEA56800E6119E /* PositionChartData.swift */; };
 		D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79929F00F2D00E6119E /* PositionMonitor.swift */; };
 		D139E79C29F00FF000E6119E /* CommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79B29F00FF000E6119E /* CommandView.swift */; };
-		D139E79E29F0101E00E6119E /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79D29F0101E00E6119E /* StatusView.swift */; };
+		D139E79E29F0101E00E6119E /* SiteFileInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */; };
 		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
 		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B56BBA2A125B6B00C074F4 /* MapView.swift */; };
@@ -43,6 +45,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D10FED9B2A14CD8300DC344E /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
+		D10FED9D2A14F86500DC344E /* SitesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SitesList.swift; sourceTree = "<group>"; };
 		D1113C9D2A08EFF8002C4B35 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		D1113C9F2A090793002C4B35 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		D112270529B9EF8B00E49993 /* PinpointSampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PinpointSampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,7 +62,7 @@
 		D139E79729EEA56800E6119E /* PositionChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionChartData.swift; sourceTree = "<group>"; };
 		D139E79929F00F2D00E6119E /* PositionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionMonitor.swift; sourceTree = "<group>"; };
 		D139E79B29F00FF000E6119E /* CommandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandView.swift; sourceTree = "<group>"; };
-		D139E79D29F0101E00E6119E /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
+		D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteFileInformationView.swift; sourceTree = "<group>"; };
 		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19576BE29F7A6880072576F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D1B56BBA2A125B6B00C074F4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
@@ -125,11 +129,13 @@
 				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
 				D139E79929F00F2D00E6119E /* PositionMonitor.swift */,
 				D139E79B29F00FF000E6119E /* CommandView.swift */,
-				D139E79D29F0101E00E6119E /* StatusView.swift */,
+				D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */,
 				D1113C9D2A08EFF8002C4B35 /* LogView.swift */,
 				D1113C9F2A090793002C4B35 /* DebugView.swift */,
 				D12462A92A0B948500CCFF50 /* ScanButton.swift */,
 				D1B56BBA2A125B6B00C074F4 /* MapView.swift */,
+				D10FED9B2A14CD8300DC344E /* ConfigView.swift */,
+				D10FED9D2A14F86500DC344E /* SitesList.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -241,13 +247,15 @@
 				D112270B29B9EF8B00E49993 /* MainView.swift in Sources */,
 				D1113CA02A090793002C4B35 /* DebugView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
+				D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */,
 				D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */,
 				D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */,
-				D139E79E29F0101E00E6119E /* StatusView.swift in Sources */,
+				D139E79E29F0101E00E6119E /* SiteFileInformationView.swift in Sources */,
 				D139E79C29F00FF000E6119E /* CommandView.swift in Sources */,
 				D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
 				D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */,
+				D10FED9E2A14F86500DC344E /* SitesList.swift in Sources */,
 				D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

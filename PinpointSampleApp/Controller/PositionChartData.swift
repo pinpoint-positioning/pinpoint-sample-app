@@ -23,12 +23,13 @@ class PositionChartData {
     
     func getData(completion: @escaping  ((TL_PositionResponse) -> Void)) {
         
-        api.freezeBuffer { buffer in
+        Task {
+            let buffer = await api.freezeBuffer()
             for message in buffer {
-
+                
                 if (self.api.getCmdByte(from: message.message) == ProtocolConstants.cmdCodePosition)  {
                     completion(TraceletResponse().GetPositionResponse(from: message.message))
-
+                    
                 }
                 
             }

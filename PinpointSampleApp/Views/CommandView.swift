@@ -12,89 +12,64 @@ struct CommandView: View {
     @State var interval = ""
     @State private var showIntervalSettings = false
     @State private var showResponseAlert = false
+    @State private var showChannelAlert = false
     @State private var version = ""
-  
+    @State private var channel:Int8 = 5
 
-    
+
     @EnvironmentObject var api:API
     
     
     var body: some View {
-        
-        VStack(alignment: .leading) {
-            Text("Commands")
-                .fontWeight(.semibold)
-            Divider()
-            
-            VStack (alignment: .leading,  spacing: 6) {
-                Button("GetStatus")
-                {
-                    api.requestStatus()
-                }
+
+            HStack (alignment: .top,  spacing: 6) {
                 
-                Button("StartPositioning")
+                Button()
                 {
                     api.requestPosition()
                     
+                } label: {
+                    VStack {
+                        Image(systemName: "play.fill")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                        Text("Start")
+                    }
                 }
                 
-                Button("StopPositioning")
+                Button()
                 {
                     api.stopPositioning()
+                }  label: {
+                    VStack {
+                        Image(systemName: "stop.fill")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                        Text("Stop")
+                    }
                 }
                 
-                Button("GetVersion")
-                {
-                    api.requestVersion { version in
-                        self.version = version
-                        showResponseAlert = true
-                    }
-                    
-                  
-                }
-                .alert("Version", isPresented: $showResponseAlert) {}
-                 message: {
-                    Text(version)
-                }
-           
-                Button("ShowMe")
+             
+                Button()
                 {
                     if let tracelet = api.connectedTracelet {
                         api.showMe(tracelet: tracelet)
                     }
+                } label: {
+                    VStack {
+                        Image(systemName: "eye.fill")
+                            .resizable()
+                            .frame(width: 20, height: 15)
+                        Text("Show")
+                    }
                 }
                 
- 
                 
-
-                Button("SetInterval")
-                {
-                    showIntervalSettings = true
-                    
-                }
-                .alert("Interval in n x 250ms", isPresented: $showIntervalSettings) {
-                    TextField("n", text: $interval)
-                        Button("Set")
-                        {
-                            showIntervalSettings = false
-                            if let interval = Int8(interval) {
-                                api.setPositioningInterval(interval: Int8(interval))
-                            } else {
-                                print("Not an int value")
-                            }
-                            
-                        }
       
-                    Button("Cancel", role: .cancel) { }
-                }
             }
- 
-         
-            
-            Spacer()
-            
-        }
-        .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
+
+        
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .padding()
         .background(Color("pinpoint_background"))
         .foregroundColor(Color("pinpoint_gray"))

@@ -24,7 +24,7 @@ struct IdentifiablePlace: Identifiable {
 }
 
 struct MapView: View {
-    @State var siteFile:SiteFile
+    @State var siteFile:SiteData
     
     
     @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 54.91425792453898, longitude: 23.86846932733282), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
@@ -37,18 +37,7 @@ struct MapView: View {
         
         VStack{
 
-        Map(coordinateRegion: $region,
-            annotationItems: [place]
-        ) { place in
-            MapAnnotation(coordinate: place.location) {
-           
-                if let image = SiteFileManager().getFloorImage() {
-                    Image(uiImage: image)
-                        .frame(width: 20, height: 20)
-                        
-                }
-            }
-        }
+        Map(coordinateRegion: $region)
     }
         
         .task {

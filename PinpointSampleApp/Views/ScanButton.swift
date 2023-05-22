@@ -13,7 +13,7 @@ struct ScanButton:View {
     @EnvironmentObject var api:API
     @State private var showingScanResults = false
     @State private var discoveredDevices:[CBPeripheral] = []
-    @State var yOffset = -50.0
+    @State var yOffset = -40.0
     @State var buttonText = ""
 
     
@@ -23,7 +23,7 @@ struct ScanButton:View {
         ZStack {
             
             Rectangle()
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 100, maxHeight: 100)
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 80, maxHeight: 80)
                 .ignoresSafeArea()
                 .foregroundColor(CustomColor.pinpoint_gray)
             
@@ -42,7 +42,7 @@ struct ScanButton:View {
                     discoveredDevices = []
                     showingScanResults.toggle()
                     
-                    api.scan(timeout: 5) { deviceList in
+                    api.scan(timeout: 3) { deviceList in
                         
                         discoveredDevices = deviceList
                     }
@@ -80,14 +80,12 @@ struct ScanButton:View {
                             }
                             if (api.generalState == .CONNECTED )
                             {
-                                Image(systemName: "link")
+                                Image("disconnected-chains")
                                     .resizable()
                                     .scaledToFit()
                                     .foregroundColor(.red)
                                     .offset(y:yOffset)
-                                    .frame(width: 60)
-                                
-                                    .padding(EdgeInsets(top: 5 , leading: 5, bottom: 5, trailing: 5))
+                                    .padding(EdgeInsets(top: 10 , leading: 10, bottom: 10, trailing: 10))
                                     .task {
                                         buttonText = "Disconnect"
                                     }
