@@ -28,6 +28,7 @@
 		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
 		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B56BBA2A125B6B00C074F4 /* MapView.swift */; };
+		D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,6 +67,7 @@
 		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19576BE29F7A6880072576F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D1B56BBA2A125B6B00C074F4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionViewFullScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +138,7 @@
 				D1B56BBA2A125B6B00C074F4 /* MapView.swift */,
 				D10FED9B2A14CD8300DC344E /* ConfigView.swift */,
 				D10FED9D2A14F86500DC344E /* SitesList.swift */,
+				D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D112271229B9EF8C00E49993 /* Persistence.swift in Sources */,
+				D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */,
 				D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */,
 				D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */,
 				D112270B29B9EF8B00E49993 /* MainView.swift in Sources */,
@@ -390,14 +394,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinpointSampleApp/Info.plist;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "I need BT";
-				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "I need BT";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to connect to the tracelet";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location needed for app to work";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Location needed for app to work";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -426,14 +430,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinpointSampleApp/Info.plist;
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "I need BT";
-				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "I need BT";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to connect to the tracelet";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location needed for app to work";
 				INFOPLIST_KEY_NSLocationUsageDescription = "Location needed for app to work";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

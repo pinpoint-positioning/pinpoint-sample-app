@@ -22,7 +22,7 @@ struct CommandView: View {
     
     var body: some View {
 
-            HStack (alignment: .top,  spacing: 6) {
+            HStack (alignment: .top,  spacing: 50) {
                 
                 Button()
                 {

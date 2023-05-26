@@ -27,7 +27,7 @@ struct ConfigView: View {
                     Section(header: Text("Tracelet Info")) {
 
                             ListItem(header: "Adress", subText: $status.address, symbol: "tag.fill")
-                            ListItem(header: "Role", subText: $role, symbol: "person.fill")
+                        ListItem(header: "Role", subText: .constant(role), symbol: "person.fill")
                             ListItem(header: "Version", subText: $version, symbol: "info.circle.fill")
        
                     }
@@ -102,22 +102,30 @@ struct ConfigView: View {
             }
             
  
-            
-            Button("Read Tracelet config") {
-                Task {
-                    
-                    if let status = await api.getStatus() {
-                        self.status = status
-                    }
-                    
-                    if let version = await api.getVersion() {
-                        self.version = version
-                    }
-                }
-            }
+
         }
         .navigationTitle("Tracelet Configuration")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                
+                Button() {
+                    Task {
+                        
+                        if let status = await api.getStatus() {
+                            self.status = status
+                        }
+                        
+                        if let version = await api.getVersion() {
+                            self.version = version
+                        }
+                    }
+                } label: {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                }
+            }
+        }
+                
     }
 }
 

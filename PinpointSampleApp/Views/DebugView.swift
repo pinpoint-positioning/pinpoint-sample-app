@@ -21,6 +21,7 @@ struct DebugView: View{
                 StatesView()
                     .cornerRadius(10)
                     .shadow(radius: 2)
+                Spacer()
             }
             .padding()
             

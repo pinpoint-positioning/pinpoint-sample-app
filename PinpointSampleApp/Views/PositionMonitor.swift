@@ -24,14 +24,18 @@ struct PositionMonitor: View {
     @State var yScale = 20.0
     @Binding var imgH:Int
     @Binding var imgW:Int
+    
+    // Zoom
+    @State private var currentAmount = 0.0
+     @State private var finalAmount = 1.0
+    
+
 
     func setScales (h:Double, w:Double, mapRes:Double) {
         
         DispatchQueue.main.async {
             yScale = (Double(imgH)/mapRes)
             xScale = (Double(imgW)/mapRes)
-            print ("imgh \(imgH) imgw \(imgW)")
-            print ("scales x \(xScale), y \(yScale)")
         }
    
     }
@@ -39,24 +43,7 @@ struct PositionMonitor: View {
     
     
     var body: some View {
-        
-        let floorPlan = 
-            
-            GeometryReader { geo in
-                
-                Image(uiImage:SiteFileManager().getFloorImage(siteFileName: siteFileName) ?? UIImage())
-                    .resizable()
-                    .opacity(0.5)
-                
-                let _ = print (geo.size)
-                let _ = setScales(h: geo.size.height, w: geo.size.width, mapRes: 39.0)
-                let _ = print (Int(geo.size.height),Int(geo.size.width) )
-            }
-        
-        
-        
 
-        
         VStack(alignment: .leading) {
             HStack {
                 if let siteFile = siteFile {
@@ -78,7 +65,7 @@ struct PositionMonitor: View {
                     .alert("Graph settings", isPresented: $showAlert) {
                         TextField("X-scale: \(xScale)", value: $xScale, format: .number)
                         TextField("Y-scale: \(yScale)", value: $yScale, format: .number)
-
+                        
                         Button("OK", action: {})
                         
                     } message: {
@@ -86,8 +73,16 @@ struct PositionMonitor: View {
                     }
                     
                 }
+                
+                NavigationLink {
+                    PositionViewFullScreen(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW)
+                } label: {
+                    Image(systemName: "map")
+                }
+                
             }
 
+            
             Chart(pos.data) {
                 
                 PointMark(
@@ -98,18 +93,31 @@ struct PositionMonitor: View {
             }
             .chartYScale(domain: 0...yScale)
             .chartXScale(domain: 0...xScale)
-            .frame(height: 250)
             .foregroundColor(Color("pinpoint_orange"))
-            .overlay(siteFile != nil ? floorPlan : nil)
+         //   .overlay(siteFile != nil ? floorPlan : nil)
             
             
             .onChange(of: api.localPosition, perform: { newValue in
                 pos.fillArray()
             })
 
+            
+            .scaleEffect(finalAmount + currentAmount)
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { amount in
+                        currentAmount = amount - 1
+                    }
+                    .onEnded { amount in
+                        finalAmount += currentAmount
+                        currentAmount = 0
+                    }
+            )
+        
+
         }
 
-        .frame(minWidth: 0, maxWidth: 400, minHeight: 260, maxHeight: 260)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 300, maxHeight:.infinity)
         .padding()
         .background(Color("pinpoint_background"))
         .foregroundColor(Color("pinpoint_gray"))

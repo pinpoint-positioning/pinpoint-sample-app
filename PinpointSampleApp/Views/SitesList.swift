@@ -19,20 +19,22 @@ struct SitesList: View {
     @Binding var siteFileName:String
     @State var selection:String?
     @State var showImporter = false
-
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     var body: some View {
-        
         VStack {
             List(list, id: \.self, selection: $selection) { item in
-                Button(item) {
+                let siteInfo = sfm.loadJson(siteFileName: item)
+                Button() {
                     image = sfm.getFloorImage(siteFileName: item) ?? UIImage()
                     imgH = image.cgImage?.height ?? 0
                     imgW = image.cgImage?.width ?? 0
                     
                     if let selection = selection {
                         siteFileName = selection
+                        
                     }
-                   
+                       
                     
                     
                     if let siteFile = sfm.loadJson(siteFileName: item){
@@ -40,13 +42,76 @@ struct SitesList: View {
                         self.siteFileName = item
                         
                     }
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(item)
+                                .fontWeight((siteFileName == item) ? .bold : .regular )
+                                
+                            Text("Resolution: \(siteInfo?.map.mapFileRes ?? 0)")
+                                .font(.system(size: 10))
+                            
+                            
+                            Text("Site ID: \(siteInfo?.map.mapSiteId ?? "unknown")")
+                                .font(.system(size: 10))
+                            Text("UWB-Channel: \(siteInfo?.map.uwbChannel ?? 0)")
+                                .font(.system(size: 10))
+                        }
+                       
+                        
+                        Spacer()
+                        Image(uiImage: sfm.getFloorImage(siteFileName: item) ?? UIImage())
+                            .resizable()
+                            .scaledToFit()
+                            .frame(minWidth: 0, maxWidth: 100, minHeight: 80, maxHeight: 80)
+                    }
+                    
                 }
-                
+               
             }
+          
+
             .task {
                 list = sfm.getSitefilesList()
+                
+            }
+            
+            //Load Button
+            Spacer()
+            
+            Button("Load SiteFile") {
+                presentationMode.wrappedValue.dismiss()
+            }
+            .buttonStyle(.bordered)
+            
+            
+            
+        }
+        .navigationTitle("Import SiteFile")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                
+                // Import SiteFile
+                Button() {
+                    showImporter = true
+                } label: {
+                    Image(systemName: "square.and.arrow.down")
+                }
+                
+                
+                
+                // Delete all SiteFiles
+                Button() {
+                    clearCache()
+                } label: {
+                    Image(systemName: "xmark.bin")
+                }
+                
+                
             }
         }
+        
         .fileImporter(
             isPresented: $showImporter,
             allowedContentTypes: [.zip],
@@ -74,7 +139,7 @@ struct SitesList: View {
                         if let sfContent = sfm.loadJson(siteFileName: "sitedata.json") {
                             siteFile = sfContent
                         }
-   
+                        
                     } else {
                         print("error saving file")
                         let error = NSError(domain:"Error saving file", code:1001, userInfo:nil)
@@ -91,25 +156,9 @@ struct SitesList: View {
             
         }
         
-        Image(uiImage: image)
-            .resizable()
-            .frame(minWidth: 0, maxWidth: 200, minHeight: 0, maxHeight: 200)
-            .shadow(radius: 2)
         
+
         
-        
-        Button("Import SiteFile") {
-            showImporter = true
-        }
-        .buttonStyle(.bordered)
-        
-        
-        
-        
-        Button("Clear all sitefiles") {
-            clearCache()
-        }
-        .buttonStyle(.bordered)
         
     }
     

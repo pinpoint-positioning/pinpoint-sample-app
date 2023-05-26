@@ -40,7 +40,8 @@ struct MainView: View {
                             PositionMonitor(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW)
                                 .cornerRadius(10)
                                 .shadow(radius: 2)
-                            
+                        
+                        
                                 SiteFileInformationView(siteFile: $siteFile)
                                     .cornerRadius(10)
                                     .shadow(radius: 2)
@@ -150,9 +151,11 @@ struct PositionView: View{
                 ConsoleTextView(text: api.allResponses , autoScroll: true)
             }
         }
-        .frame(minWidth: 0, maxWidth: 400, minHeight: 0, maxHeight: 500)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .padding()
-        .background(CustomColor.pinpoint_background)
+        .background(Color("pinpoint_background"))
+        .foregroundColor(Color("pinpoint_gray"))
+
     }
 }
 
@@ -214,8 +217,10 @@ struct StatesView: View {
             }
             .font(.system(size: 10))
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 200)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .padding()
+        .background(Color("pinpoint_background"))
+        .foregroundColor(Color("pinpoint_gray"))
     }
 }
 
