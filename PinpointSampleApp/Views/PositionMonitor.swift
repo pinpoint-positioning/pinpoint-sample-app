@@ -12,68 +12,59 @@ import SDK
 struct PositionMonitor: View {
     
     @EnvironmentObject var api:API
-    @EnvironmentObject var wgs84:Wgs84Reference
+    @Binding var siteFile:SiteData?
+    @Binding var siteFileName:String
     
     let pos = PositionChartData.shared
     @State private var showAlert = false
     @State var task: Task<Void, Never>? = nil
     @State var test = ""
-    @State var xScale = 20
-    @State var yScale = 20
+    @State var xScale = 20.0
+    @State var yScale = 20.0
+    @Binding var imgH:Int
+    @Binding var imgW:Int
     
+    // Zoom
+    @State private var currentAmount = 0.0
+     @State private var finalAmount = 1.0
+    
+
+
+    func setScales (h:Double, w:Double, mapRes:Double) {
+        
+        DispatchQueue.main.async {
+            yScale = (Double(imgH)/mapRes)
+            xScale = (Double(imgW)/mapRes)
+        }
+   
+    }
     
     
     
     var body: some View {
+
         VStack(alignment: .leading) {
             HStack {
-                Text("Position Monitor")
-                    .onTapGesture {
-                        task = Task {
-                            
-                            let loc = AsyncLocationStream.shared
-                            
-                            for await location in loc.stream {
-                                print ("hier")
-                                print(location.xCoord)
-                            }
-                        }
-                    }
-                
-                    .fontWeight(.semibold)
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        
-                        Text( String(format: "Current X: %.1f", api.localPosition.xCoord))
-                        Text( String(format: "Current Y: %.1f", api.localPosition.yCoord))
-                            .onTapGesture {
-                                task?.cancel()
-                                
-                            }
-                        
-                            .onChange(of: api.localPosition, perform: { newValue in
-                                pos.fillArray()
-                            })
-                    }
-                    
-                    .font(.system(size: 9))
-                    Spacer()
+                if let siteFile = siteFile {
+                    Text("Sitefile: \(siteFile.map.mapFile)")
+                        .font(.system(size: 8))
+                        .fontWeight(.semibold)
+                } else {
+                    Text("Sitefile: No sitefile loaded")
+                        .font(.system(size: 8))
+                }
+                Spacer()
+                if (siteFile == nil) {
                     Button {
                         showAlert = true
                     } label: {
                         Image(systemName: "gear")
+                            .foregroundColor(.blue)
                         
                     }
                     .alert("Graph settings", isPresented: $showAlert) {
-                        
-      
-                            TextField("X-scale: \(xScale)", value: $xScale, format: .number)
-                
-                  
-                        
+                        TextField("X-scale: \(xScale)", value: $xScale, format: .number)
                         TextField("Y-scale: \(yScale)", value: $yScale, format: .number)
-                        
                         
                         Button("OK", action: {})
                         
@@ -82,11 +73,10 @@ struct PositionMonitor: View {
                     }
                     
                 }
+                
+                
             }
-            
-            
-            
-            Divider()
+
             
             Chart(pos.data) {
                 
@@ -98,28 +88,46 @@ struct PositionMonitor: View {
             }
             .chartYScale(domain: 0...yScale)
             .chartXScale(domain: 0...xScale)
-            .frame(height: 250)
-            //            .overlay {
-            //                Image("roomplan")
-            //                    .resizable()
-            //                    .opacity(0.5)
-            //
-            //
-            //            }
+            .foregroundColor(Color("pinpoint_orange"))
+         //   .overlay(siteFile != nil ? floorPlan : nil)
             
+            
+    //        .onChange(of: api.localPosition, perform: { newValue in
+      //          pos.fillArray()
+        //    })
+
+            
+            .scaleEffect(finalAmount + currentAmount)
+            .gesture(
+                MagnificationGesture()
+                    .onChanged { amount in
+                        currentAmount = amount - 1
+                    }
+                    .onEnded { amount in
+                        finalAmount += currentAmount
+                        currentAmount = 0
+                    }
+            )
+        
+
         }
-        .frame(minWidth: 0, maxWidth: 400, minHeight: 260, maxHeight: 260)
+
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 300, maxHeight:.infinity)
         .padding()
-        .background(Color.orange.gradient)
+        .background(Color("pinpoint_background"))
+        .foregroundColor(Color("pinpoint_gray"))
+        
+        
     }
+    
+ 
+    
 }
 
 
-
-
-struct PositionMonitor_Previews: PreviewProvider {
-    static var previews: some View {
-        PositionMonitor()
-            .environmentObject(API())
-    }
-}
+//struct PositionMonitor_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PositionMonitor()
+//            .environmentObject(API())
+//    }
+//}

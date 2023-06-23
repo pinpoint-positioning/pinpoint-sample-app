@@ -11,6 +11,8 @@ import SDK
 @main
 struct PinpointSampleAppApp: App {
     let persistenceController = PersistenceController.shared
+    
+    
 
     var body: some Scene {
         WindowGroup {
@@ -20,4 +22,18 @@ struct PinpointSampleAppApp: App {
               
         }
     }
+}
+
+
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+
+    
+    static var orientationLock = UIInterfaceOrientationMask.portrait
+
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return AppDelegate.orientationLock
+    }
+    
+    
 }
