@@ -18,6 +18,8 @@
 		D112271229B9EF8C00E49993 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112271129B9EF8C00E49993 /* Persistence.swift */; };
 		D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D112271329B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld */; };
 		D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112272129BA005D00E49993 /* ConsoleTextView.swift */; };
+		D120F75F2A3C4D670010F812 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D120F75E2A3C4D670010F812 /* SDK.framework */; };
+		D120F7602A3C4D670010F812 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D120F75E2A3C4D670010F812 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12462A72A0B8DE900CCFF50 /* Colors.swift */; };
 		D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12462A92A0B948500CCFF50 /* ScanButton.swift */; };
 		D1381A192A0E416C00DF8141 /* FilePicker in Frameworks */ = {isa = PBXBuildFile; productRef = D1381A182A0E416C00DF8141 /* FilePicker */; };
@@ -25,20 +27,24 @@
 		D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79929F00F2D00E6119E /* PositionMonitor.swift */; };
 		D139E79C29F00FF000E6119E /* CommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79B29F00FF000E6119E /* CommandView.swift */; };
 		D139E79E29F0101E00E6119E /* SiteFileInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */; };
-		D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; };
-		D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D15D05DF29C07A3200B670A1 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D1B108FF2A3C890D0039B5ED /* StatusCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */; };
+		D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B109002A42E61C0039B5ED /* InfoView.swift */; };
+		D1B109042A457D000039B5ED /* WebDAV in Frameworks */ = {isa = PBXBuildFile; productRef = D1B109032A457D000039B5ED /* WebDAV */; };
+		D1B109062A4585750039B5ED /* RemoteSitesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B109052A4585750039B5ED /* RemoteSitesList.swift */; };
 		D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B56BBA2A125B6B00C074F4 /* MapView.swift */; };
 		D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */; };
+		D1FB33E62A3B138E003764F9 /* SiteFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */; };
+		D1FB33E92A3B142B003764F9 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = D1FB33E82A3B142B003764F9 /* ZIPFoundation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		D1FE238229C07027002F1049 /* Embed Frameworks */ = {
+		D120F7612A3C4D670010F812 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D15D05E129C07A3200B670A1 /* SDK.framework in Embed Frameworks */,
+				D120F7602A3C4D670010F812 /* SDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -58,16 +64,21 @@
 		D112271129B9EF8C00E49993 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		D112271429B9EF8C00E49993 /* PinpointSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PinpointSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		D112272129BA005D00E49993 /* ConsoleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTextView.swift; sourceTree = "<group>"; };
+		D120F75E2A3C4D670010F812 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D12462A72A0B8DE900CCFF50 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = PinpointSampleApp/Views/Colors.swift; sourceTree = SOURCE_ROOT; };
 		D12462A92A0B948500CCFF50 /* ScanButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanButton.swift; sourceTree = "<group>"; };
 		D139E79729EEA56800E6119E /* PositionChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionChartData.swift; sourceTree = "<group>"; };
 		D139E79929F00F2D00E6119E /* PositionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionMonitor.swift; sourceTree = "<group>"; };
 		D139E79B29F00FF000E6119E /* CommandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandView.swift; sourceTree = "<group>"; };
 		D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteFileInformationView.swift; sourceTree = "<group>"; };
-		D15D05DF29C07A3200B670A1 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19576BE29F7A6880072576F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCircle.swift; sourceTree = "<group>"; };
+		D1B109002A42E61C0039B5ED /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
+		D1B109052A4585750039B5ED /* RemoteSitesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSitesList.swift; sourceTree = "<group>"; };
 		D1B56BBA2A125B6B00C074F4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionViewFullScreen.swift; sourceTree = "<group>"; };
+		D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiteFileManager.swift; sourceTree = "<group>"; };
+		D1FB33EA2A3B1452003764F9 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,8 +86,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D120F75F2A3C4D670010F812 /* SDK.framework in Frameworks */,
 				D1381A192A0E416C00DF8141 /* FilePicker in Frameworks */,
-				D15D05E029C07A3200B670A1 /* SDK.framework in Frameworks */,
+				D1FB33E92A3B142B003764F9 /* ZIPFoundation in Frameworks */,
+				D1B109042A457D000039B5ED /* WebDAV in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +152,9 @@
 				D10FED9B2A14CD8300DC344E /* ConfigView.swift */,
 				D10FED9D2A14F86500DC344E /* SitesList.swift */,
 				D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */,
+				D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */,
+				D1B109002A42E61C0039B5ED /* InfoView.swift */,
+				D1B109052A4585750039B5ED /* RemoteSitesList.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -146,6 +162,7 @@
 		D1569D9029BA216100D0E578 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */,
 				D139E79729EEA56800E6119E /* PositionChartData.swift */,
 			);
 			path = Controller;
@@ -162,7 +179,8 @@
 		D1569D9229BB445A00D0E578 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D15D05DF29C07A3200B670A1 /* SDK.framework */,
+				D120F75E2A3C4D670010F812 /* SDK.framework */,
+				D1FB33EA2A3B1452003764F9 /* SDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -177,7 +195,7 @@
 				D112270129B9EF8B00E49993 /* Sources */,
 				D112270229B9EF8B00E49993 /* Frameworks */,
 				D112270329B9EF8B00E49993 /* Resources */,
-				D1FE238229C07027002F1049 /* Embed Frameworks */,
+				D120F7612A3C4D670010F812 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -186,6 +204,8 @@
 			name = PinpointSampleApp;
 			packageProductDependencies = (
 				D1381A182A0E416C00DF8141 /* FilePicker */,
+				D1FB33E82A3B142B003764F9 /* ZIPFoundation */,
+				D1B109032A457D000039B5ED /* WebDAV */,
 			);
 			productName = PinpointSampleApp;
 			productReference = D112270529B9EF8B00E49993 /* PinpointSampleApp.app */;
@@ -217,6 +237,8 @@
 			mainGroup = D11226FC29B9EF8B00E49993;
 			packageReferences = (
 				D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */,
+				D1FB33E72A3B142B003764F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				D1B109022A457D000039B5ED /* XCRemoteSwiftPackageReference "WebDAV-Swift" */,
 			);
 			productRefGroup = D112270629B9EF8B00E49993 /* Products */;
 			projectDirPath = "";
@@ -245,17 +267,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				D112271229B9EF8C00E49993 /* Persistence.swift in Sources */,
+				D1B108FF2A3C890D0039B5ED /* StatusCircle.swift in Sources */,
 				D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */,
 				D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */,
 				D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */,
 				D112270B29B9EF8B00E49993 /* MainView.swift in Sources */,
 				D1113CA02A090793002C4B35 /* DebugView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
+				D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */,
 				D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */,
 				D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */,
 				D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */,
 				D139E79E29F0101E00E6119E /* SiteFileInformationView.swift in Sources */,
 				D139E79C29F00FF000E6119E /* CommandView.swift in Sources */,
+				D1FB33E62A3B138E003764F9 /* SiteFileManager.swift in Sources */,
+				D1B109062A4585750039B5ED /* RemoteSitesList.swift in Sources */,
 				D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */,
 				D112270929B9EF8B00E49993 /* PinpointSampleAppApp.swift in Sources */,
 				D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */,
@@ -485,6 +511,22 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		D1B109022A457D000039B5ED /* XCRemoteSwiftPackageReference "WebDAV-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Isvvc/WebDAV-Swift.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		D1FB33E72A3B142B003764F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.16;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -492,6 +534,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */;
 			productName = FilePicker;
+		};
+		D1B109032A457D000039B5ED /* WebDAV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1B109022A457D000039B5ED /* XCRemoteSwiftPackageReference "WebDAV-Swift" */;
+			productName = WebDAV;
+		};
+		D1FB33E82A3B142B003764F9 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1FB33E72A3B142B003764F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 

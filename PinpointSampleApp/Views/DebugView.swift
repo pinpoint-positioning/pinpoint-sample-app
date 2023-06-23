@@ -17,12 +17,11 @@ struct DebugView: View{
             VStack{
                 PositionView()
                     .cornerRadius(10)
-                    .shadow(radius: 2)
                 StatesView()
                     .cornerRadius(10)
-                    .shadow(radius: 2)
                 Spacer()
             }
+            .shadow(radius: 2)
             .padding()
             
         }

@@ -108,8 +108,20 @@ struct SitesList: View {
                     Image(systemName: "xmark.bin")
                 }
                 
+                // webdav test
+               
+                Button(){
+                    downloadSiteDemoSiteFile()
+                    }
+                 label: {
+                    Image(systemName: "cloud.fill")
+                }
+                
                 
             }
+
+            
+            
         }
         
         .fileImporter(
@@ -160,6 +172,28 @@ struct SitesList: View {
 
         
         
+    }
+    
+    
+    func downloadSiteDemoSiteFile(){
+        
+        Task{
+            do {
+                let zipURL = URL(string: "https://cloud.scherbeck.tech/s/n98AC7Na9JR86b5/download/SSE_pp2.0.zip")!
+                
+                let destinationURL = try await sfm.downloadSiteFile(from: zipURL)
+                print("File downloaded successfully at: \(destinationURL.path)")
+                let unpacked = await sfm.unarchiveFile(sourceFile: destinationURL)
+                if unpacked {
+                    list = sfm.getSitefilesList()
+                }
+                
+            } catch {
+                print("Error downloading file: \(error.localizedDescription)")
+                // Handle the download error here
+            }
+        }
+     
     }
     
     func clearCache(){

@@ -12,7 +12,6 @@ import SDK
 struct PositionMonitor: View {
     
     @EnvironmentObject var api:API
-    @EnvironmentObject var wgs84:Wgs84Reference
     @Binding var siteFile:SiteData?
     @Binding var siteFileName:String
     
@@ -60,6 +59,7 @@ struct PositionMonitor: View {
                         showAlert = true
                     } label: {
                         Image(systemName: "gear")
+                            .foregroundColor(.blue)
                         
                     }
                     .alert("Graph settings", isPresented: $showAlert) {
@@ -74,11 +74,6 @@ struct PositionMonitor: View {
                     
                 }
                 
-                NavigationLink {
-                    PositionViewFullScreen(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW)
-                } label: {
-                    Image(systemName: "map")
-                }
                 
             }
 
@@ -97,9 +92,9 @@ struct PositionMonitor: View {
          //   .overlay(siteFile != nil ? floorPlan : nil)
             
             
-            .onChange(of: api.localPosition, perform: { newValue in
-                pos.fillArray()
-            })
+    //        .onChange(of: api.localPosition, perform: { newValue in
+      //          pos.fillArray()
+        //    })
 
             
             .scaleEffect(finalAmount + currentAmount)

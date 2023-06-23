@@ -75,7 +75,6 @@ struct ConfigView: View {
                             TextField("n", text: $interval)
                             Button("Set")
                             {
-                                showIntervalSettings = false
                                 if let interval = Int8(interval) {
                                     api.setPositioningInterval(interval: Int8(interval))
                                 } else {

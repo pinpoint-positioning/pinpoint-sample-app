@@ -45,11 +45,12 @@ class PositionChartData:ObservableObject {
         getData { position in
             DispatchQueue.main.async {
 
-                if (self.data.count > 25)
+                if (self.data.count > 10)
                 {
                     self.data.removeFirst()
                 }
-                self.data.append(ChartData(x: position.xCoord, y: position.yCoord, acc: position.covXx))
+             
+                self.data.append(ChartData(x: position.xCoord, y: position.yCoord, acc: position.accuracy))
                 self.singleXPos = position.xCoord
                 self.singleYPos = position.yCoord
             

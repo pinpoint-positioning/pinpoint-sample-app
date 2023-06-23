@@ -67,11 +67,6 @@ struct CommandView: View {
                 
       
             }
-
-        
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-        .padding()
-        .background(Color("pinpoint_background"))
         .foregroundColor(Color("pinpoint_gray"))
         .font(.system(size: 12))
  

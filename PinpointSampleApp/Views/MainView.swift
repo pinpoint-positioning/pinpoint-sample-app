@@ -8,11 +8,11 @@
 import SwiftUI
 import CoreData
 import CoreBluetooth
-import SDK
 import Charts
 import CoreLocation
 import MapKit
 import FilePicker
+import SDK
 
 
 struct MainView: View {
@@ -35,9 +35,10 @@ struct MainView: View {
                     .ignoresSafeArea()
                 VStack {
                     ScrollView {
-                        VStack(alignment: .leading){
+                        VStack(alignment: .center){
 
-                            PositionMonitor(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW)
+                         //   PositionMonitor(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW)
+                            StatusCircle()
                                 .cornerRadius(10)
                                 .shadow(radius: 2)
                         
@@ -45,55 +46,41 @@ struct MainView: View {
                                 SiteFileInformationView(siteFile: $siteFile)
                                     .cornerRadius(10)
                                     .shadow(radius: 2)
-                                CommandView()
-                                    .cornerRadius(10)
-                                    .shadow(radius: 2)
-                                    .blur(radius: api.generalState != .CONNECTED ? 1 : 0)
-                                    .overlay(api.generalState != .CONNECTED ? Text("Not connected")
-                                        .fontWeight(.semibold): nil)
-                                    .disabled(api.generalState != .CONNECTED ? true : false)
-
                         }
                         
                         .padding()
                     }
                     
-                    ScanButton()
+                    ScanButton(mapView:                             PositionViewFullScreen(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW))
                     
                         .background(Color("pinpoint_gray").edgesIgnoringSafeArea(.bottom))
                     
                 }
-                .navigationTitle("Main")
+                .navigationTitle("Tracelet Reader")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItemGroup(placement: .primaryAction) {
+                    ToolbarItem(placement: .primaryAction) {
                         NavigationLink {
                             DebugView()
                         } label: {
                             Image(systemName: "ladybug")
+                                .foregroundColor(.black)
                         }
-                        
+
+                    }
+                    ToolbarItem(placement: .navigationBarLeading) {
                         NavigationLink {
-                            ConfigView()
+                            InfoView()
                         } label: {
-                            Image(systemName: "gear")
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.black)
                         }
-                        .disabled(api.generalState == .CONNECTED ? false :true)
                         
-                        
-                        
-                        NavigationLink {
-                            SitesList(siteFile: $siteFile, imgW: $imgW, imgH: $imgH, siteFileName: $siteFileName)
-                            
-                        } label: {
-                            Image(systemName: "list.bullet")
-                        }
                     }
                 }
             }
         }
         .environmentObject(API.shared)
-        .environmentObject(Wgs84Reference.shared)
     }
 
 }
@@ -169,7 +156,7 @@ struct StatesView: View {
     var body: some View {
         
         VStack(alignment: .leading) {
-            Text("Debug Monitor")
+            Text("Debug")
                 .fontWeight(.semibold)
             
             Divider()
@@ -216,11 +203,13 @@ struct StatesView: View {
                 
             }
             .font(.system(size: 10))
+            Spacer()
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .padding()
         .background(Color("pinpoint_background"))
         .foregroundColor(Color("pinpoint_gray"))
+        
     }
 }
 

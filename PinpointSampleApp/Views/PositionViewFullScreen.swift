@@ -41,11 +41,11 @@ struct PositionViewFullScreen: View {
     @State private var imageSize: CGSize = .zero
     @State var x_origin:Double = 0
     @State var y_origin:Double = 0
-    let meterToPixelRatio: CGFloat = 39.0
+    @State var meterToPixelRatio: CGFloat = 0.0
     @State var previous_x:CGFloat = 0
     @State var previous_y:CGFloat = 0
     
-
+    
     var body: some View {
         ZStack {
             Group{
@@ -57,7 +57,7 @@ struct PositionViewFullScreen: View {
                             y: finalTranslation.height + gestureTranslation.height)
                     .scaleEffect(finalScale * gestureScale)
                 
-
+                
                 ForEach(positions.indices, id: \.self) { index in
                     
                     
@@ -73,9 +73,9 @@ struct PositionViewFullScreen: View {
                         .stroke(.orange, lineWidth: 1)
                         .scaleEffect(finalScale * gestureScale)
                     }
-
-                        Image("pinpoint-circle")
-
+                    
+                    Image("pinpoint-circle")
+                    
                         .resizable()
                         .frame(width: index == latestPositionIndex ? 20 : 10, height: index == latestPositionIndex ? 20 : 10)
                         .foregroundColor(.yellow)
@@ -108,12 +108,14 @@ struct PositionViewFullScreen: View {
                                         .foregroundColor(.blue)
                                         .scaleEffect(finalScale * gestureScale)
                                         .opacity(0.5)
-   
+                                    
                                 }
                             }
                         )
                 }
-
+                
+                //chart is shifting the positino somehow
+                
                 Chart {
                     // Dummy BarMark
                     BarMark(
@@ -122,7 +124,7 @@ struct PositionViewFullScreen: View {
                     )
                     
                 }
-                .frame(width: Double(imgW + 50), height: Double(imgH + 50))
+                .frame(width: Double(imgW), height: Double(imgH))
                 .chartYScale(domain: [0, Double(imgH) / meterToPixelRatio])
                 .chartXScale(domain: [0, Double(imgW) / meterToPixelRatio])
                 .offset(x: finalTranslation.width + gestureTranslation.width,
@@ -139,12 +141,13 @@ struct PositionViewFullScreen: View {
                         AxisTick(centered: true, stroke: StrokeStyle(lineWidth: 5))
                             .foregroundStyle(Color.orange)
                         AxisValueLabel()
+                        
                     }
                     
                 }
                 
                 .chartYAxis {
-                   
+                    
                     AxisMarks(position: .leading, values: .automatic(desiredCount: (Int(finalScale * 10)))) { _ in
                         AxisGridLine(centered: true, stroke: StrokeStyle(lineWidth: 2, dash: [5,5]))
                             .foregroundStyle(Color.mint)
@@ -156,14 +159,12 @@ struct PositionViewFullScreen: View {
                 }
                 
             }
-            .navigationTitle(siteFile?.map.mapName ?? "")
-            .navigationBarTitleDisplayMode(.inline)
+            
             .task({
                 if let siteFile = siteFile {
                     x_origin = siteFile.map.mapFileOriginX
                     y_origin = siteFile.map.mapFileOriginY
-                    
-                    
+                    meterToPixelRatio = siteFile.map.mapFileRes
                 }
             })
             
@@ -192,13 +193,34 @@ struct PositionViewFullScreen: View {
             .onReceive(pos.objectWillChange) { _ in
                 updatePositions()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            .onChange(of: api.localPosition, perform: { newValue in
+                pos.fillArray()
+            })
+            
             
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationTitle(siteFile?.map.mapName ?? "")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem{
+                
+                NavigationLink {
+                    SitesList(siteFile: $siteFile, imgW: $imgW, imgH: $imgH, siteFileName: $siteFileName)
+                    
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+            
+        }
+        
     }
     
     
     private func updatePositions() {
+   
         positions = pos.data.suffix(10).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
     }
 }
