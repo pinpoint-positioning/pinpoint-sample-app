@@ -21,8 +21,6 @@ struct MainView: View {
     @ObservedObject var api = API.shared
     @State var siteFile:SiteData?
     @State var siteFileName = ""
-    @State var imgH = 0
-    @State var imgW = 0
     
     //MARK: - Body
     var body: some View {
@@ -36,8 +34,6 @@ struct MainView: View {
                 VStack {
                     ScrollView {
                         VStack(alignment: .center){
-
-                         //   PositionMonitor(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW)
                             StatusCircle()
                                 .cornerRadius(10)
                                 .shadow(radius: 2)
@@ -51,11 +47,17 @@ struct MainView: View {
                         .padding()
                     }
                     
-                    ScanButton(mapView:                             PositionViewFullScreen(siteFile: $siteFile, siteFileName: $siteFileName, imgH: $imgH, imgW: $imgW))
+                    ScanButton(mapView:PositionViewFullScreen(siteFile: $siteFile, siteFileName: $siteFileName))
                     
                         .background(Color("pinpoint_gray").edgesIgnoringSafeArea(.bottom))
                     
                 }
+                .safeAreaInset(edge: .top, content: {
+                    Color.clear
+                        .frame(height: 0)
+                        .background(Color("pinpoint_gray"))
+                        .border(.black)
+                })
                 .navigationTitle("Tracelet Reader")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -97,31 +99,6 @@ struct MainView_Previews: PreviewProvider {
 
 
 //MARK: - Additional views
-
-
-struct Header: View {
-    @EnvironmentObject var api:API
-    var body: some View {
-        VStack{
-            HStack {
-                Image("ic_launcher_pinpoint_new-playstore")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 50, height: 50)
-                    .shadow(radius: 5)
-                
-                Text("Tracelet Reader")
-                    .font(.system(size: 40))
-                    .fontWeight(.bold)
-            }
-        }
-    }
-}
-
-
-
-
-
 
 struct PositionView: View{
     
@@ -215,11 +192,6 @@ struct StatesView: View {
 
 
 
-
-
-
-
-
 struct DeviceListView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentationMode
@@ -241,7 +213,20 @@ struct DeviceListView: View {
                 ForEach(discoveredDevices, id: \.self) { device in
                     HStack{
                         Button(device.name ?? "name not found") {
-                            api.connect(device: device)
+                            //api.connectAndStartPositioning(device: device)
+                            Task {
+                             
+                                do {
+                                    let success = try await api.connectAndStartPositioning(device: device)
+                                    print(success)
+                                }
+                                catch {
+                                    print(error)
+                                }
+                               
+                                
+
+                            }
                             dismiss()
                         }
                         Spacer()
@@ -255,6 +240,9 @@ struct DeviceListView: View {
         }
     }
 }
+
+
+
 
 
 

@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SDK
+import WebDAV
 
 struct RemoteSitesList: View {
     @State private var sites = [String]()
@@ -16,8 +18,8 @@ struct RemoteSitesList: View {
             
             List(sites, id: \.self) { site in
                 
-                NavigationLink(site) {
-                    FileDownloadView(site: site)
+                Button(site) {
+                    download(site: site)
                 }
   
             }
@@ -33,6 +35,25 @@ struct RemoteSitesList: View {
     }
 }
 
+struct Account:WebDAVAccount {
+    var username: String?
+    
+    var baseURL: String?
+
+}
+
+func download(site:String) {
+    
+    let wd = WebDAV()
+    let account = Account(username: "PinPoint_Debug", baseURL: "https://connect.pinpoint.de")
+    wd.download(fileAtPath:"/remote.php/dav/files/PinPoint_Debug\(site)", account: account, password: "123undlos!!!") { data, error in
+        print (data)
+        if let error = error {
+            print (error)
+        }
+    }
+
+}
 
 
 
@@ -52,41 +73,11 @@ struct FileDownloadView: View {
             }
         }
         .onAppear {
-            downloadFile(site)
+            
         }
 
     }
-    
-    
-    func downloadFile(_ site: String) {
-        guard let url = URL(string: "https://connect.pinpoint.de\(site)" ) else {
-            print("Invalid file URL")
-            return
-        }
-        
-        // Create a session configuration with the appropriate credentials
-        let configuration = URLSessionConfiguration.default
-        configuration.httpAdditionalHeaders = ["Authorization": "Basic " + "\("PinPoint_Debug"):\("123undlos!!!")".data(using: .utf8)!.base64EncodedString()]
-        
-        // Create a session with the configuration
-        let session = URLSession(configuration: configuration)
-        
-        let task = session.dataTask(with: url) { data, _, error in
-            if let error = error {
-                print("Error downloading file: \(error.localizedDescription)")
-                return
-            }
-            
-            if let data = data {
-                DispatchQueue.main.async {
-                    fileData = data
-                }
-            } else {
-                print("No file data received")
-            }
-        }
-        task.resume()
-    }
+
 }
 
 

@@ -159,22 +159,22 @@ public class SiteFileManager {
     }
     
     
-    public func downloadSiteFile(from url: URL) async throws -> URL {
-        let (tempURL, _) = try await URLSession.shared.download(from: url)
-        
-        do {
-            let fileManager = FileManager.default
-            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            
-            let destinationURL = documentsURL.appendingPathComponent("sse-demo")
-            //let destinationURL = documentsURL.appendingPathComponent(tempURL.lastPathComponent)
-            try fileManager.moveItem(at: tempURL, to: destinationURL)
-            
-            return destinationURL
-        } catch {
-            throw error
-        }
-    }
+//    public func downloadSiteFile(from url: URL) async throws -> URL {
+//        let (tempURL, _) = try await URLSession.shared.download(from: url)
+//        
+//        do {
+//            let fileManager = FileManager.default
+//            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+//            
+//            //let destinationURL = documentsURL.appendingPathComponent("sse-demo")
+//            let destinationURL = documentsURL.appendingPathComponent(tempURL.lastPathComponent)
+//            try fileManager.moveItem(at: tempURL, to: destinationURL)
+//            
+//            return destinationURL
+//        } catch {
+//            throw error
+//        }
+//    }
     
     
     

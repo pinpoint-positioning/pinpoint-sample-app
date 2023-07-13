@@ -32,6 +32,7 @@
 		D1B109042A457D000039B5ED /* WebDAV in Frameworks */ = {isa = PBXBuildFile; productRef = D1B109032A457D000039B5ED /* WebDAV */; };
 		D1B109062A4585750039B5ED /* RemoteSitesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B109052A4585750039B5ED /* RemoteSitesList.swift */; };
 		D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B56BBA2A125B6B00C074F4 /* MapView.swift */; };
+		D1C0E80A2A5BF07E00C44E67 /* RulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C0E8092A5BF07E00C44E67 /* RulerView.swift */; };
 		D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */; };
 		D1FB33E62A3B138E003764F9 /* SiteFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */; };
 		D1FB33E92A3B142B003764F9 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = D1FB33E82A3B142B003764F9 /* ZIPFoundation */; };
@@ -76,6 +77,7 @@
 		D1B109002A42E61C0039B5ED /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		D1B109052A4585750039B5ED /* RemoteSitesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSitesList.swift; sourceTree = "<group>"; };
 		D1B56BBA2A125B6B00C074F4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		D1C0E8092A5BF07E00C44E67 /* RulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulerView.swift; sourceTree = "<group>"; };
 		D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionViewFullScreen.swift; sourceTree = "<group>"; };
 		D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiteFileManager.swift; sourceTree = "<group>"; };
 		D1FB33EA2A3B1452003764F9 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,6 +157,7 @@
 				D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */,
 				D1B109002A42E61C0039B5ED /* InfoView.swift */,
 				D1B109052A4585750039B5ED /* RemoteSitesList.swift */,
+				D1C0E8092A5BF07E00C44E67 /* RulerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -273,6 +276,7 @@
 				D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */,
 				D112270B29B9EF8B00E49993 /* MainView.swift in Sources */,
 				D1113CA02A090793002C4B35 /* DebugView.swift in Sources */,
+				D1C0E80A2A5BF07E00C44E67 /* RulerView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
 				D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */,
 				D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */,
@@ -414,12 +418,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PinpointSampleApp/Preview Content\"";
-				DEVELOPMENT_TEAM = N9N8SDH8C6;
+				DEVELOPMENT_TEAM = H457FUNAGN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinpointSampleApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pinpoint iOS Demo";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location needed for app to work";
@@ -427,14 +433,15 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample;
+				MARKETING_VERSION = 11.2;
+				PRODUCT_BUNDLE_IDENTIFIER = de.pinpoint.iosdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -450,12 +457,14 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"PinpointSampleApp/Preview Content\"";
-				DEVELOPMENT_TEAM = N9N8SDH8C6;
+				DEVELOPMENT_TEAM = H457FUNAGN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinpointSampleApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pinpoint iOS Demo";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Location needed for app to work";
@@ -463,14 +472,15 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = tech.scherbeck.PPsample;
+				MARKETING_VERSION = 11.2;
+				PRODUCT_BUNDLE_IDENTIFIER = de.pinpoint.iosdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

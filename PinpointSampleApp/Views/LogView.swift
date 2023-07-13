@@ -41,11 +41,7 @@ struct LogView: View {
                     isShowingMailView = true
                 }
                 .buttonStyle(.bordered)
-                
-                
-                
-                
-                
+
                 Button("Clear Log") {
                     
                     API.shared.clearLogFile()

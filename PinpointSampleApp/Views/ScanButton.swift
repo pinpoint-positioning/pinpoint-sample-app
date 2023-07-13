@@ -110,10 +110,6 @@ struct ScanButton:View {
                         Text(buttonText)
                             .offset(y:20)
                             .foregroundColor(.white)
-     
-
-  
-                        SecondaryButtons(mapView: $mapView)
 
                         
                     }
@@ -129,6 +125,7 @@ struct ScanButton:View {
                 .presentationDragIndicator(.visible)
         }
             
+            SecondaryButtons(mapView: $mapView)
             
         }
    
@@ -188,3 +185,5 @@ struct SecondaryButtons: View {
         }
     }
 }
+
+

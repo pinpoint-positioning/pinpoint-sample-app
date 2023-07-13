@@ -13,10 +13,10 @@ struct ConfigView: View {
     @EnvironmentObject var api:API
     @State var status = TL_StatusResponse()
     @State var version = ""
-    @State var interval = ""
+    @State var interval: Int = 0
     @State private var showIntervalSettings = false
     @State private var showChannelAlert = false
-    @State private var channel:Int8 = 0
+    @State private var channel:Int = 0
    
     var body: some View {
       @State var role = parseRole(byte: Int8(status.role) ?? 0)
@@ -41,51 +41,44 @@ struct ConfigView: View {
                     }
                     
                     Section(header: Text("Tracelet Settings")) {
-                        Button("Set channel 9")
-                        {
-                            channel = 9
-                            Task {
-                                showChannelAlert = await api.setChannel(channel: channel)
+                        
+                        
+                        HStack {
+                            Picker("Select a Channel", selection: $channel) {
+                                Text("Channel 5").tag(5)
+                                Text("Channel 9").tag(9)
                             }
+                            .pickerStyle(.automatic)
                             
-                        }
-                        
-                        
-                        Button("Set channel 5")
-                        {
-                            channel = 5
-                            Task {
-                                showChannelAlert = await api.setChannel(channel: channel)
-                            }
-                        }
-                        .alert("Set channel", isPresented: $showChannelAlert) {}
-                    message: {
-                        Text("Channel set to \(channel)")
-                    }
-                        
-                        
-                        
-                        
-                        Button("Set interval")
-                        {
-                            showIntervalSettings = true
-                            
-                        }
-                        .alert("Interval in n x 250ms", isPresented: $showIntervalSettings) {
-                            TextField("n", text: $interval)
-                            Button("Set")
-                            {
-                                if let interval = Int8(interval) {
-                                    api.setPositioningInterval(interval: Int8(interval))
-                                } else {
-                                    print("Not an int value")
+                            .onSubmit {
+                                Task {
+                                    await api.setChannel(channel: Int8(channel))
                                 }
-                                
                             }
-                            
-                            Button("Cancel", role: .cancel) { }
+                                Spacer()
                         }
-                    }
+ 
+                        
+                        
+                        HStack {
+                            Picker("Select interval", selection: $interval) {
+                                Text("1 x 250ms").tag(1)
+                                Text("2 x 250ms").tag(2)
+                                Text("3 x 250ms").tag(3)
+                                Text("4 x 250ms").tag(4)
+                                Text("5 x 250ms").tag(5)
+                            }
+                            .pickerStyle(.automatic)
+                            
+                            .onSubmit {
+                                Task {
+                                    api.setPositioningInterval(interval: Int8(interval))
+                                }
+                            }
+                                Spacer()
+                        }
+
+                        }
                     
                 }
                 .scrollDisabled(true)

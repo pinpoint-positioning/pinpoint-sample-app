@@ -14,10 +14,9 @@ struct SitesList: View {
     let sfm = SiteFileManager()
     @State var image:UIImage = UIImage()
     @Binding var siteFile:SiteData?
-    @Binding var imgW:Int
-    @Binding var imgH:Int
     @Binding var siteFileName:String
     @State var selection:String?
+    @State var isSelected = false
     @State var showImporter = false
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
@@ -25,67 +24,71 @@ struct SitesList: View {
         VStack {
             List(list, id: \.self, selection: $selection) { item in
                 let siteInfo = sfm.loadJson(siteFileName: item)
-                Button() {
-                    image = sfm.getFloorImage(siteFileName: item) ?? UIImage()
-                    imgH = image.cgImage?.height ?? 0
-                    imgW = image.cgImage?.width ?? 0
-                    
-                    if let selection = selection {
-                        siteFileName = selection
-                        
+
+                Button(action: {
+                    if selection == item {
+                        selection = nil // Deselect the item
+                    } else {
+                        selection = item // Set the selected item
                     }
-                       
-                    
-                    
-                    if let siteFile = sfm.loadJson(siteFileName: item){
+
+                    if let siteFile = sfm.loadJson(siteFileName: item) {
                         self.siteFile = siteFile
                         self.siteFileName = item
-                        
                     }
-                } label: {
+                }) {
                     HStack {
                         VStack(alignment: .leading) {
                             Text(item)
-                                .fontWeight((siteFileName == item) ? .bold : .regular )
-                                
+                                .fontWeight((siteFileName == item) ? .bold : .regular)
+                                .font(.system(size: 16))
+                            
                             Text("Resolution: \(siteInfo?.map.mapFileRes ?? 0)")
                                 .font(.system(size: 10))
                             
-                            
                             Text("Site ID: \(siteInfo?.map.mapSiteId ?? "unknown")")
                                 .font(.system(size: 10))
+                            
                             Text("UWB-Channel: \(siteInfo?.map.uwbChannel ?? 0)")
                                 .font(.system(size: 10))
                         }
-                       
                         
                         Spacer()
-                        Image(uiImage: sfm.getFloorImage(siteFileName: item) ?? UIImage())
-                            .resizable()
-                            .scaledToFit()
-                            .frame(minWidth: 0, maxWidth: 100, minHeight: 80, maxHeight: 80)
+                        
+                        Image(systemName: siteFileName == item ? "circle.fill" : "circle")
+                            .foregroundColor(siteFileName == item ? .orange : .gray)
+                            .font(.system(size: 24))
+                            .overlay(
+                                Image(systemName: "circle.fill")
+                                    .foregroundColor(.orange)
+                                    .font(.system(size: 24))
+                                    .opacity(siteFileName == item ? 1 : 0)
+                            )
                     }
-                    
                 }
-               
+                .foregroundColor(selection == item ? .blue : .black) // Change the text color based on selection
             }
-          
+
+
+
 
             .task {
                 list = sfm.getSitefilesList()
                 
             }
             
-            //Load Button
             Spacer()
-            
-            Button("Load SiteFile") {
-                presentationMode.wrappedValue.dismiss()
-            }
-            .buttonStyle(.bordered)
-            
-            
-            
+            Button(action: {
+                 clearCache()
+             }) {
+                 Text("Delete all SiteFiles")
+                     .foregroundColor(.white)
+                     .font(.headline)
+                     .padding()
+                     .background(Color.red)
+                     .cornerRadius(10)
+             }
+             .padding()
         }
         .navigationTitle("Import SiteFile")
         .navigationBarTitleDisplayMode(.inline)
@@ -96,25 +99,16 @@ struct SitesList: View {
                 Button() {
                     showImporter = true
                 } label: {
-                    Image(systemName: "square.and.arrow.down")
-                }
-                
-                
-                
-                // Delete all SiteFiles
-                Button() {
-                    clearCache()
-                } label: {
-                    Image(systemName: "xmark.bin")
+                    Image(systemName: "folder")
                 }
                 
                 // webdav test
                
-                Button(){
-                    downloadSiteDemoSiteFile()
-                    }
+                NavigationLink{
+                    RemoteSitesList()
+                }
                  label: {
-                    Image(systemName: "cloud.fill")
+                    Image(systemName: "cloud")
                 }
                 
                 
@@ -137,64 +131,41 @@ struct SitesList: View {
                     return
                 }
                 
-                let documentsUrl =  FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+                let documentsUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
                 let destinationUrl = documentsUrl.appendingPathComponent(selectedFile.lastPathComponent)
                 
                 if let dataFromURL = NSData(contentsOf: selectedFile) {
                     if dataFromURL.write(to: destinationUrl, atomically: true) {
                         let sfm = SiteFileManager()
+                        
                         Task {
-                            
-                            _ = await sfm.unarchiveFile(sourceFile: destinationUrl)
+                           _ =  await sfm.unarchiveFile(sourceFile: destinationUrl)
+                            list = sfm.getSitefilesList()
                         }
                         
                         if let sfContent = sfm.loadJson(siteFileName: "sitedata.json") {
                             siteFile = sfContent
                         }
-                        
                     } else {
                         print("error saving file")
-                        let error = NSError(domain:"Error saving file", code:1001, userInfo:nil)
+                        let error = NSError(domain: "Error saving file", code: 1001, userInfo: nil)
                         print(error)
                     }
                 }
                 
                 selectedFile.stopAccessingSecurityScopedResource()
-                list = sfm.getSitefilesList()
-                
             } catch {
                 print(error)
             }
-            
         }
+
         
         
 
         
         
     }
-    
-    
-    func downloadSiteDemoSiteFile(){
-        
-        Task{
-            do {
-                let zipURL = URL(string: "https://cloud.scherbeck.tech/s/n98AC7Na9JR86b5/download/SSE_pp2.0.zip")!
-                
-                let destinationURL = try await sfm.downloadSiteFile(from: zipURL)
-                print("File downloaded successfully at: \(destinationURL.path)")
-                let unpacked = await sfm.unarchiveFile(sourceFile: destinationURL)
-                if unpacked {
-                    list = sfm.getSitefilesList()
-                }
-                
-            } catch {
-                print("Error downloading file: \(error.localizedDescription)")
-                // Handle the download error here
-            }
-        }
-     
-    }
+
     
     func clearCache(){
         let fileManager = FileManager.default
