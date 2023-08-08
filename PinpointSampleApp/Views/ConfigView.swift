@@ -77,6 +77,8 @@ struct ConfigView: View {
                             }
                                 Spacer()
                         }
+                        
+                        LogPreview()
 
                         }
                     
@@ -98,6 +100,7 @@ struct ConfigView: View {
         }
         .navigationTitle("Tracelet Configuration")
         .navigationBarTitleDisplayMode(.inline)
+       // .navigationBarColor(CustomColor.uiPinpointGray)
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 
@@ -114,6 +117,7 @@ struct ConfigView: View {
                     }
                 } label: {
                     Image(systemName: "arrow.triangle.2.circlepath")
+                        .foregroundColor(.white)
                 }
             }
         }

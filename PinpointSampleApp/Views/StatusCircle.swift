@@ -34,7 +34,7 @@ struct StatusCircle: View {
 
                     Text(api.generalState == .CONNECTED ? "Connected" : "Disconnected")
                         .fontWeight(.bold)
-                    Text(api.deviceName)
+                Text(api.connectedTracelet?.name ?? "")
                 
                 HStack(spacing: 50){
                     HStack{

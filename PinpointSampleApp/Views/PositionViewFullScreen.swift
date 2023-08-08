@@ -8,11 +8,14 @@
 import SwiftUI
 import Charts
 import SDK
+import CoreBluetooth
 
 struct Position: Hashable {
     let x: CGFloat
     let y: CGFloat
     let acc: CGFloat
+    var rawX:CGFloat = 0.0
+    var rawY:CGFloat = 0.0
 }
 
 
@@ -26,17 +29,16 @@ struct ImageGeometry {
 struct Settings {
     var previousPositions: Int = 5
     var showRuler: Bool = false
-    var showOrigin: Bool = true
+    var showOrigin: Bool = false
     var showAccuracyRange:Bool = true
+    var showSatlets:Bool = false
 }
 
 
 struct PositionViewFullScreen: View {
-    @EnvironmentObject var api: API
-
-    @Binding var siteFile: SiteData?
-    @Binding var siteFileName: String
-
+    @EnvironmentObject var api : API
+    @EnvironmentObject var sfm : SiteFileManager
+    
     @GestureState var gestureTranslation: CGSize = .zero
     @State var finalTranslation: CGSize = .zero
     @GestureState var gestureScale: CGFloat = 1.0
@@ -44,149 +46,200 @@ struct PositionViewFullScreen: View {
     @State var meterToPixelRatio: CGFloat = 0.0
     @State var imageGeo:ImageGeometry = ImageGeometry(xOrigin: 0.0, yOrigin: 0.0, imageSize: .zero, imagePosition: .zero)
     @State var settings:Settings = Settings()
+    @State var image = UIImage()
+    
+    @State private var showingScanResults = false
+    @State private var discoveredDevices:[CBPeripheral] = []
     
     @State private var isModalPresented = false
     @State private var redirectToSiteFileView = false
+    
+    @State var siteListIsPresented = false
+    
+    
     var body: some View {
-        NavigationStack {
- 
-        ZStack {
-            
-            Color("pinpoint_background") // Set the desired background color here
-                .ignoresSafeArea()
-              
-            
-                GeometryReader { geo in
-                    let scaleFactor = finalScale * gestureScale // Calculate the scaling factor
-                    HStack(alignment: .top) {
-                        Rectangle()
-                            .foregroundColor(Color("pinpoint_background"))
-                            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight:50)
-                    }
-                    .ignoresSafeArea()
-                    .zIndex(1)
+        
+        
+        NavigationStack{
+     
+                ZStack(alignment:.bottom) {
+                    Color("pinpoint_background")
+                        .ignoresSafeArea()
                     
+                    let scaleFactor = finalScale * gestureScale // Calculate the scaling factor
+                    ScrollView([. horizontal, . vertical]){
                     // Container for the FloorImage and PositionTraceView
                     ZStack(alignment: .topLeading) {
                         
-
-                        // Redirect to SiteFileList if no SiteFile is loaded
-                        if siteFile == nil {
-                            NavigationLink(destination: SitesList(siteFile: $siteFile, siteFileName: $siteFileName), isActive: $redirectToSiteFileView) {
-                                EmptyView()
-                            }
-                            .onAppear {
-                                redirectToSiteFileView = true
-                            }
-                        }
-                        
-                        
-                        // MARK: - Floormap
-                        
-                        
-                        if let image = SiteFileManager().getFloorImage(siteFileName: siteFileName) {
-
-                            Image(uiImage: image)
+                        if api.scanState == .SCANNING {
+                            ProgressView("Hold Tracelet close to phone")
+                        } else {
+                            
+                            // MARK: - Floormap
+                            
+                            Image(uiImage:sfm.siteFile.map.mapName == "" ? blankImage() : image)
                                 .border(Color("pinpoint_gray"), width: 2)
                             
                                 .onAppear {
                                     updateImagePosition()
                                 }
                                 .task {
-                                    if let siteFile = siteFile {
-                                        imageGeo.xOrigin = siteFile.map.mapFileOriginX
-                                        imageGeo.yOrigin = siteFile.map.mapFileOriginY
-                                        meterToPixelRatio = siteFile.map.mapFileRes
-                                        imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
-                                    }
+                                    
+                                    imageGeo.xOrigin = 0.0
+                                    imageGeo.yOrigin = 0.0
+                                    meterToPixelRatio = 100
+                                    imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
+                                    
+                                    
                                 }
-                                
-                        }
-                        
-                        if (settings.showOrigin) {
-                            CrosshairView()
-                                .position(placeOrigin())
+                                .onChange(of: api.bleState, perform: { _ in
+                                    scan()
+                                    
+                                })
+                                .onChange(of: sfm.siteFile) { newValue in
+                                    image = sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
+                                    imageGeo.xOrigin = sfm.siteFile.map.mapFileOriginX
+                                    imageGeo.yOrigin = sfm.siteFile.map.mapFileOriginY
+                                    meterToPixelRatio = sfm.siteFile.map.mapFileRes
+                                    imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
+                                }
+                                .overlay {
+                                    if (settings.showOrigin) {
+                                        CrosshairView()
+                                            .position(placeOrigin())
+                                        
+                                    }
+                                    
+                                    // MARK: - PositionTrace
+                                    
+                                    PositionTraceView(
+                                        meterToPixelRatio: $meterToPixelRatio,
+                                        imageGeo: $imageGeo,
+                                        settings: $settings
+                                    )
+                                    
+                                    // MARK: - Ruler
+                                    
+                                    if (settings.showRuler) {
+                                        RulerView(imageGeo: $imageGeo, meterToPixelRatio:$meterToPixelRatio)
+                                        
+                                    }
+                                    if(settings.showSatlets) {
+                                        SatletView( imageGeo:$imageGeo, siteFile: $sfm.siteFile)
+                                        
+                                    }
+                                    
+                                }
                             
-                        }
-                        
-                        // MARK: - PositionTrace
-                        
-                        PositionTraceView(
-                            meterToPixelRatio: $meterToPixelRatio,
-                            imageGeo: $imageGeo,
-                            settings: $settings
-                        )
-                      
-                        // MARK: - Ruler
-                        
-                        if (settings.showRuler) {
-                            RulerView(imageGeo: $imageGeo)
-                            
+                                .border(Color.black)
+                                .scaleEffect(scaleFactor)
+                            //   .offset(x: imageGeo.imagePosition.x, y: imageGeo.imagePosition.y)
+                                .frame(width: imageGeo.imageSize.width, height: imageGeo.imageSize.height)
                         }
                     }
-                    
-                    .border(Color.red)
-                    .scaleEffect(scaleFactor)
-                    .offset(x: imageGeo.imagePosition.x, y: imageGeo.imagePosition.y)
-                    .frame(width: imageGeo.imageSize.width, height: imageGeo.imageSize.height)
-                    .sheet(isPresented: $isModalPresented, content: {
-                        SettingsModalView(mapSettings: $settings)
-                    })
-                    
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            NavigationLink(destination: SitesList(siteFile: $siteFile, siteFileName: $siteFileName)) {
-                                Image(systemName: "plus")
-                            }
-                        }
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                isModalPresented = true
-                            } label: {
-                                Image(systemName: "gear")
-                            }
-                        }
+                    .padding()
+                        
                     }
+                    .highPriorityGesture(
+                        MagnificationGesture()
+                            .updating($gestureScale) { value, state, _ in
+                                state = value
+                            }
+                            .onEnded { value in
+                                finalScale *= value
+                            }
+                            .onChanged { _ in
+                                updateImagePosition()
+                            }
+                    )
                     
-                    
+                  
 
+             //       ScanAndAddButtons()
+          
                 }
-            }
             
-        .gesture(
-            MagnificationGesture()
-                .simultaneously(with: DragGesture())
-                .updating($gestureScale) { value, state, _ in
-                    state = value.first ?? 1.0
-                }
-                .updating($gestureTranslation) { value, state, _ in
-                    let scaledTranslation = value.second?.translation ?? .zero
-                    state = CGSize(width: scaledTranslation.width / finalScale, height: scaledTranslation.height / finalScale)
-                }
-                .onEnded { value in
-                    finalScale *= value.first ?? 1.0
-                    finalTranslation.width += value.second?.translation.width ?? 0.0
-                    finalTranslation.height += value.second?.translation.height ?? 0.0
-                }
-                .onChanged { _ in
-                    updateImagePosition()
-                }
-        )
             
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(siteFile?.map.mapName ?? "")
-        .onAppear()
-        {
-            UINavigationBar.appearance().isTranslucent = false
-        }
+                       .sheet(isPresented: $isModalPresented, content: {
+                           SettingsModalView(mapSettings: $settings)
+                       })
+                       .sheet(isPresented: $showingScanResults) {
+                           DeviceListView(discoveredDevices: $discoveredDevices)
+                               .presentationDetents([.medium, .large])
+                               .presentationDragIndicator(.visible)
+                       }
             
-        }
+                       .sheet(isPresented: $siteListIsPresented, content: {
+                           SitesList()
+                       })
+                       
+                       
+                       
+                       
+                       
+                       .toolbar {
+                           
+                           ToolbarItem(placement: .navigationBarLeading) {
+                               Button {
+                                   scan()
+                               } label: {
+                                   Image(systemName: "wave.3.right.circle.fill")
+                                   
+                               }
+                           }
+                           
+                           
+                           ToolbarItem(placement: .navigationBarTrailing) {
+                               Button {
+                                   isModalPresented = true
+                               } label: {
+                                   Image(systemName: "gear")
+                                   
+                               }
+                           }
+                           
+                           ToolbarItem(placement: .navigationBarTrailing) {
+                               Button {
+                                   siteListIsPresented.toggle()
+                               } label: {
+                                   Image(systemName: "plus")
+                                   
+                               }
+                           }
+                       }
 
-}
+         
+            
+        }
+        
+    }
     
     
     // Helper Functions
-
+    
+    func scan() {
+        // Initiate Scan
+        if api.generalState == .DISCONNECTED && api.bleState == .BT_OK{
+            discoveredDevices = []
+            
+            api.scan(timeout: 3) { deviceList in
+                if !deviceList.isEmpty {
+                    discoveredDevices = deviceList
+                    showingScanResults.toggle()
+                }
+                
+            }
+        }
+    }
+    
+    func blankImage() -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 500, height: 500))
+        return renderer.image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 500, height: 500))
+        }
+    }
+    
     private func updateImagePosition() {
         let positionX = finalTranslation.width + gestureTranslation.width
         let positionY = finalTranslation.height + gestureTranslation.height
@@ -195,103 +248,41 @@ struct PositionViewFullScreen: View {
         }
         
     }
-   private  func placeOrigin() -> (CGPoint) {
+    private  func placeOrigin() -> (CGPoint) {
         let scaledX = imageGeo.xOrigin * meterToPixelRatio
         let scaledY = imageGeo.imageSize.height  - (imageGeo.yOrigin * meterToPixelRatio)
-
-
+        
+        
         return CGPoint(x: scaledX, y: scaledY)
     }
- 
+    
 }
 
 
 
-// WIP - Try to remove the for loop for pop up animations
-
-
-//struct PositionTraceView: View {
-//    @ObservedObject var pos = PositionChartData.shared
-//    @EnvironmentObject var api: API
-//
-//    @State private var latestPositionIndex: Int?
-//
-//    @Binding var meterToPixelRatio: CGFloat
-//    @Binding var imageGeo: ImageGeometry
-//    @Binding var settings: Settings
-//    @GestureState private var gestureScale: CGFloat = 1.0
-//    @State private var finalScale: CGFloat = 1.0
-//
-//    @State private var showCircle = false
-//    @State private var positions: [Position] = []
-//
-//    var body: some View {
-//        ZStack {
-//            ForEach(positions, id: \.self) { position in
-//                let coords = makeCoordinates(for: position)
-//                var active = true
-//                withAnimation(.easeInOut(duration: 0.5)) {
-//                    Image("pinpoint-circle")
-//                        .resizable()
-//                        .frame(width: positions.lastIndex(of: position) == positions.count - 1 ? 20 : 10, height: positions.lastIndex(of: position) == positions.count - 1 ? 20 : 10)
-//                        .foregroundColor(.yellow)
-//                        .position(x: coords.x, y: coords.y)
-//                        .scaleEffect(1)
-//                        .opacity(active ? 1 : 0)
-//                        .animation(.easeInOut(duration: 0.3), value: position)
-//                        .onAppear {
-//                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                                removeCircle(position)
-//                                active = false
-//                            }
-//                        }
-//                }
-//            }
-//            .onChange(of: api.localPosition) { _ in
-//                updateCircles()
-//                showCircle = true
-//            }
-//            .onChange(of: positions) { _ in
-//                if let lastPosIndex = positions.indices.last {
-//                    latestPositionIndex = lastPosIndex
-//                }
-//            }
-//            .onAppear {
-//                updatePositions()
-//            }
-//        }
-//    }
-//
-//    func updateCircles() {
-//        positions.append(Position(x: api.localPosition.xCoord, y: api.localPosition.yCoord, acc: api.localPosition.accuracy))
-//    }
-//
-//    func removeCircle(_ position: Position) {
-//        if let index = positions.lastIndex(of: position) {
-//            withAnimation(.easeInOut(duration: 0.5)) {
-//                positions.remove(at: index)
-//            }
-//        }
-//    }
-//
-//    func updatePositions() {
-//        Task {
-//            await pos.fillPositionArray()
-//            positions = pos.data.suffix(settings.previousPositions).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
-//        }
-//    }
-//
-//    func makeCoordinates(for position: Position) -> Position {
-//        let scaledX = (position.x + imageGeo.xOrigin) * meterToPixelRatio
-//        let scaledY = imageGeo.imageSize.height - ((position.y + imageGeo.yOrigin) * meterToPixelRatio)
-//        let acc = position.acc * meterToPixelRatio
-//
-//        return Position(x: scaledX, y: scaledY, acc: acc)
-//    }
-//
-//
-//}
-
+struct SatletView: View {
+    @ObservedObject var pos = PositionChartData.shared
+    @EnvironmentObject var api: API
+    @Binding var imageGeo: ImageGeometry
+    @Binding var siteFile: SiteData
+    
+    var body: some View {
+        //    imageGeo.imageSize.height  - ((positions[index].y + imageGeo.yOrigin) * meterToPixelRatio)
+        
+        let satletPositions = siteFile.satlets.map { CGPoint(x: ($0.xCoordinate + siteFile.map.mapFileOriginX) * siteFile.map.mapFileRes, y: imageGeo.imageSize.height - (($0.yCoordinate + siteFile.map.mapFileOriginY) * siteFile.map.mapFileRes)) }
+        let _ = print("ori \(siteFile.map.mapFileOriginX) \(siteFile.map.mapFileOriginY)")
+        
+        ForEach(0..<satletPositions.count) { index in
+            let coords = satletPositions[index]
+            
+            ZStack {
+                Image(systemName: "wave.3.right.circle.fill")
+                    .foregroundColor(.yellow)
+                    .position(coords)
+            }
+        }
+    }
+}
 
 
 
@@ -305,7 +296,7 @@ struct PositionViewFullScreen: View {
 struct PositionTraceView: View {
     @ObservedObject var pos = PositionChartData.shared
     @EnvironmentObject var api: API
-
+    
     @State private var latestPositionIndex: Int?
     @State private var positions: [Position] = []
     @Binding var meterToPixelRatio: CGFloat
@@ -313,13 +304,13 @@ struct PositionTraceView: View {
     @Binding var settings:Settings
     @GestureState private var gestureScale: CGFloat = 1.0
     @State private var finalScale: CGFloat = 1.0
-
-
+    
+    
     var body: some View {
         ZStack {
             ForEach(positions.indices, id: \.self) { index in
                 let coords = makeCoordinates(with: index)
-
+                
                 if (index > 0) {
                     Path { path in
                         let previousCoords = makeCoordinates(with: index - 1)
@@ -328,22 +319,29 @@ struct PositionTraceView: View {
                     }
                     .stroke(Color.orange, style: StrokeStyle(lineWidth: 1, lineCap: .round))
                 }
-
-
+                
+                
                 ZStack {
                     Image("pinpoint-circle")
                         .resizable()
-                        .frame(width: index == latestPositionIndex ? 20 : 10, height: index == latestPositionIndex ? 20 : 10)
+                        .frame(width: index == latestPositionIndex ? 30 : 15, height: index == latestPositionIndex ? 30 : 15)
                         .foregroundColor(.yellow)
                         .position(x: coords.x , y: coords.y)
-
-                    if settings.showAccuracyRange && index == latestPositionIndex {
-                        AccuracyCircle(coords: coords)
-                            .position(x: coords.x, y: coords.y)
-                    }
-
+                        .overlay {
+                            if settings.showAccuracyRange && index == latestPositionIndex {
+                                AccuracyCircle(coords: coords)
+                                    .position(x: coords.x, y: coords.y)
+                                    .task {
+                                        print(coords.x)
+                                    }
+                            }
+                            
+                        }
+                    
+                    
+                    
                 }
-
+                
             }
         }
         .onChange(of: positions) { newValue in
@@ -352,56 +350,58 @@ struct PositionTraceView: View {
             }
         }
         .onChange(of: api.localPosition) { _ in
-
+            
             updatePositions()
         }
     }
-
+    
     func updatePositions() {
         Task {
             await pos.fillPositionArray()
-           positions = pos.data.suffix(settings.previousPositions).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
-
+            positions = pos.data.suffix(settings.previousPositions).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
+            
             // Test for Origin Point Check
             // positions = [Position(x: 0, y: 0, acc: 0)]
-
+            
         }
     }
-
+    
     func makeCoordinates(with index: Int) -> Position {
         let scaledX = (positions[index].x + imageGeo.xOrigin) * meterToPixelRatio
         let scaledY = imageGeo.imageSize.height  - ((positions[index].y + imageGeo.yOrigin) * meterToPixelRatio)
         let acc = positions[index].acc
-
-
-        return Position(x: scaledX, y: scaledY, acc: acc)
+        let rawX = positions[index].x
+        let rawY = positions[index].y
+        
+        
+        return Position(x: scaledX, y: scaledY, acc: acc, rawX: rawX, rawY: rawY)
     }
-
-
-
+    
+    
+    
 }
 
 
 
 struct CrosshairView: View {
     var body: some View {
-            // Vertical Line
-            VStack {
-                Spacer()
-                Rectangle()
-                    .frame(width: 3, height: 50)
-                    .foregroundColor(.red)
-                Spacer()
-            }
-            
-            // Horizontal Line
-            HStack {
-                Spacer()
-                Rectangle()
-                    .frame(width: 50, height: 3)
-                    .foregroundColor(.red)
-                Spacer()
-            }
+        // Vertical Line
+        VStack {
+            Spacer()
+            Rectangle()
+                .frame(width: 3, height: 50)
+                .foregroundColor(.red)
+            Spacer()
+        }
+        
+        // Horizontal Line
+        HStack {
+            Spacer()
+            Rectangle()
+                .frame(width: 50, height: 3)
+                .foregroundColor(.red)
+            Spacer()
+        }
         
     }
 }
@@ -410,21 +410,22 @@ struct CrosshairView: View {
 
 
 struct AccuracyCircle: View {
-    @State var coords: Position
+    var coords: Position
     
     var body: some View {
         ZStack {
             Circle()
-                .fill(Color.blue.opacity(0.5))
+                .fill(Color.blue.opacity(0.3))
                 .frame(width: coords.acc , height: coords.acc)
             
             VStack {
-                Text("X: \(coords.y)")
-                Text("Y: \(coords.y)")
+                Text("x: \(String(format: "%.1f", coords.rawX))")
+                Text("y: \(String(format: "%.1f", coords.rawY))")
+                Text("acc: \(String(format: "%.1f", coords.acc))")
             }
             .foregroundColor(.blue)
             .font(.footnote)
-            .offset(y: 25)
+            .offset(y: 40)
         }
         
     }
@@ -457,12 +458,81 @@ struct SettingsModalView: View {
                     Toggle(isOn: $mapSettings.showAccuracyRange) {
                         Text("Show Accuracy")
                     }
+                    Toggle(isOn: $mapSettings.showSatlets) {
+                        Text("Show Satlets")
+                    }
                 }
             }
             .navigationTitle("Map Settings")
             .navigationBarItems(trailing: Button("Done") {
                 presentationMode.wrappedValue.dismiss()
             })
+        }
+    }
+}
+
+struct ScanAndAddButtons: View {
+    @EnvironmentObject var api : API
+    @State private var showingScanResults = false
+    @State private var discoveredDevices:[CBPeripheral] = []
+    @State var siteListIsPresented = false
+    
+    var body: some View {
+        HStack {
+            //   Spacer()
+            
+            Button{
+                discoveredDevices = []
+                showingScanResults.toggle()
+                
+                api.scan(timeout: 3) { deviceList in
+                    
+                    discoveredDevices = deviceList
+                }
+                
+            } label: {
+                
+                Image(systemName: "dot.radiowaves.left.and.right")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(.black)
+                    .frame(width: 40, height: 40)
+                
+                    .padding()
+                    .background(CustomColor.pinpoint_orange)
+                    .clipShape(Circle())
+                
+            }
+            .shadow(radius: 2)
+            
+            Button {
+                siteListIsPresented.toggle()
+            } label: {
+                
+                Image(systemName: "map.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(.black)
+                    .frame(width: 40, height: 40)
+                
+                    .padding()
+                    .background(CustomColor.pinpoint_orange)
+                    .clipShape(Circle())
+            }
+            
+            
+        }
+        .sheet(isPresented: $siteListIsPresented, content: {
+            SitesList()
+        })
+        
+        
+        
+        // ScanList menu
+        .sheet(isPresented: $showingScanResults) {
+            DeviceListView(discoveredDevices: $discoveredDevices)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
     }
 }

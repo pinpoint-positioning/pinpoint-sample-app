@@ -15,22 +15,16 @@ import FilePicker
 import SDK
 
 
+
 struct MainView: View {
     
     @State private var showingActions = false
-    @ObservedObject var api = API.shared
-    @State var siteFile:SiteData?
-    @State var siteFileName = ""
-    
+
+
+
+
     //MARK: - Body
     var body: some View {
-        
-        
-        NavigationStack{
-            ZStack{
-                Color("pinpoint_background")
-                
-                    .ignoresSafeArea()
                 VStack {
                     ScrollView {
                         VStack(alignment: .center){
@@ -39,7 +33,7 @@ struct MainView: View {
                                 .shadow(radius: 2)
                         
                         
-                                SiteFileInformationView(siteFile: $siteFile)
+                                SiteFileInformationView()
                                     .cornerRadius(10)
                                     .shadow(radius: 2)
                         }
@@ -47,42 +41,21 @@ struct MainView: View {
                         .padding()
                     }
                     
-                    ScanButton(mapView:PositionViewFullScreen(siteFile: $siteFile, siteFileName: $siteFileName))
+                    ScanButton(mapView:PositionViewFullScreen())
                     
-                        .background(Color("pinpoint_gray").edgesIgnoringSafeArea(.bottom))
+                   //     .background(Color("pinpoint_gray"))
                     
                 }
-                .safeAreaInset(edge: .top, content: {
-                    Color.clear
-                        .frame(height: 0)
-                        .background(Color("pinpoint_gray"))
-                        .border(.black)
-                })
-                .navigationTitle("Tracelet Reader")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        NavigationLink {
-                            DebugView()
-                        } label: {
-                            Image(systemName: "ladybug")
-                                .foregroundColor(.black)
-                        }
+                
+//                .safeAreaInset(edge: .top, content: {
+//                    Color.clear
+//                        .frame(height: 0)
+//                        .background(Color("pinpoint_gray"))
+//                })
 
-                    }
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        NavigationLink {
-                            InfoView()
-                        } label: {
-                            Image(systemName: "info.circle")
-                                .foregroundColor(.black)
-                        }
-                        
-                    }
-                }
-            }
-        }
-        .environmentObject(API.shared)
+               
+               
+        
     }
 
 }
@@ -145,7 +118,7 @@ struct StatesView: View {
                 }
                 HStack {
                     Text("Device: ")
-                    Text(String(describing: api.deviceName))
+                    Text(String(describing: api.connectedTracelet?.name ?? ""))
                 }
                 Divider()
                 Text("States")
@@ -190,58 +163,54 @@ struct StatesView: View {
     }
 }
 
-
-
-struct DeviceListView: View {
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var api:API
-    @Binding var discoveredDevices:[CBPeripheral]
-    
-    var body: some View {
-        VStack {
-            Text("Available Tracelets")
-                .padding()
-                .font(.largeTitle)
-            if (api.scanState == .SCANNING) {
-                ProgressView("Scanning...")
-                    .padding()
-                
-            }
-            
-            List{
-                ForEach(discoveredDevices, id: \.self) { device in
-                    HStack{
-                        Button(device.name ?? "name not found") {
-                            //api.connectAndStartPositioning(device: device)
-                            Task {
-                             
-                                do {
-                                    let success = try await api.connectAndStartPositioning(device: device)
-                                    print(success)
-                                }
-                                catch {
-                                    print(error)
-                                }
-                               
-                                
-
-                            }
-                            dismiss()
-                        }
-                        Spacer()
-                        Image(systemName: "eye")
-                            .onTapGesture {
-                                api.showMe(tracelet: device)
-                            }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
+//
+//
+//
+//
+//
+//struct NavigationBarModifier: ViewModifier {
+//        
+//    var backgroundColor: UIColor?
+//    
+//    init( backgroundColor: UIColor?) {
+//        self.backgroundColor = backgroundColor
+//        let coloredAppearance = UINavigationBarAppearance()
+//        coloredAppearance.configureWithTransparentBackground()
+//        coloredAppearance.backgroundColor = .clear
+//        coloredAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+//        coloredAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+//        
+//        
+//        UINavigationBar.appearance().standardAppearance = coloredAppearance
+//        UINavigationBar.appearance().compactAppearance = coloredAppearance
+//        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
+//        UINavigationBar.appearance().tintColor = CustomColor.uiPinpoint_orange
+//       
+//    }
+//    
+//    func body(content: Content) -> some View {
+//        ZStack{
+//            content
+//            VStack {
+//                GeometryReader { geometry in
+//                    Color(self.backgroundColor ?? .clear)
+//                        .frame(height: geometry.safeAreaInsets.top)
+//                        .edgesIgnoringSafeArea(.top)
+//                    Spacer()
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//
+//extension View {
+// 
+//    func navigationBarColor(_ backgroundColor: UIColor?) -> some View {
+//        self.modifier(NavigationBarModifier(backgroundColor: backgroundColor))
+//    }
+//
+//}
 
 
 

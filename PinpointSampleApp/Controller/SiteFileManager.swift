@@ -14,10 +14,11 @@ import WebDAV
 
 
 
-public class SiteFileManager {
+public class SiteFileManager: ObservableObject {
     
-    public init(){}
-    
+//    public init(){}
+    @Published var siteFile = SiteData()
+    @Published var floorImage = UIImage()
     
     let fileManager = FileManager()
     //let logger = Logger.shared
@@ -121,7 +122,7 @@ public class SiteFileManager {
     
     //ParseJsonFile
     
-    public func loadJson(siteFileName: String) -> SiteData? {
+    public func loadJson(siteFileName: String) -> SiteData {
         do {
             var destinationURL = getDocumentsDirectory()
             destinationURL.appendPathComponent("sitefiles")
@@ -135,15 +136,20 @@ public class SiteFileManager {
             
         } catch {
             print("error:\(error)")
+            return SiteData()
         }
-        
-        return nil
+
+    }
+    
+    func loadSiteFile(siteFileName: String) {
+        siteFile = loadJson(siteFileName: siteFileName)
+        floorImage = getFloorImage(siteFileName: siteFileName)
     }
     
     
     // Get the floor image file
     
-    public func getFloorImage(siteFileName:String) -> UIImage? {
+    public func getFloorImage(siteFileName:String) -> UIImage {
         var destinationURL = getDocumentsDirectory()
         destinationURL.appendPathComponent("sitefiles")
         destinationURL.appendPathComponent(siteFileName)
@@ -151,30 +157,132 @@ public class SiteFileManager {
         
         do {
             let imageData = try Data(contentsOf: destinationURL)
-            return UIImage(data: imageData)
+            return UIImage(data: imageData) ?? UIImage()
         } catch {
             print("Error loading image : \(error)")
+            return UIImage()
+            
         }
-        return nil
+  
     }
     
     
-//    public func downloadSiteFile(from url: URL) async throws -> URL {
-//        let (tempURL, _) = try await URLSession.shared.download(from: url)
-//        
-//        do {
-//            let fileManager = FileManager.default
-//            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-//            
-//            //let destinationURL = documentsURL.appendingPathComponent("sse-demo")
-//            let destinationURL = documentsURL.appendingPathComponent(tempURL.lastPathComponent)
-//            try fileManager.moveItem(at: tempURL, to: destinationURL)
-//            
-//            return destinationURL
-//        } catch {
-//            throw error
-//        }
-//    }
+    public func downloadAndSave(site: String) async -> Bool {
+        let logger = Logger.shared
+        let wd = WebDAV()
+        let account = Account(username: "PinPoint_Debug", baseURL: "https://connect.pinpoint.de")
+        var lastFolderName = ""
+        let directoryURL = "\(site)"
+        
+        // extract the last folder name
+        if let url = URL(string: site) {
+            lastFolderName = url.lastPathComponent
+        } else {
+            logger.log(type: .Error, "invalid url")
+            return false
+        }
+        
+        do {
+            let resources = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<[WebDAVFile]?, Error>) in
+                wd.listFiles(atPath: directoryURL, account: account, password: "123undlos!!!") { resources, error in
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    } else {
+                        continuation.resume(returning: resources)
+                    }
+                }
+            }
+            
+            guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                logger.log(type: .Error, "Error getting documents directory.")
+                return false
+            }
+            
+            let destinationDirectoryURL = documentsDirectory.appendingPathComponent("sitefiles/\(lastFolderName)")
+            
+            do {
+                // Create a directory in the documents directory to save the files
+                try FileManager.default.createDirectory(at: destinationDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                logger.log(type: .Error, "Error creating destination directory: \(error)")
+                return false
+            }
+            
+            // Download and save JSON files
+            if let jsonResources = resources?.filter({ $0.fileName.lowercased().hasSuffix(".json") }) {
+                for jsonResource in jsonResources {
+                    let destinationURL = destinationDirectoryURL.appendingPathComponent("sitedata.json")
+                    do {
+                        let data = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<Data?, Error>) in
+                            wd.download(fileAtPath: jsonResource.path, account: account, password: "123undlos!!!") { data, error in
+                                if let error = error {
+                                    continuation.resume(throwing: error)
+                                } else {
+                                    continuation.resume(returning: data)
+                                }
+                            }
+                        }
+                        
+                        if let data = data {
+                            try data.write(to: destinationURL)
+                            logger.log(type: .Info, "JSON file saved successfully at: \(destinationURL)")
+                        } else {
+                            return false
+                        }
+                    } catch {
+                        logger.log(type: .Error, "Error saving JSON file: \(error)")
+                        return false
+                    }
+                }
+            }
+            
+            // Download and save PNG files
+            if let pngResources = resources?.filter({ $0.fileName.lowercased().hasSuffix(".png") }) {
+                for pngResource in pngResources {
+                    let destinationURL = destinationDirectoryURL.appendingPathComponent("floorplan.png")
+                    do {
+                        let data = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<Data?, Error>) in
+                            wd.download(fileAtPath: pngResource.path, account: account, password: "123undlos!!!") { data, error in
+                                if let error = error {
+                                    continuation.resume(throwing: error)
+                                } else {
+                                    continuation.resume(returning: data)
+                                }
+                            }
+                        }
+                        
+                        if let data = data {
+                            try data.write(to: destinationURL)
+                            logger.log(type: .Info, "PNG file saved successfully at: \(destinationURL)")
+                        } else {
+                            return false
+                        }
+                    } catch {
+                        logger.log(type: .Error, "Error saving PNG file: \(error)")
+                        return false
+                    }
+                }
+            }
+            
+            return true // All downloads were successful
+        } catch {
+            logger.log(type: .Error, "Error listing directory or downloading files: \(error)")
+            return false
+        }
+    }
+    
+    
+    
+    
+    
+    enum WebDAVDownloadError: Error {
+        case invalidURL
+        case missingJSONFile
+        case missingPNGFile
+        case downloadFailed
+    }
+    
+    
     
     
     
@@ -247,5 +355,14 @@ public class SiteFileManager {
                 }
             }
         }
+        
+        
+        
+        
+        
+ 
+     
+        
+        
     }
 

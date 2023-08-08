@@ -1,0 +1,79 @@
+{
+    "map": {
+        "mapFile": " Pinpoint Office_1.png",
+        "mapFileOriginX": 0.0,
+        "mapFileOriginY": 0.0,
+        "mapFileRes": 56.37,
+        "mapName": " Pinpoint Office_1",
+        "mapSiteId": "0x9999",
+        "originLatitude": 50.82288925217965,
+        "originLongitude": 12.921428096287375,
+        "originAzimuth": 217.7145691777151,
+        "uwbChannel": 5
+    },
+    "satlets": [
+        {
+            "address": "0x4985",
+            "isActive": true,
+            "name": "Satlet 1",
+            "panId": "0x0002",
+            "slot": 1.0,
+            "xCoordinate": 6.0,
+            "yCoordinate": 3.01,
+            "zCoordinate": 2.05
+        },
+        {
+            "address": "0xcb84",
+            "isActive": true,
+            "name": "Satlet 2",
+            "panId": "0x0002",
+            "slot": 2.0,
+            "xCoordinate": 6.13,
+            "yCoordinate": 6.6,
+            "zCoordinate": 1.9
+        },
+        {
+            "address": "0xca1a",
+            "isActive": true,
+            "name": "Satlet 3",
+            "panId": "0x0002",
+            "slot": 3.0,
+            "xCoordinate": 15.17,
+            "yCoordinate": 8.34,
+            "zCoordinate": 2.8
+        },
+        {
+            "address": "0x4f0d",
+            "isActive": true,
+            "name": "Satlet 4",
+            "panId": "0x0002",
+            "slot": 4.0,
+            "xCoordinate": 27.03,
+            "yCoordinate": 8.37,
+            "zCoordinate": 2.8
+        },
+        {
+            "address": "0x4927",
+            "isActive": true,
+            "name": "Satlet 5",
+            "panId": "0x0002",
+            "slot": 5.0,
+            "xCoordinate": 27.42,
+            "yCoordinate": 3.03,
+            "zCoordinate": 1.3
+        },
+        {
+            "address": "0xdbfb",
+            "isActive": true,
+            "name": "Position Monitor",
+            "panId": "0x0002",
+            "slot": 6.0,
+            "xCoordinate": 23.83,
+            "yCoordinate": 5.29,
+            "zCoordinate": 0.9
+        }
+    ],
+    "sitefileScheme": {
+        "version": 3.0
+    }
+}

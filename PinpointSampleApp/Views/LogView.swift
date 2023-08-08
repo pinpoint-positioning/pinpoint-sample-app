@@ -33,7 +33,7 @@ struct LogView: View {
             
             
             HStack {
-                ShareLink("Share logfile", item: logFileContents)
+                ShareLink("Share", item: logFileContents)
                     .buttonStyle(.bordered)
                 
                 

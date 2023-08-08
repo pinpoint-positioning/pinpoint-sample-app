@@ -25,6 +25,8 @@ struct DebugView: View{
             .padding()
             
         }
+        .navigationTitle("Debug View")
+
     }
 }
 
@@ -41,7 +43,6 @@ struct LogPreview: View{
             api.openDir()
             logView = true
         }
-        .buttonStyle(.bordered)
         .sheet(isPresented: $logView) {
             LogView()
                 .presentationDragIndicator(.visible)

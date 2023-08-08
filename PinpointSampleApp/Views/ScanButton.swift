@@ -17,16 +17,10 @@ struct ScanButton:View {
     @State var buttonText = ""
     @State var mapView:PositionViewFullScreen?
 
-    
-    
-    
+
     var body: some View {
         ZStack {
-            
-            Rectangle()
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 80, maxHeight: 80)
-                .ignoresSafeArea()
-                .foregroundColor(CustomColor.pinpoint_gray)
+
             
             Button {
                 
@@ -54,11 +48,11 @@ struct ScanButton:View {
 
                 VStack{
                     ZStack {
-                        Circle()
-                        
-                            .foregroundColor(CustomColor.pinpoint_background)
-                            .frame(width: 80, height: 80)
-                            .offset(y:yOffset)
+//                        Circle()
+//                        
+//                       //     .foregroundColor(CustomColor.pinpoint_background)
+//                            .frame(width: 80, height: 80)
+//                            .offset(y:yOffset)
                         
                         
                         Circle()
@@ -125,7 +119,7 @@ struct ScanButton:View {
                 .presentationDragIndicator(.visible)
         }
             
-            SecondaryButtons(mapView: $mapView)
+         
             
         }
    

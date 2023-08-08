@@ -1,0 +1,10 @@
+
+ ------------------------ 
+ [Info] 04/08/2023 13:11:30: init() - SDK initiated: 
+  BT-state: CBManagerState(rawValue: 0)
+ ------------------------ 
+ [Info] 04/08/2023 13:11:30: centralManagerDidUpdateState(_:) - BT changed to BT_OK
+ ------------------------ 
+ [Info] 04/08/2023 13:12:27: downloadAndSave(site:) - JSON file saved successfully at: file:///var/mobile/Containers/Data/Application/58DDB144-1526-4329-A1ED-407D9DC28745/Documents/sitefiles/Wirkbau_Office_1/sitedata.json
+ ------------------------ 
+ [Info] 04/08/2023 13:12:27: downloadAndSave(site:) - PNG file saved successfully at: file:///var/mobile/Containers/Data/Application/58DDB144-1526-4329-A1ED-407D9DC28745/Documents/sitefiles/Wirkbau_Office_1/floorplan.png

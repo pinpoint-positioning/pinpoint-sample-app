@@ -9,30 +9,50 @@ import SwiftUI
 import SDK
 import WebDAV
 
+
+    
 struct RemoteSitesList: View {
+    @EnvironmentObject var sfm:SiteFileManager
     @State private var sites = [String]()
     @State private var selectedSite: String?
+    @State private var isDownloadSuccessful = true
+    @Environment(\.dismiss) var dismiss
+    
+    
     var body: some View {
-        
-        VStack{
-            
-            List(sites, id: \.self) { site in
-                
-                Button(site) {
-                    download(site: site)
+        NavigationStack {
+            ZStack{
+                List(sites, id: \.self) { site in
+                    
+                    Button(site) {
+                        Task {
+                            isDownloadSuccessful = false
+                            isDownloadSuccessful = await sfm.downloadAndSave(site: site)
+                            dismiss()
+                        }
+                    }
+                    
                 }
-  
+                .onAppear() {
+                    Task{
+                        sites = await NextcloudFileLister().listFilesInNextcloudFolder()
+                        
+                    }
+                }
+                
+                if !isDownloadSuccessful {
+                    Color.gray
+                        .opacity(0.5)
+                    ProgressView()
+                    
+                }
             }
-        }
-        .onAppear() {
-            Task{
-                sites = await NextcloudFileLister().listFilesInNextcloudFolder()
-                print (sites)
-            }
-        }
+            .navigationTitle("Download Site")
+            .navigationBarTitleDisplayMode(.inline)
 
-        
+        }
     }
+
 }
 
 struct Account:WebDAVAccount {
@@ -42,47 +62,12 @@ struct Account:WebDAVAccount {
 
 }
 
-func download(site:String) {
-    
-    let wd = WebDAV()
-    let account = Account(username: "PinPoint_Debug", baseURL: "https://connect.pinpoint.de")
-    wd.download(fileAtPath:"/remote.php/dav/files/PinPoint_Debug\(site)", account: account, password: "123undlos!!!") { data, error in
-        print (data)
-        if let error = error {
-            print (error)
-        }
-    }
+        
+      
 
-}
-
-
-
-struct FileDownloadView: View {
-    let site: String
-
-    @State private var fileData: Data?
-    
-    var body: some View {
-        VStack {
-            if let data = fileData {
-                // Display the downloaded file content
-                Text(String(data: data, encoding: .utf8) ?? "Failed to read file data")
-            } else {
-                // Show loading indicator or any other UI while downloading
-                ProgressView()
+        struct RemoteSitesList_Previews: PreviewProvider {
+            static var previews: some View {
+                RemoteSitesList()
             }
         }
-        .onAppear {
-            
-        }
-
-    }
-
-}
-
-
-struct RemoteSitesList_Previews: PreviewProvider {
-    static var previews: some View {
-        RemoteSitesList()
-    }
-}
+    

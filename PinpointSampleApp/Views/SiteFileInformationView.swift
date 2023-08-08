@@ -11,8 +11,8 @@ import SDK
 struct SiteFileInformationView: View {
     
     @EnvironmentObject var api:API
+    @EnvironmentObject var sfm:SiteFileManager
     @State var status = TL_StatusResponse()
-    @Binding var siteFile:SiteData?
     let symbolScale = 30.0
     
     var body: some View {
@@ -25,7 +25,7 @@ struct SiteFileInformationView: View {
             
             
             
-            if let siteFile = siteFile {
+            if  sfm.siteFile.map.mapSiteId != "" {
                 HStack(alignment: .top){
                     
                     // Left side
@@ -39,7 +39,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Map name")
                                     .fontWeight(.semibold)
-                                Text(siteFile.map.mapName)
+                                Text(sfm.siteFile.map.mapName)
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -53,7 +53,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Map resolution")
                                     .fontWeight(.semibold)
-                                Text(String(siteFile.map.mapFileRes))
+                                Text(String(sfm.siteFile.map.mapFileRes))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -67,7 +67,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Site ID")
                                     .fontWeight(.semibold)
-                                Text(String(siteFile.map.mapSiteId))
+                                Text(String(sfm.siteFile.map.mapSiteId))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -81,7 +81,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Channel")
                                     .fontWeight(.semibold)
-                                Text(String(siteFile.map.uwbChannel))
+                                Text(String(sfm.siteFile.map.uwbChannel))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -102,7 +102,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Mapfile")
                                     .fontWeight(.semibold)
-                                Text(String(siteFile.map.mapFile))
+                                Text(String(sfm.siteFile.map.mapFile))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -115,7 +115,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Origin Azimuth")
                                     .fontWeight(.semibold)
-                                Text(String(siteFile.map.originAzimuth))
+                                Text(String(sfm.siteFile.map.originAzimuth))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -129,7 +129,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Origin Latitude")
                                     .fontWeight(.semibold)
-                                Text(String(siteFile.map.originLatitude))
+                                Text(String(sfm.siteFile.map.originLatitude))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -143,7 +143,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Origin Longitude")
                                     .fontWeight(.semibold)
-                                Text(String(siteFile.map.originLongitude))
+                                Text(String(sfm.siteFile.map.originLongitude))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -162,6 +162,7 @@ struct SiteFileInformationView: View {
         .background(Color("pinpoint_background"))
         .foregroundColor(Color("pinpoint_gray"))
         .font(.system(size: 10))
+
         
         
         

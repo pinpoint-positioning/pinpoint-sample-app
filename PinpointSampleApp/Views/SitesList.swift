@@ -10,114 +10,118 @@ import SwiftUI
 import SDK
 struct SitesList: View {
     
+    @EnvironmentObject var sfm : SiteFileManager
+    
     @State var list = [String]()
-    let sfm = SiteFileManager()
-    @State var image:UIImage = UIImage()
-    @Binding var siteFile:SiteData?
-    @Binding var siteFileName:String
-    @State var selection:String?
-    @State var isSelected = false
+    @State var selectedItem:String? = nil
+    @State var selectedSitefile = ""
     @State var showImporter = false
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @State var showWebDavImporter = false
+    @Environment(\.dismiss) var dismiss
+    
     
     var body: some View {
         VStack {
-            List(list, id: \.self, selection: $selection) { item in
-                let siteInfo = sfm.loadJson(siteFileName: item)
-
-                Button(action: {
-                    if selection == item {
-                        selection = nil // Deselect the item
-                    } else {
-                        selection = item // Set the selected item
-                    }
-
-                    if let siteFile = sfm.loadJson(siteFileName: item) {
-                        self.siteFile = siteFile
-                        self.siteFileName = item
-                    }
-                }) {
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(item)
-                                .fontWeight((siteFileName == item) ? .bold : .regular)
-                                .font(.system(size: 16))
-                            
-                            Text("Resolution: \(siteInfo?.map.mapFileRes ?? 0)")
-                                .font(.system(size: 10))
-                            
-                            Text("Site ID: \(siteInfo?.map.mapSiteId ?? "unknown")")
-                                .font(.system(size: 10))
-                            
-                            Text("UWB-Channel: \(siteInfo?.map.uwbChannel ?? 0)")
-                                .font(.system(size: 10))
-                        }
-                        
-                        Spacer()
-                        
-                        Image(systemName: siteFileName == item ? "circle.fill" : "circle")
-                            .foregroundColor(siteFileName == item ? .orange : .gray)
-                            .font(.system(size: 24))
-                            .overlay(
-                                Image(systemName: "circle.fill")
-                                    .foregroundColor(.orange)
-                                    .font(.system(size: 24))
-                                    .opacity(siteFileName == item ? 1 : 0)
-                            )
-                    }
-                }
-                .foregroundColor(selection == item ? .blue : .black) // Change the text color based on selection
-            }
-
-
-
-
-            .task {
-                list = sfm.getSitefilesList()
-                
-            }
-            
-            Spacer()
-            Button(action: {
-                 clearCache()
-             }) {
-                 Text("Delete all SiteFiles")
-                     .foregroundColor(.white)
-                     .font(.headline)
-                     .padding()
-                     .background(Color.red)
-                     .cornerRadius(10)
-             }
-             .padding()
-        }
-        .navigationTitle("Import SiteFile")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
-                
-                // Import SiteFile
+            HStack{
                 Button() {
                     showImporter = true
                 } label: {
-                    Image(systemName: "folder")
+                    HStack{
+                        Image(systemName: "folder")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 20, height: 20)
+                        Text("Local")
+                    }
+                    
+                }
+                .padding(.trailing)
+                
+            
+                
+                Button{
+                    showWebDavImporter.toggle()
+                }
+            label: {
+                HStack{
+                    Image(systemName: "cloud")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 20, height: 20)
+                    Text("WebDAV")
+                }
+              
+            }
+                
+                Spacer()
+                HStack{
+                    
+                    Button(action: {
+                        clearCache()
+                        
+                    }) {
+                        Image(systemName: "xmark.bin.fill")
+                            .resizable()
+                            .foregroundColor(.red)
+                            .scaledToFill()
+                            .frame(width: 20, height: 20)
+                        Text("Delete all")
+                    }
+                    .padding()
+                
                 }
                 
-                // webdav test
-               
-                NavigationLink{
-                    RemoteSitesList()
-                }
-                 label: {
-                    Image(systemName: "cloud")
-                }
                 
                 
             }
-
+            .padding()
             
             
+            List(list, id: \.self, selection: $selectedItem) { item in
+                Button{
+                    selectedItem = item
+                    selectedSitefile = item
+                } label: {
+                    Text(item)
+                        
+                }
+                .foregroundColor(selectedSitefile != item ? .black : CustomColor.pinpoint_orange)
+            }
+            
+            // Load Button
+            Button(action: {
+                if selectedSitefile != ""{
+                    setSiteFile(item: selectedSitefile)
+                    dismiss()
+                }
+                
+            }) {
+                Text("Load SiteFile")
+                    .foregroundColor(.white)
+                    .font(.headline)
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(10)
+            }
+            .disabled(selectedSitefile == "" ? true : false)
+            .padding()
+ 
         }
         
+        
+        .task {
+            list = sfm.getSitefilesList()
+        }
+        
+        .sheet(isPresented: $showWebDavImporter, onDismiss: {
+            list = sfm.getSitefilesList()
+        }) {
+            RemoteSitesList()
+        }
+  
+        .navigationTitle("Import SiteFile")
+        .navigationBarTitleDisplayMode(.inline)
+    
         .fileImporter(
             isPresented: $showImporter,
             allowedContentTypes: [.zip],
@@ -143,9 +147,7 @@ struct SitesList: View {
                             list = sfm.getSitefilesList()
                         }
                         
-                        if let sfContent = sfm.loadJson(siteFileName: "sitedata.json") {
-                            siteFile = sfContent
-                        }
+                        sfm.loadSiteFile(siteFileName: "sitedata.json")
                     } else {
                         print("error saving file")
                         let error = NSError(domain: "Error saving file", code: 1001, userInfo: nil)
@@ -167,6 +169,10 @@ struct SitesList: View {
     }
 
     
+    func setSiteFile(item: String) {
+        sfm.loadSiteFile(siteFileName: item)
+    }
+    
     func clearCache(){
         let fileManager = FileManager.default
         do {
@@ -176,6 +182,8 @@ struct SitesList: View {
                 try fileManager.removeItem(at: url)
                 list.removeAll()
             }
+            sfm.siteFile = SiteData()
+            sfm.floorImage = UIImage()
         } catch {
             print(error)
         }

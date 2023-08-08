@@ -1,0 +1,35 @@
+
+ ------------------------ 
+ [Info] 04/08/2023 12:59:40: downloadAndSave(site:) - JSON file saved successfully at: file:///var/mobile/Containers/Data/Application/23C3CECB-9066-48DE-8F5D-47EDC701B8BE/Documents//sitefilesCMMC_Halle/sitedata.json
+ ------------------------ 
+ [Info] 04/08/2023 12:59:40: downloadAndSave(site:) - PNG file saved successfully at: file:///var/mobile/Containers/Data/Application/23C3CECB-9066-48DE-8F5D-47EDC701B8BE/Documents//sitefilesCMMC_Halle/floorplan.png
+ ------------------------ 
+ [Info] 04/08/2023 13:00:24: init() - SDK initiated: 
+  BT-state: CBManagerState(rawValue: 0)
+ ------------------------ 
+ [Info] 04/08/2023 13:00:24: centralManagerDidUpdateState(_:) - BT changed to BT_OK
+ ------------------------ 
+ [Info] 04/08/2023 13:00:31: downloadAndSave(site:) - JSON file saved successfully at: file:///var/mobile/Containers/Data/Application/50968623-6518-4825-9755-DE72B0545899/Documents/sitefiles/CMMC_Halle/sitedata.json
+ ------------------------ 
+ [Info] 04/08/2023 13:00:31: downloadAndSave(site:) - PNG file saved successfully at: file:///var/mobile/Containers/Data/Application/50968623-6518-4825-9755-DE72B0545899/Documents/sitefiles/CMMC_Halle/floorplan.png
+ ------------------------ 
+ [Info] 04/08/2023 13:01:05: downloadAndSave(site:) - JSON file saved successfully at: file:///var/mobile/Containers/Data/Application/50968623-6518-4825-9755-DE72B0545899/Documents/sitefiles/SSE_0/sitedata.json
+ ------------------------ 
+ [Info] 04/08/2023 13:01:18: downloadAndSave(site:) - JSON file saved successfully at: file:///var/mobile/Containers/Data/Application/50968623-6518-4825-9755-DE72B0545899/Documents/sitefiles/SSE_pp2.0/sitedata.json
+ ------------------------ 
+ [Info] 04/08/2023 13:01:18: downloadAndSave(site:) - PNG file saved successfully at: file:///var/mobile/Containers/Data/Application/50968623-6518-4825-9755-DE72B0545899/Documents/sitefiles/SSE_pp2.0/floorplan.png
+ ------------------------ 
+ [Info] 04/08/2023 13:02:25: init() - SDK initiated: 
+  BT-state: CBManagerState(rawValue: 0)
+ ------------------------ 
+ [Info] 04/08/2023 13:02:25: centralManagerDidUpdateState(_:) - BT changed to BT_OK
+ ------------------------ 
+ [Info] 04/08/2023 13:02:56: init() - SDK initiated: 
+  BT-state: CBManagerState(rawValue: 0)
+ ------------------------ 
+ [Info] 04/08/2023 13:02:56: centralManagerDidUpdateState(_:) - BT changed to BT_OK
+ ------------------------ 
+ [Info] 04/08/2023 13:03:40: init() - SDK initiated: 
+  BT-state: CBManagerState(rawValue: 0)
+ ------------------------ 
+ [Info] 04/08/2023 13:03:40: centralManagerDidUpdateState(_:) - BT changed to BT_OK

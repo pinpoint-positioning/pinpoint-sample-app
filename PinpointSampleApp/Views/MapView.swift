@@ -1,58 +1,45 @@
-////
-////  MapView.swift
-////  PinpointSampleApp
-////
-////  Created by Christoph Scherbeck on 15.05.23.
-////
-//
-//import SwiftUI
-//import CoreLocation
-//import Foundation
-//import MapKit
-//import SDK
-//
-//
-//struct IdentifiablePlace: Identifiable {
-//    let id: UUID
-//    let location: CLLocationCoordinate2D
-//    init(id: UUID = UUID(), lat: Double, long: Double) {
-//        self.id = id
-//        self.location = CLLocationCoordinate2D(
-//            latitude: lat,
-//            longitude: long)
-//    }
-//}
-//
-//struct MapView: View {
-//    @State var siteFile:SiteData
-//    
-//    
-//    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 54.91425792453898, longitude: 23.86846932733282), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
-//    
-//    
-//    var place: IdentifiablePlace
-//    
-//    
-//    var body: some View {
-//        
-//        VStack{
-//
-//        Map(coordinateRegion: $region)
-//    }
-//        
-//        .task {
-//            print ("lat: \(siteFile.map.originLatitude), lon: \(siteFile.map.originLongitude)")
-//            region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: siteFile.map.originLatitude, longitude: siteFile.map.originLongitude), span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
-//            
-//        }
-//        
-//    }
-//}
-//
-//
-//
-////struct MapView_Previews: PreviewProvider {
-////    static var previews: some View {
-////        MapView(place: IdentifiablePlace(lat: 51.5, long: 0))
-////    }
-////}
+import SwiftUI
+import MapKit
+
+struct MapView: View {
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 13, longitude: 52),
+                                                   span: MKCoordinateSpan(latitudeDelta: 0.2, longitudeDelta: 0.2))
+    
+    var body: some View {
+        VStack {
+            Map(coordinateRegion: $region)
+                .overlay {
+                    Image("pinpoint-circle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 2000, height: 2000) // Adjust size as needed
+                        .offset(x: 0, y: 150) // Adjust vertical offset as needed
+                        .position(getMapImagePosition())
+                }
+              
+            
+
+        }
+    }
+    
+    private func getMapImagePosition() -> CGPoint {
+        let mapSize = UIScreen.main.bounds.size
+        let mapRect = MKMapRect.world
+        let mapRectWidth = mapRect.size.width
+        let mapRectHeight = mapRect.size.height
+        
+        let imageLongitude = region.center.longitude
+        let imageLatitude = region.center.latitude
+        
+        let x = CGFloat((imageLongitude - mapRect.origin.x) / mapRectWidth) * mapSize.width
+        let y = CGFloat((mapRect.origin.y + mapRectHeight - imageLatitude) / mapRectHeight) * mapSize.height
+        
+        return CGPoint(x: x, y: y)
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        MapView()
+    }
+}

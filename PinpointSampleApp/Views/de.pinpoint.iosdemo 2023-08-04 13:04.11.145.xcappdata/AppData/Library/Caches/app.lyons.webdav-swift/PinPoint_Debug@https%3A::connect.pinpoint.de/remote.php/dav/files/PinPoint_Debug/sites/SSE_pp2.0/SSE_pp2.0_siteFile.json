@@ -1,0 +1,241 @@
+{
+    "map": {
+        "mapFile": "SSE_pp2.0.png",
+        "mapFileOriginX": 0.7,
+        "mapFileOriginY": 1.25,
+        "mapFileRes": 39.0,
+        "mapSiteId": "0x055e",
+        "mapName": "SSE_pp2.0",
+        "originAzimuth": 348.57016150282834,
+        "originLatitude": 50.81388428744848,
+        "originLongitude": 12.92875878066738,
+        "tileProviderUrl": null,
+        "uwbChannel": 9,
+        "uwbPreambleIndex": null
+    },
+    "satlets": [
+        
+        {
+            "address": "0xc297",
+            "name": "1_tuer_431",
+            "panId": "0x431",
+            "xCoordinate": 10.3,
+            "yCoordinate": 4.2,
+            "zCoordinate": 2.4,
+            "isActive": null,
+            "slot": 1.0
+        },
+        {
+            "address": "0x0e24",
+            "name": "2_schrank_431",
+            "panId": "0x431",
+            "xCoordinate": 12.3,
+            "yCoordinate": 3.3,
+            "zCoordinate": 1.1,
+            "isActive": null,
+            "slot": 3.0
+        },
+        {
+            "address": "0x4015",
+            "name": "3_fenster_hinten_431",
+            "panId": "0x431",
+            "xCoordinate": 12.8,
+            "yCoordinate": 0.1,
+            "zCoordinate": 1.0,
+            "isActive": null,
+            "slot": 6.0
+        },
+        {
+            "address": "0xcf8a",
+            "name": "4_fenster_431",
+            "panId": "0x431",
+            "xCoordinate": 9.3,
+            "yCoordinate": 0.1,
+            "zCoordinate": 1.0,
+            "isActive": null,
+            "slot": 9.0
+        },
+        {
+            "address": "0x94b5",
+            "name": "5_tuer_460",
+            "panId": "0x0460",
+            "xCoordinate": 9.5,
+            "yCoordinate": 11.0,
+            "zCoordinate": 2.1,
+            "isActive": true,
+            "slot": 12.0
+        },
+        {
+            "address": "0x97b4",
+            "name": "6_blume_460",
+            "panId": "0x0460",
+            "xCoordinate": 9.6,
+            "yCoordinate": 19.5,
+            "zCoordinate": 1.3,
+            "isActive": true,
+            "slot": 15.0
+        },
+        {
+            "address": "0x9719",
+            "name": "7_ecke_hinten_rechts_460",
+            "panId": "0x0460",
+            "xCoordinate": 16.1,
+            "yCoordinate": 19.7,
+            "zCoordinate": 1.5,
+            "isActive": true,
+            "slot": 18.0
+        },
+        {
+            "address": "0xc8a4",
+            "name": "8_absperrhahn_460",
+            "panId": "0x0460",
+            "xCoordinate": 16.1,
+            "yCoordinate": 13.2,
+            "zCoordinate": 2.0,
+            "isActive": true,
+            "slot": 21.0
+        },
+        {
+            "address": "0x4e08",
+            "name": "9_bridge_431_460",
+            "panId": "0x0460",
+            "xCoordinate": 10.0,
+            "yCoordinate": 8.2,
+            "zCoordinate": 0.1,
+            "isActive": false,
+            "slot": 24.0
+        },
+        {
+            "address": "0x15a3",
+            "name": "10_ecke_hinten_links_463",
+            "panId": "0x0460",
+            "xCoordinate": 2.0,
+            "yCoordinate": 19.6,
+            "zCoordinate": 1.6,
+            "isActive": true,
+            "slot": 27.0
+        },
+        {
+            "address": "0x04af",
+            "name": "11_waschbecken_463",
+            "panId": "0x0460",
+            "xCoordinate": 2.4,
+            "yCoordinate": 8.8,
+            "zCoordinate": 1.7,
+            "isActive": true,
+            "slot": 30.0
+        },
+        {
+            "address": "0xdab1",
+            "name": "12_schrank_463",
+            "panId": "0x0460",
+            "xCoordinate": 8.7,
+            "yCoordinate": 9.0,
+            "zCoordinate": 2.4,
+            "isActive": true,
+            "slot": 2.0
+        },
+        {
+            "address": "0x9f82",
+            "name": "13_fahrstuhl_links",
+            "panId": "0xfa57",
+            "xCoordinate": 18.8,
+            "yCoordinate": 2.4,
+            "zCoordinate": 2.7,
+            "isActive": false,
+            "slot": 5.0
+        },
+        {
+            "address": "0x9fd9",
+            "name": "14_tuer_gang",
+            "panId": "0xfa57",
+            "xCoordinate": 17.2,
+            "yCoordinate": 6.0,
+            "zCoordinate": 3.0,
+            "isActive": false,
+            "slot": 7.0
+        },
+        {
+            "address": "0xbfad",
+            "name": "15_aufgang_treppe",
+            "panId": "0xfa57",
+            "xCoordinate": 16.8,
+            "yCoordinate": 11.2,
+            "zCoordinate": 3.0,
+            "isActive": false,
+            "slot": 10.0
+        },
+        {
+            "address": "0xdd8b",
+            "name": "16_hekto",
+            "panId": "0x0460",
+            "xCoordinate": 16.0,
+            "yCoordinate": 16.2,
+            "zCoordinate": 1.5,
+            "isActive": false,
+            "slot": 13.0
+        },
+        {
+            "address": "0x8605",
+            "name": "17_satlet03_438",
+            "panId": "0x0438",
+            "xCoordinate": 35.6,
+            "yCoordinate": 0.1,
+            "zCoordinate": 0.7,
+            "isActive": false,
+            "slot": 0.0
+        },
+        {
+            "address": "0x0f31",
+            "name": "18_satlet09_438",
+            "panId": "0x0438",
+            "xCoordinate": 38.5,
+            "yCoordinate": 0.1,
+            "zCoordinate": 0.9,
+            "isActive": false,
+            "slot": 0.0
+        },
+        {
+            "address": "0x0f25",
+            "name": "19_satlet13_438",
+            "panId": "0x0438",
+            "xCoordinate": 38.5,
+            "yCoordinate": 3.5,
+            "zCoordinate": 2.0,
+            "isActive": false,
+            "slot": 0.0
+        },
+        {
+            "address": "0x17b1",
+            "name": "20_satlet14_438",
+            "panId": "0x0438",
+            "xCoordinate": 35.6,
+            "yCoordinate": 3.5,
+            "zCoordinate": 2.0,
+            "isActive": false,
+            "slot": 0.0
+        },
+        {
+            "address": "0x1234",
+            "name": "21_test_satlet_463",
+            "panId": "0x0460",
+            "xCoordinate": 4.3,
+            "yCoordinate": 14.59,
+            "zCoordinate": 2.27,
+            "isActive": false,
+            "slot": 0.0
+        },
+        {
+            "address": "0xd49f",
+            "name": "PositionMonitor",
+            "panId": "0x0460",
+            "xCoordinate": 12.14,
+            "yCoordinate": 17.31,
+            "zCoordinate": 0.85,
+            "isActive": false,
+            "slot": 0.0
+        }   ],
+    "sitefileScheme": {
+        "version": 3.0
+    }
+}
