@@ -115,7 +115,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Origin Azimuth")
                                     .fontWeight(.semibold)
-                                Text(String(sfm.siteFile.map.originAzimuth))
+                                Text(String(sfm.siteFile.map.originAzimuth ?? 0))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -129,7 +129,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Origin Latitude")
                                     .fontWeight(.semibold)
-                                Text(String(sfm.siteFile.map.originLatitude))
+                                Text(String(sfm.siteFile.map.originLatitude ?? 0))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }
@@ -143,7 +143,7 @@ struct SiteFileInformationView: View {
                                 
                                 Text("Origin Longitude")
                                     .fontWeight(.semibold)
-                                Text(String(sfm.siteFile.map.originLongitude))
+                                Text(String(sfm.siteFile.map.originLongitude ?? 0))
                                     .fontWeight(.regular)
                                     .font(.system(size: 12))
                             }

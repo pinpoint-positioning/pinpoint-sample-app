@@ -91,6 +91,8 @@ struct SitesList: View {
             // Load Button
             Button(action: {
                 if selectedSitefile != ""{
+                  //  print("site_wohnzimmer_1.zip")
+                    print(selectedSitefile)
                     setSiteFile(item: selectedSitefile)
                     dismiss()
                 }
@@ -146,8 +148,8 @@ struct SitesList: View {
                            _ =  await sfm.unarchiveFile(sourceFile: destinationUrl)
                             list = sfm.getSitefilesList()
                         }
-                        
-                        sfm.loadSiteFile(siteFileName: "sitedata.json")
+                  
+                        sfm.loadSiteFile(siteFileName: selectedFile.lastPathComponent)
                     } else {
                         print("error saving file")
                         let error = NSError(domain: "Error saving file", code: 1001, userInfo: nil)

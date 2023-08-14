@@ -10,6 +10,9 @@ import Charts
 import SDK
 import CoreBluetooth
 
+
+// ToDo -> Change site from siteID
+
 struct Position: Hashable {
     let x: CGFloat
     let y: CGFloat
@@ -84,16 +87,21 @@ struct PositionViewFullScreen: View {
                                     updateImagePosition()
                                 }
                                 .task {
-                                    
-                                    imageGeo.xOrigin = 0.0
-                                    imageGeo.yOrigin = 0.0
-                                    meterToPixelRatio = 100
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
+                                
+                                    if sfm.siteFile.map.mapName == "" {
+                                        meterToPixelRatio = 5
+                                        imageGeo.xOrigin = 0.0
+                                        imageGeo.yOrigin = -100.0
+                                    }
+                                 
                                     
                                     
                                 }
                                 .onChange(of: api.bleState, perform: { _ in
-                                    scan()
+                                    Task {
+                                        await scan()
+                                    }
                                     
                                 })
                                 .onChange(of: sfm.siteFile) { newValue in
@@ -181,11 +189,14 @@ struct PositionViewFullScreen: View {
                            
                            ToolbarItem(placement: .navigationBarLeading) {
                                Button {
-                                   scan()
+                                   Task {
+                                     await  scan()
+                                   }
                                } label: {
-                                   Image(systemName: "wave.3.right.circle.fill")
+                                   Image(systemName: "wave.3.right.circle")
                                    
                                }
+                               .disabled(api.generalState == .CONNECTED ? true : false)
                            }
                            
                            
@@ -217,7 +228,7 @@ struct PositionViewFullScreen: View {
     
     // Helper Functions
     
-    func scan() {
+    func scan() async {
         // Initiate Scan
         if api.generalState == .DISCONNECTED && api.bleState == .BT_OK{
             discoveredDevices = []
@@ -225,7 +236,23 @@ struct PositionViewFullScreen: View {
             api.scan(timeout: 3) { deviceList in
                 if !deviceList.isEmpty {
                     discoveredDevices = deviceList
-                    showingScanResults.toggle()
+                    // Show List of devices only if there are more than 1
+                    if deviceList.count > 1 {
+                        showingScanResults.toggle()
+                    } else {
+                        Task{
+                            do {
+                                if let onlyDevice = deviceList.first{
+                                    let _ =  try await api.connectAndStartPositioning(device: onlyDevice)
+                                }
+                            } catch {
+                                print (error)
+                            }
+                                
+                        }
+                    }
+                    
+                    
                 }
                 
             }
@@ -272,7 +299,7 @@ struct SatletView: View {
         let satletPositions = siteFile.satlets.map { CGPoint(x: ($0.xCoordinate + siteFile.map.mapFileOriginX) * siteFile.map.mapFileRes, y: imageGeo.imageSize.height - (($0.yCoordinate + siteFile.map.mapFileOriginY) * siteFile.map.mapFileRes)) }
         let _ = print("ori \(siteFile.map.mapFileOriginX) \(siteFile.map.mapFileOriginY)")
         
-        ForEach(0..<satletPositions.count) { index in
+        ForEach(satletPositions.indices, id: \.self) { index in
             let coords = satletPositions[index]
             
             ZStack {
@@ -308,6 +335,8 @@ struct PositionTraceView: View {
     
     var body: some View {
         ZStack {
+            Text("\(meterToPixelRatio)")
+         
             ForEach(positions.indices, id: \.self) { index in
                 let coords = makeCoordinates(with: index)
                 
@@ -322,6 +351,7 @@ struct PositionTraceView: View {
                 
                 
                 ZStack {
+                    
                     Image("pinpoint-circle")
                         .resizable()
                         .frame(width: index == latestPositionIndex ? 30 : 15, height: index == latestPositionIndex ? 30 : 15)

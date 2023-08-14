@@ -21,7 +21,7 @@ public class SiteFileManager: ObservableObject {
     @Published var floorImage = UIImage()
     
     let fileManager = FileManager()
-    //let logger = Logger.shared
+    let logger = Logger.shared
     
     func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
@@ -31,30 +31,38 @@ public class SiteFileManager: ObservableObject {
     
     // Unzip Sitefile to documentsfolder/sitefiles/sitefilename/
     
-    public func unarchiveFile(sourceFile:URL) async -> Bool {
-        
+    public func unarchiveFile(sourceFile: URL) async -> Bool {
         var destinationURL = getDocumentsDirectory()
         destinationURL.appendPathComponent("sitefiles")
-        destinationURL.appendPathComponent(sourceFile.lastPathComponent)
+
+        // Remove ".zip" extension if it exists
+        var sourceFileName = sourceFile.lastPathComponent
+        if sourceFileName.lowercased().hasSuffix(".zip") {
+            sourceFileName = String(sourceFileName.dropLast(4))
+        }
+        
+        destinationURL.appendPathComponent(sourceFileName)
+        
         do {
-            
             try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
-            print("folder created")
+            print("Folder created")
             try fileManager.unzipItem(at: sourceFile, to: destinationURL)
             try await _Concurrency.Task.sleep(nanoseconds: 2_000_000_000)
+            
             if let items = moveAndRenameFiles(path: destinationURL) {
                 for item in items {
                     print("Found \(item)")
                 }
                 return true
             }
-            
         } catch {
-            print("unzip \(error)")
+            print("Unzip error: \(error)")
             return false
         }
+        
         return true
     }
+
     
     
     
@@ -124,6 +132,7 @@ public class SiteFileManager: ObservableObject {
     
     public func loadJson(siteFileName: String) -> SiteData {
         do {
+
             var destinationURL = getDocumentsDirectory()
             destinationURL.appendPathComponent("sitefiles")
             destinationURL.appendPathComponent(siteFileName)
@@ -142,14 +151,21 @@ public class SiteFileManager: ObservableObject {
     }
     
     func loadSiteFile(siteFileName: String) {
-        siteFile = loadJson(siteFileName: siteFileName)
-        floorImage = getFloorImage(siteFileName: siteFileName)
+        var fileNameWithoutExtension = siteFileName
+        if siteFileName.lowercased().hasSuffix(".zip") {
+            fileNameWithoutExtension = String(siteFileName.dropLast(4))
+        }
+
+        siteFile = loadJson(siteFileName: fileNameWithoutExtension)
+        floorImage = getFloorImage(siteFileName: fileNameWithoutExtension)
     }
     
     
     // Get the floor image file
     
     public func getFloorImage(siteFileName:String) -> UIImage {
+        print("try get get sitfilename2:")
+        print(siteFileName)
         var destinationURL = getDocumentsDirectory()
         destinationURL.appendPathComponent("sitefiles")
         destinationURL.appendPathComponent(siteFileName)
@@ -168,7 +184,7 @@ public class SiteFileManager: ObservableObject {
     
     
     public func downloadAndSave(site: String) async -> Bool {
-        let logger = Logger.shared
+        
         let wd = WebDAV()
         let account = Account(username: "PinPoint_Debug", baseURL: "https://connect.pinpoint.de")
         var lastFolderName = ""

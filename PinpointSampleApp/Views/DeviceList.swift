@@ -14,6 +14,8 @@ struct DeviceListView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var api:API
     @Binding var discoveredDevices:[CBPeripheral]
+    let logger = Logger.shared
+    @State var eyeIconOpacity = 1.0
     
     var body: some View {
         NavigationView{
@@ -32,10 +34,10 @@ struct DeviceListView: View {
                                     
                                     do {
                                         let success = try await api.connectAndStartPositioning(device: device)
-                                        print(success)
+                                        logger.log(type: .Info, "ConnectAndStartPositioning OK")
                                     }
                                     catch {
-                                        print(error)
+                                        logger.log(type: .Error, error.localizedDescription)
                                     }
                                     
                                     
@@ -44,16 +46,37 @@ struct DeviceListView: View {
                                 dismiss()
                             }
                             Spacer()
+                            
+                            // Eye will fadeInOut when showme is ongoing
                             Image(systemName: "eye")
+                                .foregroundColor(.black)
                                 .onTapGesture {
                                     // connect and then showme, then disconnect
-                                    api.showMe(tracelet: device)
+                                    Task {
+                                        do {
+                                            try await api.connect(device: device)
+                                        } catch {
+                                            logger.log(type: .Error, error.localizedDescription)
+                                        }
+                                        api.showMe(tracelet: device)
+                                        
+                                        
+                                        try await _Concurrency.Task.sleep(nanoseconds: 2_000_000_000)
+          
+                                        
+                                        api.disconnect()
+                                    }
+                                    
+                                        
                                 }
+                            
                         }
+                    
                     }
                 }
             }
             .navigationTitle("Nearby Tracelets")
         }
     }
+
 }

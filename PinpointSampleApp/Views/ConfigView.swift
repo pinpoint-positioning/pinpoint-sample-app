@@ -50,9 +50,9 @@ struct ConfigView: View {
                             }
                             .pickerStyle(.automatic)
                             
-                            .onSubmit {
+                            .onChange(of: channel) { newValue in
                                 Task {
-                                    await api.setChannel(channel: Int8(channel))
+                                    await api.setChannel(channel: Int8(newValue))
                                 }
                             }
                                 Spacer()
@@ -69,10 +69,11 @@ struct ConfigView: View {
                                 Text("5 x 250ms").tag(5)
                             }
                             .pickerStyle(.automatic)
-                            
-                            .onSubmit {
+                            .onChange(of: interval) { newValue in
                                 Task {
-                                    api.setPositioningInterval(interval: Int8(interval))
+                                    print("submit")
+                                    print(newValue)
+                                     api.setPositioningInterval(interval: Int8(newValue))
                                 }
                             }
                                 Spacer()
