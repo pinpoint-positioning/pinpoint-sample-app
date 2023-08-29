@@ -182,11 +182,17 @@ public class SiteFileManager: ObservableObject {
   
     }
     
+    // "PinPoint_Debug"
+    // "https://connect.pinpoint.de"
+    //  "123undlos!!!"
     
     public func downloadAndSave(site: String) async -> Bool {
+        @AppStorage("webdav-server") var webdavServer = ""
+        @AppStorage("webdav-user") var webdavUser = ""
+        @AppStorage("webdav-pw") var webdavPW = ""
         
         let wd = WebDAV()
-        let account = Account(username: "PinPoint_Debug", baseURL: "https://connect.pinpoint.de")
+        let account = Account(username: webdavUser, baseURL: webdavServer)
         var lastFolderName = ""
         let directoryURL = "\(site)"
         
@@ -200,7 +206,7 @@ public class SiteFileManager: ObservableObject {
         
         do {
             let resources = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<[WebDAVFile]?, Error>) in
-                wd.listFiles(atPath: directoryURL, account: account, password: "123undlos!!!") { resources, error in
+                wd.listFiles(atPath: directoryURL, account: account, password: webdavPW) { resources, error in
                     if let error = error {
                         continuation.resume(throwing: error)
                     } else {
@@ -312,14 +318,22 @@ public class SiteFileManager: ObservableObject {
 
 // in Progress - WebDav
 
+
+// https://connect.pinpoint.de/remote.php/dav/files/PinPoint_Debug"
+
+
     public class NextcloudFileLister: NSObject, XMLParserDelegate {
         private var currentElement: String?
         private var fileNames: [String] = []
         
-        public func listFilesInNextcloudFolder() async -> [String] {
-            let serverURL = URL(string: "https://connect.pinpoint.de/remote.php/dav/files/PinPoint_Debug")!
-            let username = "PinPoint_Debug"
-            let password = "123undlos!!!"
+        @AppStorage("webdav-server") var webdavServer = ""
+        @AppStorage("webdav-user") var webdavUser = ""
+        @AppStorage("webdav-pw") var webdavPW = ""
+        
+        public func listFilesInNextcloudFolder() async -> [String]? {
+            guard let serverURL =  URL(string: "\(webdavServer)/remote.php/dav/files/\(webdavUser)") else {return nil}
+            let username = webdavUser
+            let password = webdavPW
             let folderPath = "/sites"
             
             // Create a session configuration with credentials

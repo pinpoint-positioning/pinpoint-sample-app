@@ -20,6 +20,8 @@
 		D112272229BA005D00E49993 /* ConsoleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D112272129BA005D00E49993 /* ConsoleTextView.swift */; };
 		D120F75F2A3C4D670010F812 /* SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D120F75E2A3C4D670010F812 /* SDK.framework */; };
 		D120F7602A3C4D670010F812 /* SDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D120F75E2A3C4D670010F812 /* SDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D1223B632A8B9214008A755E /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = D1223B622A8B9214008A755E /* AlertToast */; };
+		D1223B652A8B924D008A755E /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1223B642A8B924D008A755E /* AlertController.swift */; };
 		D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12462A72A0B8DE900CCFF50 /* Colors.swift */; };
 		D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12462A92A0B948500CCFF50 /* ScanButton.swift */; };
 		D1381A192A0E416C00DF8141 /* FilePicker in Frameworks */ = {isa = PBXBuildFile; productRef = D1381A182A0E416C00DF8141 /* FilePicker */; };
@@ -27,6 +29,11 @@
 		D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79929F00F2D00E6119E /* PositionMonitor.swift */; };
 		D139E79C29F00FF000E6119E /* CommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79B29F00FF000E6119E /* CommandView.swift */; };
 		D139E79E29F0101E00E6119E /* SiteFileInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */; };
+		D158C6532A9CB3410074E0E9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6522A9CB3410074E0E9 /* SettingsView.swift */; };
+		D158C6552A9CB4AE0074E0E9 /* FloorMapOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */; };
+		D158C6572A9CB4D40074E0E9 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6562A9CB4D40074E0E9 /* DataModels.swift */; };
+		D158C6592A9CB5260074E0E9 /* UiElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6582A9CB5260074E0E9 /* UiElements.swift */; };
+		D158C65B2A9CC0810074E0E9 /* TestZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C65A2A9CC0810074E0E9 /* TestZoomableScrollView.swift */; };
 		D15D2BF22A80E08000E87875 /* DeviceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15D2BF12A80E08000E87875 /* DeviceList.swift */; };
 		D1B108FF2A3C890D0039B5ED /* StatusCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */; };
 		D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B109002A42E61C0039B5ED /* InfoView.swift */; };
@@ -34,6 +41,12 @@
 		D1B109062A4585750039B5ED /* RemoteSitesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B109052A4585750039B5ED /* RemoteSitesList.swift */; };
 		D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B56BBA2A125B6B00C074F4 /* MapView.swift */; };
 		D1C0E80A2A5BF07E00C44E67 /* RulerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C0E8092A5BF07E00C44E67 /* RulerView.swift */; };
+		D1CD4E9B2A9364370025A2DD /* tracelet.proto in Sources */ = {isa = PBXBuildFile; fileRef = D1CD4E9A2A9364370025A2DD /* tracelet.proto */; };
+		D1CD4E9D2A9364680025A2DD /* tracelet.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CD4E9C2A9364680025A2DD /* tracelet.pb.swift */; };
+		D1CD4EA02A9364B70025A2DD /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = D1CD4E9F2A9364B70025A2DD /* SwiftProtobuf */; };
+		D1CD4EA22A9364B70025A2DD /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = D1CD4EA12A9364B70025A2DD /* SwiftProtobufPluginLibrary */; };
+		D1CD4EA42A9364B70025A2DD /* protoc-gen-swift in Frameworks */ = {isa = PBXBuildFile; productRef = D1CD4EA32A9364B70025A2DD /* protoc-gen-swift */; };
+		D1CD4EA62A9365370025A2DD /* ProtoBufManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CD4EA52A9365370025A2DD /* ProtoBufManager.swift */; };
 		D1DCAED82A7CD6510094333A /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DCAED72A7CD6510094333A /* RootView.swift */; };
 		D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */; };
 		D1FB33E62A3B138E003764F9 /* SiteFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */; };
@@ -68,12 +81,18 @@
 		D112271429B9EF8C00E49993 /* PinpointSampleApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PinpointSampleApp.xcdatamodel; sourceTree = "<group>"; };
 		D112272129BA005D00E49993 /* ConsoleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleTextView.swift; sourceTree = "<group>"; };
 		D120F75E2A3C4D670010F812 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1223B642A8B924D008A755E /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		D12462A72A0B8DE900CCFF50 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = PinpointSampleApp/Views/Colors.swift; sourceTree = SOURCE_ROOT; };
 		D12462A92A0B948500CCFF50 /* ScanButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanButton.swift; sourceTree = "<group>"; };
 		D139E79729EEA56800E6119E /* PositionChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionChartData.swift; sourceTree = "<group>"; };
 		D139E79929F00F2D00E6119E /* PositionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionMonitor.swift; sourceTree = "<group>"; };
 		D139E79B29F00FF000E6119E /* CommandView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandView.swift; sourceTree = "<group>"; };
 		D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteFileInformationView.swift; sourceTree = "<group>"; };
+		D158C6522A9CB3410074E0E9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapOverlays.swift; sourceTree = "<group>"; };
+		D158C6562A9CB4D40074E0E9 /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataModels.swift; path = PinpointSampleApp/Views/DataModels.swift; sourceTree = SOURCE_ROOT; };
+		D158C6582A9CB5260074E0E9 /* UiElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UiElements.swift; path = PinpointSampleApp/Views/UiElements.swift; sourceTree = SOURCE_ROOT; };
+		D158C65A2A9CC0810074E0E9 /* TestZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestZoomableScrollView.swift; sourceTree = "<group>"; };
 		D15D2BF12A80E08000E87875 /* DeviceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceList.swift; sourceTree = "<group>"; };
 		D19576BE29F7A6880072576F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCircle.swift; sourceTree = "<group>"; };
@@ -81,6 +100,9 @@
 		D1B109052A4585750039B5ED /* RemoteSitesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteSitesList.swift; sourceTree = "<group>"; };
 		D1B56BBA2A125B6B00C074F4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		D1C0E8092A5BF07E00C44E67 /* RulerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulerView.swift; sourceTree = "<group>"; };
+		D1CD4E9A2A9364370025A2DD /* tracelet.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.protobuf; path = tracelet.proto; sourceTree = "<group>"; };
+		D1CD4E9C2A9364680025A2DD /* tracelet.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tracelet.pb.swift; sourceTree = "<group>"; };
+		D1CD4EA52A9365370025A2DD /* ProtoBufManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoBufManager.swift; sourceTree = "<group>"; };
 		D1DCAED72A7CD6510094333A /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionViewFullScreen.swift; sourceTree = "<group>"; };
 		D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiteFileManager.swift; sourceTree = "<group>"; };
@@ -92,10 +114,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1CD4EA42A9364B70025A2DD /* protoc-gen-swift in Frameworks */,
 				D120F75F2A3C4D670010F812 /* SDK.framework in Frameworks */,
 				D1381A192A0E416C00DF8141 /* FilePicker in Frameworks */,
+				D1CD4EA22A9364B70025A2DD /* SwiftProtobufPluginLibrary in Frameworks */,
 				D1FB33E92A3B142B003764F9 /* ZIPFoundation in Frameworks */,
+				D1223B632A8B9214008A755E /* AlertToast in Frameworks */,
 				D1B109042A457D000039B5ED /* WebDAV in Frameworks */,
+				D1CD4EA02A9364B70025A2DD /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +148,8 @@
 		D112270729B9EF8B00E49993 /* PinpointSampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				D1CD4E9A2A9364370025A2DD /* tracelet.proto */,
+				D1CD4E9C2A9364680025A2DD /* tracelet.pb.swift */,
 				D19576BE29F7A6880072576F /* Info.plist */,
 				D1569D9129BA217600D0E578 /* Model */,
 				D1569D8F29BA214F00D0E578 /* Views */,
@@ -164,6 +192,9 @@
 				D1C0E8092A5BF07E00C44E67 /* RulerView.swift */,
 				D1DCAED72A7CD6510094333A /* RootView.swift */,
 				D15D2BF12A80E08000E87875 /* DeviceList.swift */,
+				D158C6522A9CB3410074E0E9 /* SettingsView.swift */,
+				D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */,
+				D158C65A2A9CC0810074E0E9 /* TestZoomableScrollView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -173,6 +204,8 @@
 			children = (
 				D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */,
 				D139E79729EEA56800E6119E /* PositionChartData.swift */,
+				D1223B642A8B924D008A755E /* AlertController.swift */,
+				D1CD4EA52A9365370025A2DD /* ProtoBufManager.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -181,6 +214,8 @@
 			isa = PBXGroup;
 			children = (
 				D12462A72A0B8DE900CCFF50 /* Colors.swift */,
+				D158C6562A9CB4D40074E0E9 /* DataModels.swift */,
+				D158C6582A9CB5260074E0E9 /* UiElements.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -215,6 +250,10 @@
 				D1381A182A0E416C00DF8141 /* FilePicker */,
 				D1FB33E82A3B142B003764F9 /* ZIPFoundation */,
 				D1B109032A457D000039B5ED /* WebDAV */,
+				D1223B622A8B9214008A755E /* AlertToast */,
+				D1CD4E9F2A9364B70025A2DD /* SwiftProtobuf */,
+				D1CD4EA12A9364B70025A2DD /* SwiftProtobufPluginLibrary */,
+				D1CD4EA32A9364B70025A2DD /* protoc-gen-swift */,
 			);
 			productName = PinpointSampleApp;
 			productReference = D112270529B9EF8B00E49993 /* PinpointSampleApp.app */;
@@ -248,6 +287,8 @@
 				D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */,
 				D1FB33E72A3B142B003764F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				D1B109022A457D000039B5ED /* XCRemoteSwiftPackageReference "WebDAV-Swift" */,
+				D1223B612A8B9214008A755E /* XCRemoteSwiftPackageReference "AlertToast" */,
+				D1CD4E9E2A9364B70025A2DD /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 			);
 			productRefGroup = D112270629B9EF8B00E49993 /* Products */;
 			projectDirPath = "";
@@ -275,17 +316,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D158C6532A9CB3410074E0E9 /* SettingsView.swift in Sources */,
+				D158C6572A9CB4D40074E0E9 /* DataModels.swift in Sources */,
+				D1CD4EA62A9365370025A2DD /* ProtoBufManager.swift in Sources */,
 				D112271229B9EF8C00E49993 /* Persistence.swift in Sources */,
 				D1DCAED82A7CD6510094333A /* RootView.swift in Sources */,
+				D1CD4E9B2A9364370025A2DD /* tracelet.proto in Sources */,
+				D158C6592A9CB5260074E0E9 /* UiElements.swift in Sources */,
 				D1B108FF2A3C890D0039B5ED /* StatusCircle.swift in Sources */,
 				D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */,
 				D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */,
+				D1CD4E9D2A9364680025A2DD /* tracelet.pb.swift in Sources */,
 				D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */,
 				D112270B29B9EF8B00E49993 /* MainView.swift in Sources */,
 				D1113CA02A090793002C4B35 /* DebugView.swift in Sources */,
 				D1C0E80A2A5BF07E00C44E67 /* RulerView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
 				D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */,
+				D158C65B2A9CC0810074E0E9 /* TestZoomableScrollView.swift in Sources */,
+				D1223B652A8B924D008A755E /* AlertController.swift in Sources */,
+				D158C6552A9CB4AE0074E0E9 /* FloorMapOverlays.swift in Sources */,
 				D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */,
 				D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */,
 				D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */,
@@ -426,13 +476,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PinpointSampleApp/Preview Content\"";
 				DEVELOPMENT_TEAM = H457FUNAGN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinpointSampleApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Pinpoint iOS Demo";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pinpoint Positioning";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Bluetooth is needed to connect to the tracelet";
@@ -448,7 +498,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 11.2;
+				MARKETING_VERSION = 11.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.pinpoint.iosdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -465,13 +515,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PinpointSampleApp/Preview Content\"";
 				DEVELOPMENT_TEAM = H457FUNAGN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PinpointSampleApp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Pinpoint iOS Demo";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pinpoint Positioning";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to connect to the tracelet";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Bluetooth is needed to connect to the tracelet";
@@ -487,7 +537,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 11.2;
+				MARKETING_VERSION = 11.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = de.pinpoint.iosdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -521,6 +571,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D1223B612A8B9214008A755E /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/markrenaud/FilePicker";
@@ -537,6 +595,14 @@
 				kind = branch;
 			};
 		};
+		D1CD4E9E2A9364B70025A2DD /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-protobuf.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		D1FB33E72A3B142B003764F9 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
@@ -548,6 +614,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D1223B622A8B9214008A755E /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1223B612A8B9214008A755E /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
 		D1381A182A0E416C00DF8141 /* FilePicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */;
@@ -557,6 +628,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D1B109022A457D000039B5ED /* XCRemoteSwiftPackageReference "WebDAV-Swift" */;
 			productName = WebDAV;
+		};
+		D1CD4E9F2A9364B70025A2DD /* SwiftProtobuf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1CD4E9E2A9364B70025A2DD /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobuf;
+		};
+		D1CD4EA12A9364B70025A2DD /* SwiftProtobufPluginLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1CD4E9E2A9364B70025A2DD /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobufPluginLibrary;
+		};
+		D1CD4EA32A9364B70025A2DD /* protoc-gen-swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D1CD4E9E2A9364B70025A2DD /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = "protoc-gen-swift";
 		};
 		D1FB33E82A3B142B003764F9 /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;

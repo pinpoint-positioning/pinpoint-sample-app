@@ -25,37 +25,22 @@ struct MainView: View {
 
     //MARK: - Body
     var body: some View {
-                VStack {
-                    ScrollView {
-                        VStack(alignment: .center){
-                            StatusCircle()
-                                .cornerRadius(10)
-                                .shadow(radius: 2)
-                        
-                        
-                                SiteFileInformationView()
-                                    .cornerRadius(10)
-                                    .shadow(radius: 2)
-                        }
-                        
-                        .padding()
-                    }
+        VStack {
+            ScrollView {
+                VStack(alignment: .center){
+                    StatusCircle()
+                        .cornerRadius(10)
+                        .shadow(radius: 2)
                     
-                    ScanButton(mapView:PositionViewFullScreen())
                     
-                   //     .background(Color("pinpoint_gray"))
-                    
+                    SiteFileInformationView()
+                        .cornerRadius(10)
+                        .shadow(radius: 2)
                 }
                 
-//                .safeAreaInset(edge: .top, content: {
-//                    Color.clear
-//                        .frame(height: 0)
-//                        .background(Color("pinpoint_gray"))
-//                })
-
-               
-               
-        
+                .padding()
+            }
+        }
     }
 
 }

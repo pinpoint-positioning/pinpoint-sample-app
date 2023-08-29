@@ -13,34 +13,13 @@ import CoreBluetooth
 
 // ToDo -> Change site from siteID
 
-struct Position: Hashable {
-    let x: CGFloat
-    let y: CGFloat
-    let acc: CGFloat
-    var rawX:CGFloat = 0.0
-    var rawY:CGFloat = 0.0
-}
 
-
-struct ImageGeometry {
-    var xOrigin: CGFloat
-    var yOrigin: CGFloat
-    var imageSize: CGSize
-    var imagePosition:CGPoint
-}
-
-struct Settings {
-    var previousPositions: Int = 5
-    var showRuler: Bool = false
-    var showOrigin: Bool = false
-    var showAccuracyRange:Bool = true
-    var showSatlets:Bool = false
-}
 
 
 struct PositionViewFullScreen: View {
     @EnvironmentObject var api : API
     @EnvironmentObject var sfm : SiteFileManager
+    @EnvironmentObject var alerts : AlertController
     
     @GestureState var gestureTranslation: CGSize = .zero
     @State var finalTranslation: CGSize = .zero
@@ -59,22 +38,29 @@ struct PositionViewFullScreen: View {
     
     @State var siteListIsPresented = false
     
+    @State private var showAlert = false
+    
+    @AppStorage("remote-positioning") var remotePositioningEnabled = false
+    @AppStorage ("channel")  var channel:Int = 5
+  
+    
     
     var body: some View {
         
         
         NavigationStack{
-     
-                ZStack(alignment:.bottom) {
-                    Color("pinpoint_background")
-                        .ignoresSafeArea()
-                    
-                    let scaleFactor = finalScale * gestureScale // Calculate the scaling factor
-                    ScrollView([. horizontal, . vertical]){
+            
+            ZStack(alignment:.bottom) {
+                Color("pinpoint_background")
+                    .ignoresSafeArea()
+                
+                let scaleFactor = finalScale * gestureScale // Calculate the scaling factor
+                
+                ScrollView([. horizontal, . vertical]){
                     // Container for the FloorImage and PositionTraceView
                     ZStack(alignment: .topLeading) {
                         
-                        if api.scanState == .SCANNING {
+                        if api.scanState == .SCANNING{
                             ProgressView("Hold Tracelet close to phone")
                         } else {
                             
@@ -87,22 +73,30 @@ struct PositionViewFullScreen: View {
                                     updateImagePosition()
                                 }
                                 .task {
+                                    
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
-                                
+                                    let _ = print(imageGeo.imageSize)
+                                    
                                     if sfm.siteFile.map.mapName == "" {
-                                        meterToPixelRatio = 5
-                                        imageGeo.xOrigin = 0.0
-                                        imageGeo.yOrigin = -100.0
+                                        meterToPixelRatio = 2
+                                        imageGeo.xOrigin = 100
+                                        imageGeo.yOrigin = -100
                                     }
-                                 
-                                    
-                                    
+
                                 }
                                 .onChange(of: api.bleState, perform: { _ in
                                     Task {
-                                        await scan()
+                                        await startDelayedScan()
                                     }
                                     
+                                })
+                                .onChange(of: api.generalState, perform: { newValue in
+                                    if newValue == .CONNECTED{
+                                        alerts.showConnectedToast.toggle()
+                                    }
+                                    if newValue == .DISCONNECTED{
+                                        alerts.showDisconnectedToast.toggle()
+                                    }
                                 })
                                 .onChange(of: sfm.siteFile) { newValue in
                                     image = sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
@@ -110,6 +104,13 @@ struct PositionViewFullScreen: View {
                                     imageGeo.yOrigin = sfm.siteFile.map.mapFileOriginY
                                     meterToPixelRatio = sfm.siteFile.map.mapFileRes
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
+                                    
+                                    // Set channel according to sitefile
+                                    Task {
+                                       let success =  await api.setChannel(channel:Int8(sfm.siteFile.map.uwbChannel))
+                                        channel = Int(sfm.siteFile.map.uwbChannel)
+                                        api.startPositioning()
+                                    }
                                 }
                                 .overlay {
                                     if (settings.showOrigin) {
@@ -121,6 +122,7 @@ struct PositionViewFullScreen: View {
                                     // MARK: - PositionTrace
                                     
                                     PositionTraceView(
+                                        
                                         meterToPixelRatio: $meterToPixelRatio,
                                         imageGeo: $imageGeo,
                                         settings: $settings
@@ -141,105 +143,138 @@ struct PositionViewFullScreen: View {
                             
                                 .border(Color.black)
                                 .scaleEffect(scaleFactor)
-                            //   .offset(x: imageGeo.imagePosition.x, y: imageGeo.imagePosition.y)
                                 .frame(width: imageGeo.imageSize.width, height: imageGeo.imageSize.height)
                         }
+
                     }
                     .padding()
+                }
+                .highPriorityGesture(
+                    MagnificationGesture()
+                        
+                        .updating($gestureScale) { value, state, _ in
+                            state = value
+                        }
+                        .onEnded { value in
+                            finalScale *= value
+                        }
+                        .onChanged { _ in
+                            updateImagePosition()
+                        }
+                        
+                )
+   
+            }
+            .navigationTitle(sfm.siteFile.map.mapName)
+            .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $isModalPresented, content: {
+                SettingsView(mapSettings: $settings)
+            })
+            .sheet(isPresented: $showingScanResults) {
+                DeviceListView(discoveredDevices: $discoveredDevices)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
+            }
+            
+            .sheet(isPresented: $siteListIsPresented, content: {
+                SitesList()
+            })
+            .toolbar {
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        Task {
+                            if api.generalState == .CONNECTED {
+                                api.disconnect()
+                            }
+                            else if api.generalState == .DISCONNECTED {
+                                await scan()
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "wave.3.right.circle")
+                            .foregroundColor(api.generalState == .CONNECTED ? .red : .accentColor)
                         
                     }
-                    .highPriorityGesture(
-                        MagnificationGesture()
-                            .updating($gestureScale) { value, state, _ in
-                                state = value
-                            }
-                            .onEnded { value in
-                                finalScale *= value
-                            }
-                            .onChanged { _ in
-                                updateImagePosition()
-                            }
-                    )
-                    
-                  
-
-             //       ScanAndAddButtons()
-          
+                
                 }
-            
-            
-                       .sheet(isPresented: $isModalPresented, content: {
-                           SettingsModalView(mapSettings: $settings)
-                       })
-                       .sheet(isPresented: $showingScanResults) {
-                           DeviceListView(discoveredDevices: $discoveredDevices)
-                               .presentationDetents([.medium, .large])
-                               .presentationDragIndicator(.visible)
-                       }
-            
-                       .sheet(isPresented: $siteListIsPresented, content: {
-                           SitesList()
-                       })
-                       
-                       
-                       
-                       
-                       
-                       .toolbar {
-                           
-                           ToolbarItem(placement: .navigationBarLeading) {
-                               Button {
-                                   Task {
-                                     await  scan()
-                                   }
-                               } label: {
-                                   Image(systemName: "wave.3.right.circle")
-                                   
-                               }
-                               .disabled(api.generalState == .CONNECTED ? true : false)
-                           }
-                           
-                           
-                           ToolbarItem(placement: .navigationBarTrailing) {
-                               Button {
-                                   isModalPresented = true
-                               } label: {
-                                   Image(systemName: "gear")
-                                   
-                               }
-                           }
-                           
-                           ToolbarItem(placement: .navigationBarTrailing) {
-                               Button {
-                                   siteListIsPresented.toggle()
-                               } label: {
-                                   Image(systemName: "plus")
-                                   
-                               }
-                           }
-                       }
-
-         
-            
+                
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        if remotePositioningEnabled == false {
+                            showAlert.toggle()
+                        } else {
+                            remotePositioningEnabled = false
+                        }
+                    } label: {
+                        Image(systemName: "square.and.arrow.up.circle")
+                            .foregroundColor(remotePositioningEnabled ? .green : .accentColor)
+                        
+                    }
+                
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        siteListIsPresented.toggle()
+                    } label: {
+                        Image(systemName: "plus")
+                        
+                    }
+                }
+                
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        isModalPresented = true
+                    } label: {
+                        Image(systemName: "gear")
+                        
+                    }
+                }
+                
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("You will share your position remotely!"),
+                    primaryButton: .default(Text("Yes")) {
+                        // Set the state to on when confirmed
+                        remotePositioningEnabled = true
+                    },
+                    secondaryButton: .cancel(Text("No")) {
+                        // Set the state to off if canceled
+                        remotePositioningEnabled = false
+                    }
+                )
+            }
         }
+        
         
     }
     
     
     // Helper Functions
     
+    func startDelayedScan() async {
+        api.scanState = .SCANNING
+        try? await Task.sleep(nanoseconds: 2_000_000_000) // Sleep for 3 seconds (3,000,000,000 nanoseconds)
+        await scan()
+    }
+    
     func scan() async {
         // Initiate Scan
         if api.generalState == .DISCONNECTED && api.bleState == .BT_OK{
-            discoveredDevices = []
+            discoveredDevices.removeAll()
             
             api.scan(timeout: 3) { deviceList in
                 if !deviceList.isEmpty {
-                    discoveredDevices = deviceList
-                    // Show List of devices only if there are more than 1
+                    // If there is more than one tracelet, show the list
                     if deviceList.count > 1 {
                         showingScanResults.toggle()
+                        
                     } else {
+                        // If there is only one tracelet, connect to it
                         Task{
                             do {
                                 if let onlyDevice = deviceList.first{
@@ -248,23 +283,33 @@ struct PositionViewFullScreen: View {
                             } catch {
                                 print (error)
                             }
-                                
+                            
                         }
                     }
                     
+                } else {
+                    DispatchQueue.main.async {
+                        alerts.showNoTraceletInRange = true
+                    }
                     
                 }
-                
+                discoveredDevices = deviceList
             }
         }
     }
     
     func blankImage() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 500, height: 500))
-        return renderer.image { context in
-            UIColor.white.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 500, height: 500))
+        
+        let image = UIImage(named:"coordinate-system")
+        let scaledImageSize = CGSize(width: 400, height: 400)
+
+        let renderer = UIGraphicsImageRenderer(size: scaledImageSize)
+        let scaledImage = renderer.image { _ in
+                image!.draw(in: CGRect(origin: .zero, size: scaledImageSize))
+            
         }
+        return scaledImage
+
     }
     
     private func updateImagePosition() {
@@ -287,282 +332,4 @@ struct PositionViewFullScreen: View {
 
 
 
-struct SatletView: View {
-    @ObservedObject var pos = PositionChartData.shared
-    @EnvironmentObject var api: API
-    @Binding var imageGeo: ImageGeometry
-    @Binding var siteFile: SiteData
-    
-    var body: some View {
-        //    imageGeo.imageSize.height  - ((positions[index].y + imageGeo.yOrigin) * meterToPixelRatio)
-        
-        let satletPositions = siteFile.satlets.map { CGPoint(x: ($0.xCoordinate + siteFile.map.mapFileOriginX) * siteFile.map.mapFileRes, y: imageGeo.imageSize.height - (($0.yCoordinate + siteFile.map.mapFileOriginY) * siteFile.map.mapFileRes)) }
-        let _ = print("ori \(siteFile.map.mapFileOriginX) \(siteFile.map.mapFileOriginY)")
-        
-        ForEach(satletPositions.indices, id: \.self) { index in
-            let coords = satletPositions[index]
-            
-            ZStack {
-                Image(systemName: "wave.3.right.circle.fill")
-                    .foregroundColor(.yellow)
-                    .position(coords)
-            }
-        }
-    }
-}
 
-
-
-
-
-
-
-
-
-
-struct PositionTraceView: View {
-    @ObservedObject var pos = PositionChartData.shared
-    @EnvironmentObject var api: API
-    
-    @State private var latestPositionIndex: Int?
-    @State private var positions: [Position] = []
-    @Binding var meterToPixelRatio: CGFloat
-    @Binding var imageGeo:ImageGeometry
-    @Binding var settings:Settings
-    @GestureState private var gestureScale: CGFloat = 1.0
-    @State private var finalScale: CGFloat = 1.0
-    
-    
-    var body: some View {
-        ZStack {
-            Text("\(meterToPixelRatio)")
-         
-            ForEach(positions.indices, id: \.self) { index in
-                let coords = makeCoordinates(with: index)
-                
-                if (index > 0) {
-                    Path { path in
-                        let previousCoords = makeCoordinates(with: index - 1)
-                        path.move(to: CGPoint(x: coords.x, y: coords.y))
-                        path.addLine(to: CGPoint(x: previousCoords.x, y: previousCoords.y))
-                    }
-                    .stroke(Color.orange, style: StrokeStyle(lineWidth: 1, lineCap: .round))
-                }
-                
-                
-                ZStack {
-                    
-                    Image("pinpoint-circle")
-                        .resizable()
-                        .frame(width: index == latestPositionIndex ? 30 : 15, height: index == latestPositionIndex ? 30 : 15)
-                        .foregroundColor(.yellow)
-                        .position(x: coords.x , y: coords.y)
-                        .overlay {
-                            if settings.showAccuracyRange && index == latestPositionIndex {
-                                AccuracyCircle(coords: coords)
-                                    .position(x: coords.x, y: coords.y)
-                                    .task {
-                                        print(coords.x)
-                                    }
-                            }
-                            
-                        }
-                    
-                    
-                    
-                }
-                
-            }
-        }
-        .onChange(of: positions) { newValue in
-            if let lastPosIndex = newValue.indices.last {
-                latestPositionIndex = lastPosIndex
-            }
-        }
-        .onChange(of: api.localPosition) { _ in
-            
-            updatePositions()
-        }
-    }
-    
-    func updatePositions() {
-        Task {
-            await pos.fillPositionArray()
-            positions = pos.data.suffix(settings.previousPositions).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
-            
-            // Test for Origin Point Check
-            // positions = [Position(x: 0, y: 0, acc: 0)]
-            
-        }
-    }
-    
-    func makeCoordinates(with index: Int) -> Position {
-        let scaledX = (positions[index].x + imageGeo.xOrigin) * meterToPixelRatio
-        let scaledY = imageGeo.imageSize.height  - ((positions[index].y + imageGeo.yOrigin) * meterToPixelRatio)
-        let acc = positions[index].acc
-        let rawX = positions[index].x
-        let rawY = positions[index].y
-        
-        
-        return Position(x: scaledX, y: scaledY, acc: acc, rawX: rawX, rawY: rawY)
-    }
-    
-    
-    
-}
-
-
-
-struct CrosshairView: View {
-    var body: some View {
-        // Vertical Line
-        VStack {
-            Spacer()
-            Rectangle()
-                .frame(width: 3, height: 50)
-                .foregroundColor(.red)
-            Spacer()
-        }
-        
-        // Horizontal Line
-        HStack {
-            Spacer()
-            Rectangle()
-                .frame(width: 50, height: 3)
-                .foregroundColor(.red)
-            Spacer()
-        }
-        
-    }
-}
-
-
-
-
-struct AccuracyCircle: View {
-    var coords: Position
-    
-    var body: some View {
-        ZStack {
-            Circle()
-                .fill(Color.blue.opacity(0.3))
-                .frame(width: coords.acc , height: coords.acc)
-            
-            VStack {
-                Text("x: \(String(format: "%.1f", coords.rawX))")
-                Text("y: \(String(format: "%.1f", coords.rawY))")
-                Text("acc: \(String(format: "%.1f", coords.acc))")
-            }
-            .foregroundColor(.blue)
-            .font(.footnote)
-            .offset(y: 40)
-        }
-        
-    }
-}
-
-
-
-
-
-struct SettingsModalView: View {
-    @Binding var mapSettings: Settings
-    @Environment(\.presentationMode) var presentationMode
-    
-    var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Settings")) {
-                    Stepper(value: $mapSettings.previousPositions, in: 0...10, label: {
-                        Text("Previous Positions: \(mapSettings.previousPositions)")
-                    })
-                    
-                    Toggle(isOn: $mapSettings.showRuler) {
-                        Text("Show Ruler")
-                    }
-                    
-                    Toggle(isOn: $mapSettings.showOrigin) {
-                        Text("Show Origin")
-                    }
-                    
-                    Toggle(isOn: $mapSettings.showAccuracyRange) {
-                        Text("Show Accuracy")
-                    }
-                    Toggle(isOn: $mapSettings.showSatlets) {
-                        Text("Show Satlets")
-                    }
-                }
-            }
-            .navigationTitle("Map Settings")
-            .navigationBarItems(trailing: Button("Done") {
-                presentationMode.wrappedValue.dismiss()
-            })
-        }
-    }
-}
-
-struct ScanAndAddButtons: View {
-    @EnvironmentObject var api : API
-    @State private var showingScanResults = false
-    @State private var discoveredDevices:[CBPeripheral] = []
-    @State var siteListIsPresented = false
-    
-    var body: some View {
-        HStack {
-            //   Spacer()
-            
-            Button{
-                discoveredDevices = []
-                showingScanResults.toggle()
-                
-                api.scan(timeout: 3) { deviceList in
-                    
-                    discoveredDevices = deviceList
-                }
-                
-            } label: {
-                
-                Image(systemName: "dot.radiowaves.left.and.right")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.black)
-                    .frame(width: 40, height: 40)
-                
-                    .padding()
-                    .background(CustomColor.pinpoint_orange)
-                    .clipShape(Circle())
-                
-            }
-            .shadow(radius: 2)
-            
-            Button {
-                siteListIsPresented.toggle()
-            } label: {
-                
-                Image(systemName: "map.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.black)
-                    .frame(width: 40, height: 40)
-                
-                    .padding()
-                    .background(CustomColor.pinpoint_orange)
-                    .clipShape(Circle())
-            }
-            
-            
-        }
-        .sheet(isPresented: $siteListIsPresented, content: {
-            SitesList()
-        })
-        
-        
-        
-        // ScanList menu
-        .sheet(isPresented: $showingScanResults) {
-            DeviceListView(discoveredDevices: $discoveredDevices)
-                .presentationDetents([.medium, .large])
-                .presentationDragIndicator(.visible)
-        }
-    }
-}

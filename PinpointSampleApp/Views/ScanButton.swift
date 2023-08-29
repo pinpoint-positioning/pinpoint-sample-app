@@ -48,13 +48,6 @@ struct ScanButton:View {
 
                 VStack{
                     ZStack {
-//                        Circle()
-//                        
-//                       //     .foregroundColor(CustomColor.pinpoint_background)
-//                            .frame(width: 80, height: 80)
-//                            .offset(y:yOffset)
-                        
-                        
                         Circle()
                             .foregroundColor(CustomColor.pinpoint_orange)
                             .frame(width: 60, height: 60)
@@ -133,51 +126,51 @@ struct ScanButton_Previews: PreviewProvider {
     }
 }
 
-struct SecondaryButtons: View {
-    @Binding var mapView:PositionViewFullScreen?
-    var body: some View {
-        HStack {
-            
-            NavigationLink{
-                ConfigView()
-            }
-        label: {
-            ZStack{
-                Circle()
-                    .foregroundColor(CustomColor.pinpoint_orange)
-                    .frame(width: 60, height: 60)
-                    .shadow(radius: 2)
-                Image(systemName: "gear")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 40, height: 40)
-                    .foregroundColor(.white)
-            }
-            
-        }
-        .padding()
-            
-            Spacer()
-            NavigationLink{
-                mapView
-            } label: {
-                ZStack{
-                    Circle()
-                        .foregroundColor(CustomColor.pinpoint_orange)
-                        .frame(width: 60, height: 60)
-                        .shadow(radius: 2)
-                    Image("floor-map_3")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        
-                }
-                
-            }
-            .padding()
-            
-        }
-    }
-}
+//struct SecondaryButtons: View {
+//    @Binding var mapView:PositionViewFullScreen?
+//    var body: some View {
+//        HStack {
+//
+//            NavigationLink{
+//                ConfigView()
+//            }
+//        label: {
+//            ZStack{
+//                Circle()
+//                    .foregroundColor(CustomColor.pinpoint_orange)
+//                    .frame(width: 60, height: 60)
+//                    .shadow(radius: 2)
+//                Image(systemName: "gear")
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 40, height: 40)
+//                    .foregroundColor(.white)
+//            }
+//
+//        }
+//        .padding()
+//
+//            Spacer()
+//            NavigationLink{
+//                mapView
+//            } label: {
+//                ZStack{
+//                    Circle()
+//                        .foregroundColor(CustomColor.pinpoint_orange)
+//                        .frame(width: 60, height: 60)
+//                        .shadow(radius: 2)
+//                    Image("floor-map_3")
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 40, height: 40)
+//
+//                }
+//
+//            }
+//            .padding()
+//
+//        }
+//    }
+//}
 
 

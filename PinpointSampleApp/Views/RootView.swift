@@ -6,33 +6,23 @@
 //
 import SwiftUI
 import SDK
+import AlertToast
 
 struct RootView: View {
     @StateObject var api = API.shared
     @StateObject var sfm = SiteFileManager()
+    @StateObject var alerts = AlertController()
     var body: some View {
         
         ZStack{
             Color("pinpoint_background")
-             //   .edgesIgnoringSafeArea([.top, .leading , .trailing])
-            TabView {
+            //   .edgesIgnoringSafeArea([.top, .leading , .trailing])
+            
+            
+            PositionViewFullScreen()
+        }
 
-                PositionViewFullScreen()
-                    .tabItem {
-
-                        Label("Positioning", systemImage: "map")
-                    }
-                MainView()
-                    .tabItem {
-
-                        Label("Debug", systemImage: "doc.text.magnifyingglass")
-                    }
-                ConfigView()
-                    .tabItem {
-
-                        Label("Settings", systemImage: "gearshape")
-                    }
-            }
+     
             .onAppear {
                 let tabBarAppearance = UITabBarAppearance()
                 tabBarAppearance.configureWithDefaultBackground()
@@ -40,12 +30,28 @@ struct RootView: View {
             }
             .environmentObject(api)
             .environmentObject(sfm)
+            .environmentObject(alerts)
+            
+            // AlertToast
+            .toast(isPresenting: $alerts.showNoTraceletInRange){
+                AlertToast(type: .regular, title: "No Tracelet in range")
+            }
+            .toast(isPresenting: $alerts.showConnectedToast){
+                AlertToast(type: .complete(.green), title: "Tracelet connected")
+            }
+            .toast(isPresenting: $alerts.showDisconnectedToast){
+                AlertToast(type: .error(.red), title: "Tracelet disconnected")
+            }
+            .toast(isPresenting: $alerts.showNoWebDavAccount){
+                AlertToast(type: .error(.red), title: "No WebDAV configured!")
+            }
+      
         }
-    }
-}
-
-struct RootView_Previews: PreviewProvider {
-    static var previews: some View {
-        RootView()
+    
+    
+    struct RootView_Previews: PreviewProvider {
+        static var previews: some View {
+            RootView()
+        }
     }
 }

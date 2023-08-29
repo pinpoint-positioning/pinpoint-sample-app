@@ -1,0 +1,163 @@
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-FileCopyrightText: (c) 2023 Ci4Rail GmbH
+
+// Protobuf definitiions for Ci4Rail Tracelet, e.g. SIO02.
+// It defines the messages exchanged between the Tracelet and the localization
+// system. The messages are transported over TCP, with a little framing
+// protocol:
+//
+// Format of a TCP message:
+// - Byte 0: 0xFE
+// - Byte 1: 0xED
+// - Byte 2..5: Length of marshalled protobuf data (Byte 2=LSB)
+// - Byte 6..n: Marshalled Protobuf Data
+//
+// The Tracelet is the TCP client, the localization system is the TCP server.
+
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package tracelet;
+option go_package = "./tracelet";
+
+// message sent from server to tracelet
+
+message ServerToTracelet {
+  message LocationRequest {} // request the location of the tracelet
+  message StatusRequest {}   // request the status of the tracelet
+
+  // id of the request, will be echoed in StatusResponse
+  int32 id = 1;
+  oneof type {
+    // request the location of the tracelet
+    LocationRequest location = 2;
+    // request the status of the tracelet
+    StatusRequest status = 3;
+  }
+}
+
+// message sent from tracelet to server
+
+message TraceletToServer {
+
+  // Sub-message sent in response to a location request OR
+  // periodically sent by the tracelet
+  message Location {
+
+    message Gnss {
+      // GNSS location valid. If false, the other fields are not valid
+      bool valid = 1;
+
+      // WGS84 coordinates
+      // latitude in [deg]
+      double latitude = 2;
+
+      // longitude in [deg]
+      double longitude = 3;
+
+      // altitude in [m]
+      double altitude = 4;
+
+      // horizontal accuracy in [m]
+      double eph = 5;
+
+      // vertical accuracy in [m]
+      double epv = 6;
+
+      // type of fix 
+      // 0 = invalid, 1 = GPS fix, 2 = DGPS fix, 3 = PPS fix, 4 = Real Time Kinematic, 
+      // 5 = Float RTK, 6 = estimated, 7 = Manual input mode, 8 = Simulation mode
+      int32 fix_type = 7;
+    }
+
+    message Uwb {
+      // UWB location valid. If false, the other fields are not valid
+      bool valid = 1;
+
+      // location of tracelet in space
+      // Units: [m], can be negative. Resolution 0.1m
+      double x = 2;
+      double y = 3;
+      double z = 4;
+
+      // Site ID
+      // a 16 bit unsigned value
+      uint32 site_id = 5;
+
+      // Location signature
+      // can be used to validate the received location
+      fixed64 location_signature = 6;
+
+      // horizontal accuracy in [m]
+      double eph = 7;
+    }
+
+    enum Direction {
+      // Invalid direction
+      NO_DIRECTION = 0;
+
+      // CAB A
+      CAB_A_DIRECTION = 1;
+
+      // CAB B
+      CAB_B_DIRECTION = 2;
+    }
+
+    // Data from GNSS subsystem
+    Gnss gnss = 1;
+
+    // Data from UWB subsystem
+    Uwb uwb = 2;
+
+    // Driving direction of the vehicle
+    Direction direction = 3;
+
+    // Vehicle Speed in [m/s]
+    double speed = 4;
+
+    // Vehicle Mileage in [km]
+    int32 mileage = 5;
+
+    // Current Tracelet Temperature in [°C]
+    double temperature = 6;
+
+  } // Location
+
+  // Sub-message sent in response to a status request
+  message StatusResponse {
+    // number of tracelet power Ups
+    int32 power_up_count = 1;
+    // Tracelet has a valid time
+    bool has_time = 2;
+    // Status of the UWB module (0=OK, error code otherwise)
+    int32 uwb_module_status = 3;
+    // Status of the GNSS module (0=OK, error code otherwise)
+    int32 gnss_module_status = 4;
+    // Status of Main processor IMU (0=OK, error code otherwise)
+    int32 imu1_status = 5;
+    // Status of tachometer signal (0=OK, error code otherwise)
+    int32 tacho_status = 6;
+  }
+
+  // Tracelet will echo the ID of the request here.
+  // For messages sent without a request, the ID is 0
+  int32 id = 1;
+
+  // timestamp when the message was sent by the tracelet
+  // If the Tracelet has no valid time, receive_ts is set to 1970-Jan-1 00:00
+  // UTC
+  google.protobuf.Timestamp delivery_ts = 2;
+
+  // tracelet ID as provisioned in tracelet. Could be a vehicle ID
+  string tracelet_id = 3;
+
+  // status of the tracelet ignition signal
+  bool ignition = 4;
+
+  oneof type {
+    Location location = 5;     // periodically sent by the tracelet or in
+                               // response to a location request
+    StatusResponse status = 6; // sent in response to the status request
+  }
+}

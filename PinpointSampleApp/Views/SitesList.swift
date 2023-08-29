@@ -69,10 +69,7 @@ struct SitesList: View {
                     }
                     .padding()
                 
-                }
-                
-                
-                
+                } 
             }
             .padding()
             
@@ -91,20 +88,14 @@ struct SitesList: View {
             // Load Button
             Button(action: {
                 if selectedSitefile != ""{
-                  //  print("site_wohnzimmer_1.zip")
-                    print(selectedSitefile)
                     setSiteFile(item: selectedSitefile)
                     dismiss()
                 }
                 
             }) {
                 Text("Load SiteFile")
-                    .foregroundColor(.white)
-                    .font(.headline)
-                    .padding()
-                    .background(Color.green)
-                    .cornerRadius(10)
             }
+            .buttonStyle(.borderedProminent)
             .disabled(selectedSitefile == "" ? true : false)
             .padding()
  
@@ -162,12 +153,7 @@ struct SitesList: View {
                 print(error)
             }
         }
-
-        
-        
-
-        
-        
+   
     }
 
     
