@@ -23,12 +23,12 @@ class ProtobufManager: ObservableObject {
         let hostEndpoint = NWEndpoint.Host(remoteHost)
         let endpoint = NWEndpoint.hostPort(host: hostEndpoint, port: NWEndpoint.Port(rawValue: UInt16(remotePort))!)
         let parameters = NWParameters.tcp.copy()
-        parameters.requiredInterfaceType = .wifi // Use the appropriate network interface type
+       // parameters.requiredInterfaceType = .wifi // Careful if host will be public available
         
         connection = NWConnection(to: endpoint, using: parameters)
     }
     
-    func sendMessage(x: Double, y: Double, acc: Double, name: String) {
+    func sendMessage(x: Double, y: Double, acc: Double, name: String) throws {
         establishConnection()
         
         guard let connection = connection else {
@@ -84,50 +84,10 @@ class ProtobufManager: ObservableObject {
     
     private func pack(msg: Data) -> Data {
         let header: [UInt8] = [0xFE, 0xED]
-        var length: UInt32 = UInt32(msg.count).littleEndian // Ensure big-endian byte order
+        var length: UInt32 = UInt32(msg.count).littleEndian 
         let dataLength = withUnsafeBytes(of: &length) { Data($0) }
         
         return Data(header + dataLength + msg)
     }
 }
 
-
-// For Protobuf
-
-
-struct LocationData: Codable {
-    let id: Int
-    let deliveryTs: Date
-    let traceletId: String
-    let ignition: Bool
-    let location: Location
-}
-
-struct Location: Codable {
-    let gnss: Gnss
-    let uwb: Uwb
-    let direction: Int
-    let speed: Double
-    let mileage: Int
-    let temperature: Double
-}
-
-struct Gnss: Codable {
-    let valid: Bool
-    let latitude: Double
-    let longitude: Double
-    let altitude: Double
-    let eph: Double
-    let epv: Double
-    let fixType: Int
-}
-
-struct Uwb: Codable {
-    let valid: Bool
-    let x: Double
-    let y: Double
-    let z: Double
-    let siteId: UInt32
-    let locationSignature: UInt64
-    let eph: Double
-}

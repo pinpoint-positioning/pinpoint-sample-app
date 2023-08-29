@@ -15,6 +15,7 @@ struct SatletView: View {
     @Binding var imageGeo: ImageGeometry
     @Binding var siteFile: SiteData
     
+    
     var body: some View {
         //    imageGeo.imageSize.height  - ((positions[index].y + imageGeo.yOrigin) * meterToPixelRatio)
         
@@ -49,6 +50,7 @@ struct PositionTraceView: View {
     let pb = ProtobufManager.shared
     @AppStorage("tracelet-id") var traceletID = ""
     @AppStorage("remote-positioning") var remotePositioningEnabled = false
+    let logger = Logger()
     
     var body: some View {
         ZStack {
@@ -89,7 +91,13 @@ struct PositionTraceView: View {
                 latestPositionIndex = lastPosIndex
                 if let position = positions.last {
                     if remotePositioningEnabled {
-                        pb.sendMessage(x: position.x, y: position.y, acc: position.acc, name: traceletID)
+                        do {
+                            try pb.sendMessage(x: position.x, y: position.y, acc: position.acc, name: traceletID)
+                        } catch {
+                            logger.log(type: .Error, error.localizedDescription)
+                        }
+                            
+                        
                     }
                 }
             

@@ -197,6 +197,7 @@ struct SettingsView: View {
                                 .font(.footnote)
                             TextField("Server", text: $webdavServer)
                                 .keyboardType(.URL)
+                                .autocapitalization(.none)
                         }
                         VStack(alignment: .leading){
                             Text("User")
