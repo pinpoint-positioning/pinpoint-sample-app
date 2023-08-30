@@ -42,7 +42,9 @@ class PositionChartData:ObservableObject {
                         self.data.removeFirst()
                     }
                     
-                    self.data.append(PositionData(x: position.xCoord, y: position.yCoord, acc: position.accuracy))
+              //      if position.yCoord != self.data.last?.y && position.xCoord != self.data.last?.x {
+                        self.data.append(PositionData(x: position.xCoord, y: position.yCoord, acc: position.accuracy))
+               //     }
 
                 }
             }

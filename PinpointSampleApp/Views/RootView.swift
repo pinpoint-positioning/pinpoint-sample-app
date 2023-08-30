@@ -12,25 +12,36 @@ struct RootView: View {
     @StateObject var api = API.shared
     @StateObject var sfm = SiteFileManager()
     @StateObject var alerts = AlertController()
+    @StateObject var storage = LocalStorageManager()
     var body: some View {
-        
-        ZStack{
-            Color("pinpoint_background")
-            //   .edgesIgnoringSafeArea([.top, .leading , .trailing])
+        NavigationStack{
+            ZStack{
+                Color("pinpoint_background")
+                //   .edgesIgnoringSafeArea([.top, .leading , .trailing])
+                
+                
+                FloorMapView()
+            }
             
             
-            PositionViewFullScreen()
-        }
-
-     
             .onAppear {
+                // Set Remote Positioning to false at start
+                storage.remotePositioningEnabled = false
                 let tabBarAppearance = UITabBarAppearance()
                 tabBarAppearance.configureWithDefaultBackground()
                 UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+                
             }
             .environmentObject(api)
             .environmentObject(sfm)
             .environmentObject(alerts)
+            .navigationTitle("Pinpoint Positioning")
+             .navigationBarTitleDisplayMode(.inline)
+             .toolbarBackground(
+                 Color.orange,
+                 for: .navigationBar)
+             .toolbarBackground(.visible, for: .navigationBar)
+
             
             // AlertToast
             .toast(isPresenting: $alerts.showNoTraceletInRange){
@@ -45,8 +56,9 @@ struct RootView: View {
             .toast(isPresenting: $alerts.showNoWebDavAccount){
                 AlertToast(type: .error(.red), title: "No WebDAV configured!")
             }
-      
+            
         }
+    }
     
     
     struct RootView_Previews: PreviewProvider {

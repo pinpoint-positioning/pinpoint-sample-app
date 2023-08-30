@@ -11,13 +11,7 @@ import SDK
 struct SettingsView: View {
     @Binding var mapSettings: Settings
     @Environment(\.presentationMode) var presentationMode
-    @AppStorage("webdav-server") var webdavServer = ""
-    @AppStorage("webdav-user") var webdavUser = ""
-    @AppStorage("webdav-pw") var webdavPW = ""
-    @AppStorage("remote-positioning") var remotePositioningEnabled = false
-    @AppStorage("tracelet-id") var traceletID = ""
-    @AppStorage("remote-host") var remoteHost = ""
-    @AppStorage("remote-port") var remotePort = 8081
+
 
     
     @State var updatedTraceletID = ""
@@ -29,7 +23,7 @@ struct SettingsView: View {
     @State private var showIntervalSettings = false
     @State private var showChannelAlert = false
     @State private var showAlert = false
-    @AppStorage ("channel")  var channel:Int = 5
+    @StateObject var storage = LocalStorageManager()
 
 
     var body: some View {
@@ -59,29 +53,29 @@ struct SettingsView: View {
      
                 Section(header: Text("Remote Positioning")) {
                     
-                    Toggle(isOn: $remotePositioningEnabled) {
-                                   Text("Allow Remote Positioning")
-                               }
-                               .onChange(of: remotePositioningEnabled) { newValue in
-                                   // Show the alert when the toggle is switched on
-                                   if newValue {
-                                       showAlert = true
-                                   }
-                               }
-                               .alert(isPresented: $showAlert) {
-                                   Alert(
-                                       title: Text("Are you sure?"),
-                                       message: Text("You will share your position remotely!"),
-                                       primaryButton: .default(Text("Yes")) {
-                                           // Set the state to on when confirmed
-                                           remotePositioningEnabled = true
-                                       },
-                                       secondaryButton: .cancel(Text("No")) {
-                                           // Set the state to off if canceled
-                                           remotePositioningEnabled = false
-                                       }
-                                   )
-                               }
+//                    Toggle(isOn: $remotePositioningEnabled) {
+//                                   Text("Allow Remote Positioning")
+//                               }
+//                               .onChange(of: remotePositioningEnabled) { newValue in
+//                                   // Show the alert when the toggle is switched on
+//                                   if newValue {
+//                                       showAlert = true
+//                                   }
+//                               }
+//                               .alert(isPresented: $showAlert) {
+//                                   Alert(
+//                                       title: Text("Are you sure?"),
+//                                       message: Text("You will share your position remotely!"),
+//                                       primaryButton: .default(Text("Yes")) {
+//                                           // Set the state to on when confirmed
+//                                           remotePositioningEnabled = true
+//                                       },
+//                                       secondaryButton: .cancel(Text("No")) {
+//                                           // Set the state to off if canceled
+//                                           remotePositioningEnabled = false
+//                                       }
+//                                   )
+//                               }
                            
 
                    
@@ -94,19 +88,19 @@ struct SettingsView: View {
                     VStack(alignment: .leading){
                         Text("Remote Host")
                             .font(.footnote)
-                        TextField("Remote Host", text: $remoteHost)
+                        TextField("Remote Host", text: $storage.remoteHost)
                     }
                     
                     VStack(alignment: .leading){
                         Text("Remote Port")
                             .font(.footnote)
-                        TextField("Remote Port", value: $remotePort, formatter: NumberFormatter())
+                        TextField("Remote Port", value: $storage.remotePort, formatter: NumberFormatter())
                     }
                     
                 }
                 
                 .task {
-                    updatedTraceletID = traceletID
+                    updatedTraceletID = storage.traceletID
                 }
                 
                 Section(header: Text("Tracelet Info")) {
@@ -131,13 +125,13 @@ struct SettingsView: View {
                     
                     
                     HStack {
-                        Picker("Select a Channel", selection: $channel) {
+                        Picker("Select a Channel", selection: $storage.channel) {
                             Text("Channel 5").tag(5)
                             Text("Channel 9").tag(9)
                         }
                         .pickerStyle(.automatic)
                         
-                        .onChange(of: channel) { newValue in
+                        .onChange(of: storage.channel) { newValue in
                             Task {
                                 let success = await api.setChannel(channel: Int8(newValue))
                                 api.startPositioning()
@@ -173,13 +167,7 @@ struct SettingsView: View {
                     } label: {
                         Text("More Debug Options")
                     }
-                    
-                    NavigationLink {
-                        TestZoomableScrollView()
-                    } label: {
-                        Text("TestZoom")
-                    }
-                    
+       
 
                     }
                 
@@ -195,19 +183,19 @@ struct SettingsView: View {
                         VStack(alignment: .leading){
                             Text("Server")
                                 .font(.footnote)
-                            TextField("Server", text: $webdavServer)
+                            TextField("Server", text: $storage.webdavServer)
                                 .keyboardType(.URL)
                                 .autocapitalization(.none)
                         }
                         VStack(alignment: .leading){
                             Text("User")
                                 .font(.footnote)
-                            TextField("Username", text: $webdavUser)
+                            TextField("Username", text: $storage.webdavUser)
                         }
                         VStack(alignment: .leading){
                             Text("Password")
                                 .font(.footnote)
-                            TextField("Password", text: $webdavPW)
+                            TextField("Password", text: $storage.webdavPW)
                         }
                         
                     }
@@ -215,7 +203,7 @@ struct SettingsView: View {
             
             .navigationTitle("Map Settings")
             .navigationBarItems(trailing: Button("Done") {
-                traceletID = updatedTraceletID
+                storage.traceletID = updatedTraceletID
                 presentationMode.wrappedValue.dismiss()
             })
         }

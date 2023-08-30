@@ -62,8 +62,8 @@ public class SiteFileManager: ObservableObject {
         
         return true
     }
-
     
+
     
     
     public func getSitefilesList() -> [String] {
@@ -128,6 +128,65 @@ public class SiteFileManager: ObservableObject {
         
     }
     
+    
+    
+    func loadSiteFile(siteFileName: String) {
+        var fileNameWithoutExtension = siteFileName
+        if siteFileName.lowercased().hasSuffix(".zip") {
+            fileNameWithoutExtension = String(siteFileName.dropLast(4))
+        }
+
+        siteFile = loadJson(siteFileName: fileNameWithoutExtension)
+        floorImage = getFloorImage(siteFileName: fileNameWithoutExtension)
+    }
+    
+    
+    func loadLocalSiteFile(siteFileName: String) {
+
+        siteFile = loadLocalJson(siteFileName: siteFileName)
+        print(siteFile)
+        if let localImage = getLocalFloorImage(siteFileName: siteFileName) {
+          
+            floorImage = localImage
+            print(floorImage)
+        }
+    }
+    
+    
+    
+    
+    //ParseJsonFile
+    
+    public func loadLocalJson(siteFileName: String) -> SiteData{
+        if let asset = NSDataAsset(name: "\(siteFileName)-json", bundle: Bundle.main) {
+            do {
+                let jsonData = try JSONDecoder().decode(SiteData.self, from: asset.data)
+                return jsonData
+            } catch {
+                print("Error decoding JSON: \(error)")
+            }
+        } else {
+            print("JSON file not found: \(siteFileName)")
+            return SiteData()
+        }
+        
+        // Return nil in case of any error or if the JSON file is not found
+        return SiteData()
+    }
+
+    
+    
+    public func getLocalFloorImage(siteFileName: String) -> UIImage? {
+        if let image = UIImage(named: siteFileName) {
+            return image
+        } else {
+           print("error loading local image")
+            return nil
+        }
+    }
+    
+    
+    
     //ParseJsonFile
     
     public func loadJson(siteFileName: String) -> SiteData {
@@ -150,15 +209,7 @@ public class SiteFileManager: ObservableObject {
 
     }
     
-    func loadSiteFile(siteFileName: String) {
-        var fileNameWithoutExtension = siteFileName
-        if siteFileName.lowercased().hasSuffix(".zip") {
-            fileNameWithoutExtension = String(siteFileName.dropLast(4))
-        }
 
-        siteFile = loadJson(siteFileName: fileNameWithoutExtension)
-        floorImage = getFloorImage(siteFileName: fileNameWithoutExtension)
-    }
     
     
     // Get the floor image file

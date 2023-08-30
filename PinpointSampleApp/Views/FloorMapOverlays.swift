@@ -14,6 +14,7 @@ struct SatletView: View {
     @EnvironmentObject var api: API
     @Binding var imageGeo: ImageGeometry
     @Binding var siteFile: SiteData
+  
     
     
     var body: some View {
@@ -42,15 +43,15 @@ struct PositionTraceView: View {
     
     @State private var latestPositionIndex: Int?
     @State private var positions: [Position] = []
+    @State private var allPositions: [Position] = []
     @Binding var meterToPixelRatio: CGFloat
     @Binding var imageGeo:ImageGeometry
     @Binding var settings:Settings
     @GestureState private var gestureScale: CGFloat = 1.0
     @State private var finalScale: CGFloat = 1.0
     let pb = ProtobufManager.shared
-    @AppStorage("tracelet-id") var traceletID = ""
-    @AppStorage("remote-positioning") var remotePositioningEnabled = false
     let logger = Logger()
+    @StateObject var storage = LocalStorageManager()
     
     var body: some View {
         ZStack {
@@ -90,35 +91,42 @@ struct PositionTraceView: View {
             if let lastPosIndex = newValue.indices.last {
                 latestPositionIndex = lastPosIndex
                 if let position = positions.last {
-                    if remotePositioningEnabled {
+                    if storage.remotePositioningEnabled {
                         do {
-                            try pb.sendMessage(x: position.x, y: position.y, acc: position.acc, name: traceletID)
+                            try pb.sendMessage(x: position.x, y: position.y, acc: position.acc, name: storage.traceletID)
                         } catch {
                             logger.log(type: .Error, error.localizedDescription)
                         }
-                            
+                        
                         
                     }
                 }
-            
+                
             }
         }
-        .onChange(of: api.localPosition) { newValue in
+        .onChange(of: api.localPosition) { newPosition in
+            let newPositionObject = Position(x: newPosition.xCoord, y: newPosition.yCoord, acc: newPosition.accuracy)
+            if newPosition.xCoord != api.localPosition.xCoord && newPosition.yCoord != api.localPosition.yCoord{
+                positions.append(newPositionObject) // Insert at the front.
+                
+                if positions.count > settings.previousPositions {
+                    positions.removeFirst() // Remove the last element to keep the array size limited to 10.
+                }
+            }
+            // Create a subarray containing the first ten elements
+        
             
-            updatePositions()
-      
         }
     }
     
-    func updatePositions() {
-        Task {
+    
+    func updatePositions() async {
             await pos.fillPositionArray()
             positions = pos.data.suffix(settings.previousPositions).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
             
             // Test for Origin Point Check
             // positions = [Position(x: 0, y: 0, acc: 0)]
-            
-        }
+   
     }
     
     func makeCoordinates(with index: Int) -> Position {

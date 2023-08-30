@@ -15,7 +15,7 @@ struct ScanButton:View {
     @State private var discoveredDevices:[CBPeripheral] = []
     @State var yOffset = -40.0
     @State var buttonText = ""
-    @State var mapView:PositionViewFullScreen?
+    @State var mapView:FloorMapView?
 
 
     var body: some View {

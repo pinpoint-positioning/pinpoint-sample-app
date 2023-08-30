@@ -33,8 +33,9 @@
 		D158C6552A9CB4AE0074E0E9 /* FloorMapOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */; };
 		D158C6572A9CB4D40074E0E9 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6562A9CB4D40074E0E9 /* DataModels.swift */; };
 		D158C6592A9CB5260074E0E9 /* UiElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6582A9CB5260074E0E9 /* UiElements.swift */; };
-		D158C65B2A9CC0810074E0E9 /* TestZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C65A2A9CC0810074E0E9 /* TestZoomableScrollView.swift */; };
 		D15D2BF22A80E08000E87875 /* DeviceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15D2BF12A80E08000E87875 /* DeviceList.swift */; };
+		D18A5A892A9E060B0085EF3F /* LocalStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18A5A882A9E060B0085EF3F /* LocalStorageManager.swift */; };
+		D18A5A8B2A9F3E120085EF3F /* ExpandablePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18A5A8A2A9F3E120085EF3F /* ExpandablePanel.swift */; };
 		D1B108FF2A3C890D0039B5ED /* StatusCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */; };
 		D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B109002A42E61C0039B5ED /* InfoView.swift */; };
 		D1B109042A457D000039B5ED /* WebDAV in Frameworks */ = {isa = PBXBuildFile; productRef = D1B109032A457D000039B5ED /* WebDAV */; };
@@ -48,7 +49,7 @@
 		D1CD4EA42A9364B70025A2DD /* protoc-gen-swift in Frameworks */ = {isa = PBXBuildFile; productRef = D1CD4EA32A9364B70025A2DD /* protoc-gen-swift */; };
 		D1CD4EA62A9365370025A2DD /* ProtoBufManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CD4EA52A9365370025A2DD /* ProtoBufManager.swift */; };
 		D1DCAED82A7CD6510094333A /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1DCAED72A7CD6510094333A /* RootView.swift */; };
-		D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */; };
+		D1F967F12A1CA4AA00277310 /* FloorMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F967F02A1CA4AA00277310 /* FloorMapView.swift */; };
 		D1FB33E62A3B138E003764F9 /* SiteFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */; };
 		D1FB33E92A3B142B003764F9 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = D1FB33E82A3B142B003764F9 /* ZIPFoundation */; };
 /* End PBXBuildFile section */
@@ -92,8 +93,9 @@
 		D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapOverlays.swift; sourceTree = "<group>"; };
 		D158C6562A9CB4D40074E0E9 /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DataModels.swift; path = PinpointSampleApp/Views/DataModels.swift; sourceTree = SOURCE_ROOT; };
 		D158C6582A9CB5260074E0E9 /* UiElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UiElements.swift; path = PinpointSampleApp/Views/UiElements.swift; sourceTree = SOURCE_ROOT; };
-		D158C65A2A9CC0810074E0E9 /* TestZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestZoomableScrollView.swift; sourceTree = "<group>"; };
 		D15D2BF12A80E08000E87875 /* DeviceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceList.swift; sourceTree = "<group>"; };
+		D18A5A882A9E060B0085EF3F /* LocalStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalStorageManager.swift; sourceTree = "<group>"; };
+		D18A5A8A2A9F3E120085EF3F /* ExpandablePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandablePanel.swift; sourceTree = "<group>"; };
 		D19576BE29F7A6880072576F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusCircle.swift; sourceTree = "<group>"; };
 		D1B109002A42E61C0039B5ED /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
@@ -104,7 +106,7 @@
 		D1CD4E9C2A9364680025A2DD /* tracelet.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tracelet.pb.swift; sourceTree = "<group>"; };
 		D1CD4EA52A9365370025A2DD /* ProtoBufManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtoBufManager.swift; sourceTree = "<group>"; };
 		D1DCAED72A7CD6510094333A /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionViewFullScreen.swift; sourceTree = "<group>"; };
+		D1F967F02A1CA4AA00277310 /* FloorMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorMapView.swift; sourceTree = "<group>"; };
 		D1FB33E52A3B138E003764F9 /* SiteFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SiteFileManager.swift; sourceTree = "<group>"; };
 		D1FB33EA2A3B1452003764F9 /* SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -174,6 +176,8 @@
 		D1569D8F29BA214F00D0E578 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D1F967F02A1CA4AA00277310 /* FloorMapView.swift */,
+				D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */,
 				D112270A29B9EF8B00E49993 /* MainView.swift */,
 				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
 				D139E79929F00F2D00E6119E /* PositionMonitor.swift */,
@@ -185,7 +189,6 @@
 				D1B56BBA2A125B6B00C074F4 /* MapView.swift */,
 				D10FED9B2A14CD8300DC344E /* ConfigView.swift */,
 				D10FED9D2A14F86500DC344E /* SitesList.swift */,
-				D1F967F02A1CA4AA00277310 /* PositionViewFullScreen.swift */,
 				D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */,
 				D1B109002A42E61C0039B5ED /* InfoView.swift */,
 				D1B109052A4585750039B5ED /* RemoteSitesList.swift */,
@@ -193,8 +196,7 @@
 				D1DCAED72A7CD6510094333A /* RootView.swift */,
 				D15D2BF12A80E08000E87875 /* DeviceList.swift */,
 				D158C6522A9CB3410074E0E9 /* SettingsView.swift */,
-				D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */,
-				D158C65A2A9CC0810074E0E9 /* TestZoomableScrollView.swift */,
+				D18A5A8A2A9F3E120085EF3F /* ExpandablePanel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -206,6 +208,7 @@
 				D139E79729EEA56800E6119E /* PositionChartData.swift */,
 				D1223B642A8B924D008A755E /* AlertController.swift */,
 				D1CD4EA52A9365370025A2DD /* ProtoBufManager.swift */,
+				D18A5A882A9E060B0085EF3F /* LocalStorageManager.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -324,16 +327,16 @@
 				D1CD4E9B2A9364370025A2DD /* tracelet.proto in Sources */,
 				D158C6592A9CB5260074E0E9 /* UiElements.swift in Sources */,
 				D1B108FF2A3C890D0039B5ED /* StatusCircle.swift in Sources */,
-				D1F967F12A1CA4AA00277310 /* PositionViewFullScreen.swift in Sources */,
+				D1F967F12A1CA4AA00277310 /* FloorMapView.swift in Sources */,
 				D12462A82A0B8DE900CCFF50 /* Colors.swift in Sources */,
 				D1CD4E9D2A9364680025A2DD /* tracelet.pb.swift in Sources */,
 				D12462AA2A0B948500CCFF50 /* ScanButton.swift in Sources */,
 				D112270B29B9EF8B00E49993 /* MainView.swift in Sources */,
 				D1113CA02A090793002C4B35 /* DebugView.swift in Sources */,
+				D18A5A8B2A9F3E120085EF3F /* ExpandablePanel.swift in Sources */,
 				D1C0E80A2A5BF07E00C44E67 /* RulerView.swift in Sources */,
 				D112271529B9EF8C00E49993 /* PinpointSampleApp.xcdatamodeld in Sources */,
 				D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */,
-				D158C65B2A9CC0810074E0E9 /* TestZoomableScrollView.swift in Sources */,
 				D1223B652A8B924D008A755E /* AlertController.swift in Sources */,
 				D158C6552A9CB4AE0074E0E9 /* FloorMapOverlays.swift in Sources */,
 				D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */,
@@ -341,6 +344,7 @@
 				D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */,
 				D139E79E29F0101E00E6119E /* SiteFileInformationView.swift in Sources */,
 				D15D2BF22A80E08000E87875 /* DeviceList.swift in Sources */,
+				D18A5A892A9E060B0085EF3F /* LocalStorageManager.swift in Sources */,
 				D139E79C29F00FF000E6119E /* CommandView.swift in Sources */,
 				D1FB33E62A3B138E003764F9 /* SiteFileManager.swift in Sources */,
 				D1B109062A4585750039B5ED /* RemoteSitesList.swift in Sources */,
@@ -491,6 +495,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -530,6 +535,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;

@@ -16,6 +16,7 @@ struct SitesList: View {
     @State var selectedItem:String? = nil
     @State var selectedSitefile = ""
     @State var showImporter = false
+    @State var showLocalSiteFiles = false
     @State var showWebDavImporter = false
     @Environment(\.dismiss) var dismiss
     
@@ -24,7 +25,8 @@ struct SitesList: View {
         VStack {
             HStack{
                 Button() {
-                    showImporter = true
+                    showLocalSiteFiles = true
+                  //  showImporter = true
                 } label: {
                     HStack{
                         Image(systemName: "folder")
@@ -111,6 +113,11 @@ struct SitesList: View {
         }) {
             RemoteSitesList()
         }
+        
+        
+        .sheet(isPresented: $showLocalSiteFiles) {
+           LocalSiteFileList()
+        }
   
         .navigationTitle("Import SiteFile")
         .navigationBarTitleDisplayMode(.inline)
@@ -161,6 +168,9 @@ struct SitesList: View {
         sfm.loadSiteFile(siteFileName: item)
     }
     
+    
+
+    
     func clearCache(){
         let fileManager = FileManager.default
         do {
@@ -177,6 +187,40 @@ struct SitesList: View {
         }
     }
 }
+
+
+
+import SwiftUI
+
+struct LocalSiteFileList: View {
+    @EnvironmentObject var sfm: SiteFileManager
+    @Environment(\.presentationMode) var presentationMode
+
+    var body: some View {
+        VStack {
+            List {
+                Button(action: {
+                    setSiteLocalFile(item: "Pinpoint-Office")
+                    presentationMode.wrappedValue.dismiss() // Dismiss the view
+                }) {
+                    Text("Pinpoint-Office")
+                }
+            }
+        }
+    }
+
+    func setSiteLocalFile(item: String) {
+        sfm.loadLocalSiteFile(siteFileName: item)
+    }
+}
+
+
+struct LocalSiteFileList_Previews: PreviewProvider {
+    static var previews: some View {
+        LocalSiteFileList()
+    }
+}
+
 
 
 
