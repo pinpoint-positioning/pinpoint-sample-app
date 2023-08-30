@@ -9,12 +9,14 @@ import Foundation
 import SwiftProtobuf
 import Network
 import SwiftUI
+import SDK
 
 class ProtobufManager: ObservableObject {
     
     static let shared = ProtobufManager()
     @AppStorage("remote-host") var remoteHost = ""
     @AppStorage("remote-port") var remotePort = 8081
+    let logger = Logger.shared
 
     
     private var connection: NWConnection?
@@ -32,7 +34,7 @@ class ProtobufManager: ObservableObject {
         establishConnection()
         
         guard let connection = connection else {
-            print("Failed to create a network connection.")
+            logger.log(type: .Error, "Failed to create a network connection.")
             return
         }
         
@@ -65,7 +67,9 @@ class ProtobufManager: ObservableObject {
                     // Send the binary data to the server
                     connection.send(content: packedData, completion: .contentProcessed { error in
                         if let error = error {
-                            print("Failed to send the message: \(error)")
+                            self.logger.log(type: .Error, "Failed to send protobuf-message: \(error)")
+                         
+                            
                         } else {
                             print("Message sent successfully.")
                         }
@@ -78,7 +82,7 @@ class ProtobufManager: ObservableObject {
             
             connection.start(queue: .global())
         } catch {
-            print("Error: \(error)")
+            self.logger.log(type: .Error, "Failed to send protobuf-message: \(error)")
         }
     }
     
