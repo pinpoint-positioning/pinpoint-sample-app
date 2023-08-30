@@ -14,7 +14,7 @@ struct SettingsView: View {
 
 
     
-    @State var updatedTraceletID = ""
+    @State var updatedTraceletID:String = ""
    
     @EnvironmentObject var api:API
     @State var status = TL_StatusResponse()
@@ -22,7 +22,7 @@ struct SettingsView: View {
     @State var interval: Int = 1
     @State private var showIntervalSettings = false
     @State private var showChannelAlert = false
-    @State private var showAlert = false
+   
     @StateObject var storage = LocalStorageManager()
 
 
@@ -30,6 +30,7 @@ struct SettingsView: View {
         @State var role = parseRole(byte: Int8(status.role) ?? 0)
         NavigationView {
             Form {
+                let _ = print (UIDevice.current.name)
                 Section(header: Text("Settings")) {
                     Stepper(value: $mapSettings.previousPositions, in: 0...10, label: {
                         Text("Previous Positions: \(mapSettings.previousPositions)")
@@ -53,32 +54,10 @@ struct SettingsView: View {
      
                 Section(header: Text("Remote Positioning")) {
                     
-//                    Toggle(isOn: $remotePositioningEnabled) {
-//                                   Text("Allow Remote Positioning")
-//                               }
-//                               .onChange(of: remotePositioningEnabled) { newValue in
-//                                   // Show the alert when the toggle is switched on
-//                                   if newValue {
-//                                       showAlert = true
-//                                   }
-//                               }
-//                               .alert(isPresented: $showAlert) {
-//                                   Alert(
-//                                       title: Text("Are you sure?"),
-//                                       message: Text("You will share your position remotely!"),
-//                                       primaryButton: .default(Text("Yes")) {
-//                                           // Set the state to on when confirmed
-//                                           remotePositioningEnabled = true
-//                                       },
-//                                       secondaryButton: .cancel(Text("No")) {
-//                                           // Set the state to off if canceled
-//                                           remotePositioningEnabled = false
-//                                       }
-//                                   )
-//                               }
-                           
+                    Toggle(isOn: $storage.usePinpointRemoteServer) {
+                                   Text("Use Pinpoint Demo Server")
+                               }
 
-                   
                     VStack(alignment: .leading){
                         Text("Tracelet Name")
                             .font(.footnote)
@@ -89,12 +68,14 @@ struct SettingsView: View {
                         Text("Remote Host")
                             .font(.footnote)
                         TextField("Remote Host", text: $storage.remoteHost)
+                            .disabled(storage.usePinpointRemoteServer)
                     }
                     
                     VStack(alignment: .leading){
                         Text("Remote Port")
                             .font(.footnote)
                         TextField("Remote Port", value: $storage.remotePort, formatter: NumberFormatter())
+                            .disabled(storage.usePinpointRemoteServer)
                     }
                     
                 }
@@ -167,6 +148,8 @@ struct SettingsView: View {
                     } label: {
                         Text("More Debug Options")
                     }
+                    Toggle("Event Mode", isOn: $storage.eventMode)
+              
        
 
                     }

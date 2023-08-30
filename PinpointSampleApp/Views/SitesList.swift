@@ -25,8 +25,8 @@ struct SitesList: View {
         VStack {
             HStack{
                 Button() {
-                    showLocalSiteFiles = true
-                  //  showImporter = true
+                   // showLocalSiteFiles = true
+                    showImporter = true
                 } label: {
                     HStack{
                         Image(systemName: "folder")
@@ -199,11 +199,20 @@ struct LocalSiteFileList: View {
     var body: some View {
         VStack {
             List {
+                
+                //Pinpoint Office Map
                 Button(action: {
                     setSiteLocalFile(item: "Pinpoint-Office")
                     presentationMode.wrappedValue.dismiss() // Dismiss the view
                 }) {
                     Text("Pinpoint-Office")
+                }
+                
+                Button(action: {
+                    setSiteLocalFile(item: "UBIB-IdeenReich")
+                    presentationMode.wrappedValue.dismiss() // Dismiss the view
+                }) {
+                    Text("UBIB-IdeenReich")
                 }
             }
         }

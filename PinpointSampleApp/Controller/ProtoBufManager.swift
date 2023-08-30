@@ -12,18 +12,21 @@ import SwiftUI
 import SDK
 
 class ProtobufManager: ObservableObject {
-    
+    let storage = LocalStorageManager()
     static let shared = ProtobufManager()
-    @AppStorage("remote-host") var remoteHost = ""
-    @AppStorage("remote-port") var remotePort = 8081
+
     let logger = Logger.shared
+    let ppHost = "pinpoint.feste-ip.net" //"pp-chris.feste-ip.net"//
+    let ppPort = 21526 //14175 //
 
     
     private var connection: NWConnection?
     
     private func establishConnection() {
-        let hostEndpoint = NWEndpoint.Host(remoteHost)
-        let endpoint = NWEndpoint.hostPort(host: hostEndpoint, port: NWEndpoint.Port(rawValue: UInt16(remotePort))!)
+        
+        
+        let hostEndpoint = NWEndpoint.Host(storage.usePinpointRemoteServer ? ppHost : storage.remoteHost)
+        let endpoint = NWEndpoint.hostPort(host: hostEndpoint, port: NWEndpoint.Port(rawValue: UInt16(storage.usePinpointRemoteServer ? ppPort : storage.remotePort))!)
         let parameters = NWParameters.tcp.copy()
        // parameters.requiredInterfaceType = .wifi // Careful if host will be public available
         
@@ -44,7 +47,11 @@ class ProtobufManager: ObservableObject {
         var traceletMessage = Tracelet_TraceletToServer()
         traceletMessage.id = 1
         traceletMessage.deliveryTs = timestamp
-        traceletMessage.traceletID = name
+        if name == "" {
+            traceletMessage.traceletID = UIDevice.current.name
+        } else {
+            traceletMessage.traceletID = name
+        }
         traceletMessage.ignition = true
         
         var location = Tracelet_TraceletToServer.Location()

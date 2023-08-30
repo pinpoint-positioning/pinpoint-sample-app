@@ -106,13 +106,13 @@ struct PositionTraceView: View {
         }
         .onChange(of: api.localPosition) { newPosition in
             let newPositionObject = Position(x: newPosition.xCoord, y: newPosition.yCoord, acc: newPosition.accuracy)
-            if newPosition.xCoord != api.localPosition.xCoord && newPosition.yCoord != api.localPosition.yCoord{
-                positions.append(newPositionObject) // Insert at the front.
+        
+                positions.append(newPositionObject)
                 
-                if positions.count > settings.previousPositions {
+                if positions.count > settings.previousPositions * 10 {
                     positions.removeFirst() // Remove the last element to keep the array size limited to 10.
                 }
-            }
+            
             // Create a subarray containing the first ten elements
         
             

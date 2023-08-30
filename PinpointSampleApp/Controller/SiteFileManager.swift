@@ -146,9 +146,7 @@ public class SiteFileManager: ObservableObject {
         siteFile = loadLocalJson(siteFileName: siteFileName)
         print(siteFile)
         if let localImage = getLocalFloorImage(siteFileName: siteFileName) {
-          
             floorImage = localImage
-            print(floorImage)
         }
     }
     
@@ -177,7 +175,10 @@ public class SiteFileManager: ObservableObject {
     
     
     public func getLocalFloorImage(siteFileName: String) -> UIImage? {
+    
         if let image = UIImage(named: siteFileName) {
+            print(image)
+            print("have image")
             return image
         } else {
            print("error loading local image")
@@ -185,7 +186,7 @@ public class SiteFileManager: ObservableObject {
         }
     }
     
-    
+
     
     //ParseJsonFile
     

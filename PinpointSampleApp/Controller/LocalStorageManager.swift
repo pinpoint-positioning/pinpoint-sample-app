@@ -16,9 +16,12 @@ class LocalStorageManager: ObservableObject{
     @AppStorage("webdav-user") var webdavUser = ""
     @AppStorage("webdav-pw") var webdavPW = ""
     @AppStorage("remote-positioning") var remotePositioningEnabled = false
-    @AppStorage("tracelet-id") var traceletID = ""
+    @AppStorage("tracelet-id") var traceletID:String = "\(UUID())"
     @AppStorage("remote-host") var remoteHost = ""
     @AppStorage("remote-port") var remotePort = 8081
     @AppStorage ("channel")  var channel:Int = 5
+    @AppStorage ("event-mode")  var eventMode = true
+    @AppStorage ("pinpoint-remote-server") var usePinpointRemoteServer = false
+
     
 }

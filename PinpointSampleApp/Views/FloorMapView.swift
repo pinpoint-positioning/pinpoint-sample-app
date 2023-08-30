@@ -20,6 +20,7 @@ struct FloorMapView: View {
     @EnvironmentObject var api : API
     @EnvironmentObject var sfm : SiteFileManager
     @EnvironmentObject var alerts : AlertController
+
     
     @GestureState var gestureTranslation: CGSize = .zero
     @State var finalTranslation: CGSize = .zero
@@ -67,12 +68,13 @@ struct FloorMapView: View {
                         } else {
                             
                             // MARK: - Floormap
-                            
-                            Image(uiImage:sfm.siteFile.map.mapName == "" ? blankImage() : image)
+                            // For Event
+                       //     Image(uiImage:sfm.siteFile.map.mapName == "" ? blankImage() : image)
+                            Image(uiImage: image)
                                 .resizable()
                                 .border(Color("pinpoint_gray"), width: 2)
                                 .task {
-                                    
+                                    setSiteLocalFile(item: "UBIB-IdeenReich")
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
                                     
                                     if sfm.siteFile.map.mapName == "" {
@@ -97,6 +99,7 @@ struct FloorMapView: View {
                                 .onChange(of: api.generalState, perform: { newValue in
                                     if newValue == .CONNECTED{
                                         Task {
+                                            setSiteLocalFile(item: "UBIB-IdeenReich")
                                             // Set Channel of SiteFile to Tracelet if the sitefile is already loaded
                                             if sfm.siteFile.map.mapName != "" {
                                                 _ = await api.setChannel(channel: Int8(sfm.siteFile.map.uwbChannel))
@@ -109,7 +112,13 @@ struct FloorMapView: View {
                                     }
                                 })
                                 .onChange(of: sfm.siteFile) { newValue in
-                                    image = sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
+                                    if storage.eventMode {
+                                        if let img = sfm.getLocalFloorImage(siteFileName: sfm.siteFile.map.mapName){
+                                            image = img
+                                        }
+                                    } else {
+                                        image = sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
+                                    }
                                     imageGeo.xOrigin = sfm.siteFile.map.mapFileOriginX
                                     imageGeo.yOrigin = sfm.siteFile.map.mapFileOriginY
                                     meterToPixelRatio = sfm.siteFile.map.mapFileRes
@@ -166,7 +175,7 @@ struct FloorMapView: View {
                 // Center Button
                 FloatingButton(action: {
                     centerImage()
-                }, imageName: "scope", backgroundColor: Color(uiColor: .systemGray5))
+                }, imageName: "scope", backgroundColor: Color(uiColor: .systemGray5).opacity(0.8))
                 
                 // Remote Position Button
                 FloatingButton(action: {
@@ -175,7 +184,7 @@ struct FloorMapView: View {
                     } else {
                         storage.remotePositioningEnabled = false
                     }
-                }, imageName: "square.and.arrow.up", backgroundColor: storage.remotePositioningEnabled ? Color(uiColor: .systemGreen) : Color(uiColor: .systemGray5))
+                }, imageName: "square.and.arrow.up", backgroundColor: storage.remotePositioningEnabled ? Color(uiColor: .orange).opacity(0.8) : Color(uiColor: .systemGray5).opacity(0.8))
 
                 
                 
@@ -209,7 +218,7 @@ struct FloorMapView: View {
                     }
                 } label: {
                     Image(systemName: "wave.3.right.circle")
-                        .foregroundColor(api.generalState == .CONNECTED ? .red : .accentColor)
+                        .foregroundColor(api.generalState == .CONNECTED ? .red : .black)
                     
                 }
                 
@@ -221,6 +230,7 @@ struct FloorMapView: View {
                     siteListIsPresented.toggle()
                 } label: {
                     Image(systemName: "plus")
+                        .foregroundColor(Color.black)
                     
                 }
             }
@@ -231,6 +241,7 @@ struct FloorMapView: View {
                     isModalPresented = true
                 } label: {
                     Image(systemName: "gear")
+                        .foregroundColor(Color.black)
                     
                 }
             }
@@ -269,6 +280,14 @@ struct FloorMapView: View {
         centerAnchor.toggle() // Set it to an integer value (0 in this case)
     }
     
+    
+    func setSiteLocalFile(item: String) {
+        sfm.loadLocalSiteFile(siteFileName: item)
+        if let img = sfm.getLocalFloorImage(siteFileName: item) {
+            image = img
+            
+        }
+    }
     
     func scan() async {
         // Initiate Scan
@@ -310,19 +329,19 @@ struct FloorMapView: View {
         }
     }
     
-    func blankImage() -> UIImage {
-        
-        let image = UIImage(named:"coordinate-system")
-        let scaledImageSize = CGSize(width: 400, height: 400)
-        
-        let renderer = UIGraphicsImageRenderer(size: scaledImageSize)
-        let scaledImage = renderer.image { _ in
-            image!.draw(in: CGRect(origin: .zero, size: scaledImageSize))
-            
-        }
-        return scaledImage
-        
-    }
+//    func blankImage() -> UIImage {
+//
+//        let image = UIImage(named:"coordinate-system")
+//        let scaledImageSize = CGSize(width: 400, height: 400)
+//
+//        let renderer = UIGraphicsImageRenderer(size: scaledImageSize)
+//        let scaledImage = renderer.image { _ in
+//            image!.draw(in: CGRect(origin: .zero, size: scaledImageSize))
+//
+//        }
+//        return scaledImage
+//
+//    }
     
     private func updateImagePosition() {
         let positionX = finalTranslation.width + gestureTranslation.width
