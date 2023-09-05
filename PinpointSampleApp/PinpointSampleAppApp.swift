@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SDK
-
+    
 @main
 struct PinpointSampleAppApp: App {
     let persistenceController = PersistenceController.shared

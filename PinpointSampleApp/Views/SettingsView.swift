@@ -23,14 +23,13 @@ struct SettingsView: View {
     @State private var showIntervalSettings = false
     @State private var showChannelAlert = false
    
-    @StateObject var storage = LocalStorageManager()
+    @StateObject var storage = LocalStorageManager.shared
 
 
     var body: some View {
         @State var role = parseRole(byte: Int8(status.role) ?? 0)
         NavigationView {
             Form {
-                let _ = print (UIDevice.current.name)
                 Section(header: Text("Settings")) {
                     Stepper(value: $mapSettings.previousPositions, in: 0...10, label: {
                         Text("Previous Positions: \(mapSettings.previousPositions)")
@@ -148,8 +147,9 @@ struct SettingsView: View {
                     } label: {
                         Text("More Debug Options")
                     }
-                    Toggle("Event Mode", isOn: $storage.eventMode)
-              
+                    Toggle(isOn: $storage.eventMode) {
+                        Text("Event Mode")
+                    }
        
 
                     }

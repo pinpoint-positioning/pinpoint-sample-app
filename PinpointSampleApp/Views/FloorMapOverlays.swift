@@ -51,31 +51,34 @@ struct PositionTraceView: View {
     @State private var finalScale: CGFloat = 1.0
     let pb = ProtobufManager.shared
     let logger = Logger()
-    @StateObject var storage = LocalStorageManager()
+    @Binding var circlePos:CGPoint
+    @StateObject var storage = LocalStorageManager.shared
     
     var body: some View {
         ZStack {
             
             ForEach(positions.indices, id: \.self) { index in
                 let coords = makeCoordinates(with: index)
-                
-                if (index > 0) {
-                    Path { path in
-                        let previousCoords = makeCoordinates(with: index - 1)
-                        path.move(to: CGPoint(x: coords.x, y: coords.y))
-                        path.addLine(to: CGPoint(x: previousCoords.x, y: previousCoords.y))
+     
+                    if (index > 0) {
+                        Path { path in
+                            let previousCoords = makeCoordinates(with: index - 1)
+                            path.move(to: CGPoint(x: coords.x, y: coords.y))
+                            path.addLine(to: CGPoint(x: previousCoords.x, y: previousCoords.y))
+                        }
+                        .stroke(Color.orange, style: StrokeStyle(lineWidth: 1, lineCap: .round))
                     }
-                    .stroke(Color.orange, style: StrokeStyle(lineWidth: 1, lineCap: .round))
-                }
+                
                 
                 
                 ZStack {
                     
                     Image("pinpoint-circle")
+                     
                         .resizable()
-                        .frame(width: index == latestPositionIndex ? 50 : 25, height: index == latestPositionIndex ? 50 : 25)
-                        .foregroundColor(.yellow)
+                        .frame(width: index == latestPositionIndex ? 25 : 5, height: index == latestPositionIndex ? 25 : 5)
                         .position(x: coords.x , y: coords.y)
+                        .id("position")
                         .overlay {
                             if settings.showAccuracyRange && index == latestPositionIndex {
                                 AccuracyCircle(coords: coords, meterToPixelRatio:meterToPixelRatio)
@@ -92,10 +95,12 @@ struct PositionTraceView: View {
                 latestPositionIndex = lastPosIndex
                 if let position = positions.last {
                     if storage.remotePositioningEnabled {
-                        do {
-                            try pb.sendMessage(x: position.x, y: position.y, acc: position.acc, name: storage.traceletID)
-                        } catch {
-                            logger.log(type: .Error, error.localizedDescription)
+                        Task{
+                            do {
+                                try await pb.sendMessage(x: position.x, y: position.y, acc: position.acc, name: storage.traceletID)
+                            } catch {
+                                logger.log(type: .Error, error.localizedDescription)
+                            }
                         }
                         
                         
@@ -109,7 +114,7 @@ struct PositionTraceView: View {
         
                 positions.append(newPositionObject)
                 
-                if positions.count > settings.previousPositions * 10 {
+                if positions.count > settings.previousPositions + 1 {
                     positions.removeFirst() // Remove the last element to keep the array size limited to 10.
                 }
             
@@ -122,7 +127,7 @@ struct PositionTraceView: View {
     
     func updatePositions() async {
             await pos.fillPositionArray()
-            positions = pos.data.suffix(settings.previousPositions).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
+            positions = pos.data.suffix(settings.previousPositions + 1).map { Position(x: $0.x, y: $0.y, acc: $0.acc) }
             
             // Test for Origin Point Check
             // positions = [Position(x: 0, y: 0, acc: 0)]
@@ -135,8 +140,11 @@ struct PositionTraceView: View {
         let acc = positions[index].acc
         let rawX = positions[index].x
         let rawY = positions[index].y
-        
-        
+        // For scrolling to the position in the parent scrollview
+        DispatchQueue.main.async {
+            circlePos = CGPoint(x: scaledX, y: scaledY)
+        }
+       
         return Position(x: scaledX, y: scaledY, acc: acc, rawX: rawX, rawY: rawY)
     }
     

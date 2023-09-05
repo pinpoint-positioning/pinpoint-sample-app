@@ -25,10 +25,10 @@ struct ImageGeometry {
 }
 
 struct Settings {
-    var previousPositions: Int = 5
+    var previousPositions: Int = 0
     var showRuler: Bool = false
     var showOrigin: Bool = false
-    var showAccuracyRange:Bool = true
+    var showAccuracyRange:Bool = false
     var showSatlets:Bool = false
 }
 

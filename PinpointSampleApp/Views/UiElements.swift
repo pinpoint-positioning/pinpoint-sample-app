@@ -37,13 +37,14 @@ struct FloatingButton: View {
     var action: () -> Void // Define a closure that takes no parameters and returns Void
     var imageName: String // Define a parameter for the image system name
     var backgroundColor: Color // Define a parameter for the button's background color
+    var size: CGSize
     
     var body: some View {
         Button(action: {
             action() // Call the closure when the button is pressed
         }) {
             Image(systemName: imageName)
-                .frame(width: 20, height: 20)
+                .frame(width: size.width, height: size.height)
                 .scaledToFill()
                 .font(.title.weight(.semibold))
                 .padding()
@@ -51,10 +52,8 @@ struct FloatingButton: View {
                 .clipShape(Circle())
                 .shadow(radius: 4, x: 0, y: 4)
                 .foregroundColor(.black)
-              
 
-        }
-
+                }
     }
 }
 
@@ -132,7 +131,7 @@ class PinchZoomView: UIView {
             if scale <= 0.1 {
                 scale = 0.1
             }
-            
+
             location = gesture.location(in: self)
             offset = CGSize(width: location.x - startLocation.x, height: location.y - startLocation.y)
             

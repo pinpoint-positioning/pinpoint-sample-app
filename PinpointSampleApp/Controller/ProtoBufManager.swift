@@ -1,41 +1,64 @@
-//
-//  ProtoBufManager.swift
-//  PinpointSampleApp
-//
-//  Created by Christoph Scherbeck on 21.08.23.
-//
-
 import Foundation
 import SwiftProtobuf
 import Network
-import SwiftUI
 import SDK
 
-class ProtobufManager: ObservableObject {
-    let storage = LocalStorageManager()
+class ProtobufManager {
+    var storage = LocalStorageManager.shared
     static let shared = ProtobufManager()
-
+    var success = false
     let logger = Logger.shared
-    let ppHost = "pinpoint.feste-ip.net" //"pp-chris.feste-ip.net"//
-    let ppPort = 21526 //14175 //
+    var ppHost = "pinpoint.feste-ip.net"
+    var ppPort = 21526
+    var connection: NWConnection? // Store the connection as an instance variable
+    private var isConnectionEstablished = false
 
-    
-    private var connection: NWConnection?
-    
-    private func establishConnection() {
-        
-        
-        let hostEndpoint = NWEndpoint.Host(storage.usePinpointRemoteServer ? ppHost : storage.remoteHost)
-        let endpoint = NWEndpoint.hostPort(host: hostEndpoint, port: NWEndpoint.Port(rawValue: UInt16(storage.usePinpointRemoteServer ? ppPort : storage.remotePort))!)
-        let parameters = NWParameters.tcp.copy()
-       // parameters.requiredInterfaceType = .wifi // Careful if host will be public available
-        
-        connection = NWConnection(to: endpoint, using: parameters)
+    private init() {
+        // Private initializer for singleton pattern
     }
     
-    func sendMessage(x: Double, y: Double, acc: Double, name: String) throws {
-        establishConnection()
-        
+    func establishConnection() {
+          if isConnectionEstablished {
+              print("con exists")
+              return
+          }
+        print("new con")
+          
+          if !storage.usePinpointRemoteServer {
+              ppHost = storage.remoteHost
+              ppPort = storage.remotePort
+          }
+          
+          let hostEndpoint = NWEndpoint.Host(ppHost)
+          let endpoint = NWEndpoint.hostPort(host: hostEndpoint, port: NWEndpoint.Port(rawValue: UInt16(ppPort))!)
+          let parameters = NWParameters.tcp
+          
+          connection = NWConnection(to: endpoint, using: parameters)
+          connection?.stateUpdateHandler = { [weak self] newState in
+              switch newState {
+              case .ready:
+                  self?.isConnectionEstablished = true
+                  self?.logger.log(type: .Info, "Connection established.")
+              case .failed(let error):
+                  self?.isConnectionEstablished = false
+                  self?.logger.log(type: .Error, "Connection failed with error: \(error)")
+              default:
+                  self?.logger.log(type: .Error, "Connection  could not be established")
+                  break
+              }
+          }
+          
+          connection?.start(queue: .global())
+      }
+    
+    
+    func closeConnection() {
+        connection?.cancel()
+        isConnectionEstablished = false
+        logger.log(type: .Info, "Connection closed.")
+    }
+    
+    func sendMessage(x: Double, y: Double, acc: Double, name: String) async throws {
         guard let connection = connection else {
             logger.log(type: .Error, "Failed to create a network connection.")
             return
@@ -47,11 +70,7 @@ class ProtobufManager: ObservableObject {
         var traceletMessage = Tracelet_TraceletToServer()
         traceletMessage.id = 1
         traceletMessage.deliveryTs = timestamp
-        if name == "" {
-            traceletMessage.traceletID = UIDevice.current.name
-        } else {
-            traceletMessage.traceletID = name
-        }
+        traceletMessage.traceletID = name
         traceletMessage.ignition = true
         
         var location = Tracelet_TraceletToServer.Location()
@@ -68,37 +87,30 @@ class ProtobufManager: ObservableObject {
             let binaryData = try traceletMessage.serializedData()
             let packedData = pack(msg: binaryData)
             
-            connection.stateUpdateHandler = { newState in
-                switch newState {
-                case .ready:
-                    // Send the binary data to the server
-                    connection.send(content: packedData, completion: .contentProcessed { error in
-                        if let error = error {
-                            self.logger.log(type: .Error, "Failed to send protobuf-message: \(error)")
-                         
-                            
-                        } else {
-                            print("Message sent successfully.")
-                        }
-                        connection.cancel()
-                    })
-                default:
-                    return
+            connection.send(content: packedData, completion: .contentProcessed { error in
+                if let error = error {
+                    self.logger.log(type: .Error, "Failed to send protobuf-message: \(error)")
+                } else {
+                    self.success.toggle()
+                    self.logger.log(type: .Info, "Message sent successfully.")
                 }
-            }
-            
-            connection.start(queue: .global())
+            })
         } catch {
             self.logger.log(type: .Error, "Failed to send protobuf-message: \(error)")
         }
     }
+
     
     private func pack(msg: Data) -> Data {
-        let header: [UInt8] = [0xFE, 0xED]
-        var length: UInt32 = UInt32(msg.count).littleEndian 
+        var header: [UInt8] = [0xFE, 0xED]
+        var length: UInt32 = UInt32(msg.count).littleEndian
         let dataLength = withUnsafeBytes(of: &length) { Data($0) }
         
-        return Data(header + dataLength + msg)
+        header.append(contentsOf: dataLength)
+        header.append(contentsOf: msg)
+        
+        return Data(header)
     }
+   
 }
 

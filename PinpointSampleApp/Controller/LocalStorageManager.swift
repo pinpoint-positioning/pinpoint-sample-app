@@ -10,7 +10,7 @@ import SwiftUI
 
 class LocalStorageManager: ObservableObject{
     
-   // static var shared = LocalStorageManager()
+    static var shared = LocalStorageManager()
     
     @AppStorage("webdav-server") var webdavServer = ""
     @AppStorage("webdav-user") var webdavUser = ""
@@ -22,6 +22,4 @@ class LocalStorageManager: ObservableObject{
     @AppStorage ("channel")  var channel:Int = 5
     @AppStorage ("event-mode")  var eventMode = true
     @AppStorage ("pinpoint-remote-server") var usePinpointRemoteServer = false
-
-    
 }

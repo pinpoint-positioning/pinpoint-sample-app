@@ -30,6 +30,8 @@ struct FloorMapView: View {
     @State var imageGeo:ImageGeometry = ImageGeometry(xOrigin: 0.0, yOrigin: 0.0, imageSize: .zero, imagePosition: .zero)
     @State var settings:Settings = Settings()
     @State var image = UIImage()
+    // For scrolling to Position
+    @State var currentPosition = CGPoint()
     
     @State private var showingScanResults = false
     @State private var discoveredDevices:[CBPeripheral] = []
@@ -40,18 +42,23 @@ struct FloorMapView: View {
     @State var siteListIsPresented = false
     
     @State private var showAlert = false
-    @StateObject var storage = LocalStorageManager()
+    @State private var scale = 0.6
+
+    @StateObject var storage = LocalStorageManager.shared
     
     
     // Center Image
     @State private var centerAnchor: Bool = false
+  
     
     
+    let pb = ProtobufManager.shared
+    @State var successBump = false
     let logger = Logger()
     
     
     var body: some View {
-        
+       
         
         ZStack(alignment:.bottomTrailing) {
             Color("pinpoint_background")
@@ -60,21 +67,29 @@ struct FloorMapView: View {
             // Container for the FloorImage and PositionTraceView
             VStack(alignment:.leading) {
                 ExpandablePanel()
+                
                 ScrollViewReader { scrollView in
                     ScrollView ([.horizontal, .vertical]){
                         
                         if api.scanState == .SCANNING{
-                            ProgressView("Hold Tracelet close to phone")
+                            ZStack{
+
+                                ProgressView("Hold Tracelet close to phone")
+                            }
                         } else {
                             
                             // MARK: - Floormap
-                            // For Event
-                       //     Image(uiImage:sfm.siteFile.map.mapName == "" ? blankImage() : image)
+
                             Image(uiImage: image)
                                 .resizable()
+                             
                                 .border(Color("pinpoint_gray"), width: 2)
+                                .id("imagecenter")
                                 .task {
-                                    setSiteLocalFile(item: "UBIB-IdeenReich")
+                                    if sfm.siteFile.map.mapName == "" {
+                                        setSiteLocalFile(item: "UBIB-IdeenReich")
+                                    }
+                                    
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
                                     
                                     if sfm.siteFile.map.mapName == "" {
@@ -82,13 +97,14 @@ struct FloorMapView: View {
                                         imageGeo.xOrigin = 100
                                         imageGeo.yOrigin = -100
                                     }
-                                    scrollView.scrollTo("center", anchor: .center)
+                                    scrollView.scrollTo("imagecenter", anchor: .center)
                                     
                                 }
-                                .id("center") // Add an ID to this view for the center anchor
+                           
                             
                                 .onChange(of: centerAnchor) { newCenterAnchor in
-                                    scrollView.scrollTo("center", anchor: .center)
+                                    scrollView.scrollTo("imagecenter", anchor: .center)
+                                    scale = 0.6
                                 }
                                 .onChange(of: api.bleState, perform: { _ in
                                     Task {
@@ -99,7 +115,7 @@ struct FloorMapView: View {
                                 .onChange(of: api.generalState, perform: { newValue in
                                     if newValue == .CONNECTED{
                                         Task {
-                                            setSiteLocalFile(item: "UBIB-IdeenReich")
+                                            
                                             // Set Channel of SiteFile to Tracelet if the sitefile is already loaded
                                             if sfm.siteFile.map.mapName != "" {
                                                 _ = await api.setChannel(channel: Int8(sfm.siteFile.map.uwbChannel))
@@ -112,6 +128,7 @@ struct FloorMapView: View {
                                     }
                                 })
                                 .onChange(of: sfm.siteFile) { newValue in
+                                    print(storage.eventMode)
                                     if storage.eventMode {
                                         if let img = sfm.getLocalFloorImage(siteFileName: sfm.siteFile.map.mapName){
                                             image = img
@@ -119,6 +136,7 @@ struct FloorMapView: View {
                                     } else {
                                         image = sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
                                     }
+
                                     imageGeo.xOrigin = sfm.siteFile.map.mapFileOriginX
                                     imageGeo.yOrigin = sfm.siteFile.map.mapFileOriginY
                                     meterToPixelRatio = sfm.siteFile.map.mapFileRes
@@ -146,8 +164,17 @@ struct FloorMapView: View {
                                         
                                         meterToPixelRatio: $meterToPixelRatio,
                                         imageGeo: $imageGeo,
-                                        settings: $settings
+                                        settings: $settings,
+                                        circlePos: $currentPosition
                                     )
+                          
+       
+
+
+                                    
+
+               
+                                  
                                     
                                     // MARK: - Ruler
                                     
@@ -161,30 +188,41 @@ struct FloorMapView: View {
                                     }
                                     
                                 }
+                                .scaleEffect(scale)
                                 .pinchToZoom()
-                            
+
                         }
-                        
+    
                     }
+                    
                 }
             }
             
-            VStack(alignment: .trailing, spacing: 10){
+            
 
+            
+            VStack(alignment: .trailing, spacing: 10){
                 
+           
                 // Center Button
                 FloatingButton(action: {
                     centerImage()
-                }, imageName: "scope", backgroundColor: Color(uiColor: .systemGray5).opacity(0.8))
-                
+                }, imageName: "arrow.counterclockwise", backgroundColor: Color(uiColor: .systemGray5).opacity(0.8), size: CGSize(width: 20, height: 20))
+            
                 // Remote Position Button
                 FloatingButton(action: {
                     if storage.remotePositioningEnabled == false {
-                        showAlert.toggle()
+                        showAlert = true
                     } else {
+                        pb.closeConnection()
                         storage.remotePositioningEnabled = false
                     }
-                }, imageName: "square.and.arrow.up", backgroundColor: storage.remotePositioningEnabled ? Color(uiColor: .orange).opacity(0.8) : Color(uiColor: .systemGray5).opacity(0.8))
+                }, imageName: "square.and.arrow.up", backgroundColor: storage.remotePositioningEnabled ? Color(uiColor: .orange).opacity(0.8) : Color(uiColor: .systemGray5).opacity(0.8), size: CGSize(width: 20, height: 20))
+                .onChange(of: pb.success) { newValue in
+                    withAnimation {
+                        successBump.toggle()
+                    }
+                }
 
                 
                 
@@ -192,6 +230,7 @@ struct FloorMapView: View {
             }
             .padding()
         }
+    
         .sheet(isPresented: $isModalPresented, content: {
             SettingsView(mapSettings: $settings)
         })
@@ -226,12 +265,14 @@ struct FloorMapView: View {
             
             
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    siteListIsPresented.toggle()
-                } label: {
-                    Image(systemName: "plus")
-                        .foregroundColor(Color.black)
-                    
+                if !storage.eventMode {
+                    Button {
+                        siteListIsPresented.toggle()
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundColor(Color.black)
+                        
+                    }
                 }
             }
             
@@ -255,6 +296,9 @@ struct FloorMapView: View {
                 primaryButton: .default(Text("Yes")) {
                     // Set the state to on when confirmed
                     storage.remotePositioningEnabled = true
+                    pb.establishConnection()
+                  
+                    
                 },
                 secondaryButton: .cancel(Text("No")) {
                     // Set the state to off if canceled
@@ -265,17 +309,7 @@ struct FloorMapView: View {
         
         
     }
-    
-    
-    // Helper Functions
-    
-    //    func startDelayedScan() async {
-    //        api.scanState = .SCANNING
-    //        try? await Task.sleep(nanoseconds: 2_000_000_000) // Sleep for 3 seconds (3,000,000,000 nanoseconds)
-    //        await scan()
-    //    }
-    
-    
+
     func centerImage() {
         centerAnchor.toggle() // Set it to an integer value (0 in this case)
     }
@@ -328,21 +362,7 @@ struct FloorMapView: View {
             }
         }
     }
-    
-//    func blankImage() -> UIImage {
-//
-//        let image = UIImage(named:"coordinate-system")
-//        let scaledImageSize = CGSize(width: 400, height: 400)
-//
-//        let renderer = UIGraphicsImageRenderer(size: scaledImageSize)
-//        let scaledImage = renderer.image { _ in
-//            image!.draw(in: CGRect(origin: .zero, size: scaledImageSize))
-//
-//        }
-//        return scaledImage
-//
-//    }
-    
+
     private func updateImagePosition() {
         let positionX = finalTranslation.width + gestureTranslation.width
         let positionY = finalTranslation.height + gestureTranslation.height

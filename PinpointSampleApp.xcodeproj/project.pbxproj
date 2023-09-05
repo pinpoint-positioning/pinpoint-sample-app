@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D105D2902AA21F7C0058EC88 /* ZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D105D28F2AA21F7C0058EC88 /* ZoomView.swift */; };
 		D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10FED9B2A14CD8300DC344E /* ConfigView.swift */; };
 		D10FED9E2A14F86500DC344E /* SitesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10FED9D2A14F86500DC344E /* SitesList.swift */; };
 		D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1113C9D2A08EFF8002C4B35 /* LogView.swift */; };
@@ -29,6 +30,7 @@
 		D139E79A29F00F2D00E6119E /* PositionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79929F00F2D00E6119E /* PositionMonitor.swift */; };
 		D139E79C29F00FF000E6119E /* CommandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79B29F00FF000E6119E /* CommandView.swift */; };
 		D139E79E29F0101E00E6119E /* SiteFileInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */; };
+		D152DAD42AA0E08E0074F145 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = D152DAD32AA0E08E0074F145 /* SocketIO */; };
 		D158C6532A9CB3410074E0E9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6522A9CB3410074E0E9 /* SettingsView.swift */; };
 		D158C6552A9CB4AE0074E0E9 /* FloorMapOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */; };
 		D158C6572A9CB4D40074E0E9 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D158C6562A9CB4D40074E0E9 /* DataModels.swift */; };
@@ -69,6 +71,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D105D28F2AA21F7C0058EC88 /* ZoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomView.swift; sourceTree = "<group>"; };
 		D10FED9B2A14CD8300DC344E /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		D10FED9D2A14F86500DC344E /* SitesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SitesList.swift; sourceTree = "<group>"; };
 		D1113C9D2A08EFF8002C4B35 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
@@ -124,6 +127,7 @@
 				D1223B632A8B9214008A755E /* AlertToast in Frameworks */,
 				D1B109042A457D000039B5ED /* WebDAV in Frameworks */,
 				D1CD4EA02A9364B70025A2DD /* SwiftProtobuf in Frameworks */,
+				D152DAD42AA0E08E0074F145 /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,6 +201,7 @@
 				D15D2BF12A80E08000E87875 /* DeviceList.swift */,
 				D158C6522A9CB3410074E0E9 /* SettingsView.swift */,
 				D18A5A8A2A9F3E120085EF3F /* ExpandablePanel.swift */,
+				D105D28F2AA21F7C0058EC88 /* ZoomView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -257,6 +262,7 @@
 				D1CD4E9F2A9364B70025A2DD /* SwiftProtobuf */,
 				D1CD4EA12A9364B70025A2DD /* SwiftProtobufPluginLibrary */,
 				D1CD4EA32A9364B70025A2DD /* protoc-gen-swift */,
+				D152DAD32AA0E08E0074F145 /* SocketIO */,
 			);
 			productName = PinpointSampleApp;
 			productReference = D112270529B9EF8B00E49993 /* PinpointSampleApp.app */;
@@ -292,6 +298,7 @@
 				D1B109022A457D000039B5ED /* XCRemoteSwiftPackageReference "WebDAV-Swift" */,
 				D1223B612A8B9214008A755E /* XCRemoteSwiftPackageReference "AlertToast" */,
 				D1CD4E9E2A9364B70025A2DD /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				D152DAD22AA0E08E0074F145 /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = D112270629B9EF8B00E49993 /* Products */;
 			projectDirPath = "";
@@ -339,6 +346,7 @@
 				D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */,
 				D1223B652A8B924D008A755E /* AlertController.swift in Sources */,
 				D158C6552A9CB4AE0074E0E9 /* FloorMapOverlays.swift in Sources */,
+				D105D2902AA21F7C0058EC88 /* ZoomView.swift in Sources */,
 				D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */,
 				D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */,
 				D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */,
@@ -503,7 +511,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 11.2.2;
+				MARKETING_VERSION = 11.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = de.pinpoint.iosdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -543,7 +551,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 11.2.2;
+				MARKETING_VERSION = 11.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = de.pinpoint.iosdemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -593,6 +601,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		D152DAD22AA0E08E0074F145 /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		D1B109022A457D000039B5ED /* XCRemoteSwiftPackageReference "WebDAV-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Isvvc/WebDAV-Swift.git";
@@ -629,6 +645,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D1381A172A0E416C00DF8141 /* XCRemoteSwiftPackageReference "FilePicker" */;
 			productName = FilePicker;
+		};
+		D152DAD32AA0E08E0074F145 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D152DAD22AA0E08E0074F145 /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
 		};
 		D1B109032A457D000039B5ED /* WebDAV */ = {
 			isa = XCSwiftPackageProductDependency;
