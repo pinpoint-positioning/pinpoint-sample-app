@@ -20,6 +20,6 @@ class LocalStorageManager: ObservableObject{
     @AppStorage("remote-host") var remoteHost = ""
     @AppStorage("remote-port") var remotePort = 8081
     @AppStorage ("channel")  var channel:Int = 5
-    @AppStorage ("event-mode")  var eventMode = true
+    @AppStorage ("event-mode")  var eventMode = false
     @AppStorage ("pinpoint-remote-server") var usePinpointRemoteServer = false
 }
