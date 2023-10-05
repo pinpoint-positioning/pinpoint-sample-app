@@ -117,10 +117,7 @@ struct PositionTraceView: View {
                 if positions.count > settings.previousPositions + 1 {
                     positions.removeFirst() // Remove the last element to keep the array size limited to 10.
                 }
-            
-            // Create a subarray containing the first ten elements
-        
-            
+  
         }
     }
     

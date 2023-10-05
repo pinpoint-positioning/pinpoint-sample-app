@@ -19,10 +19,10 @@ class ProtobufManager {
     
     func establishConnection() {
           if isConnectionEstablished {
-              print("con exists")
+              logger.log(type: .Info, "Using existing connection")
               return
           }
-        print("new con")
+        logger.log(type: .Info, "Create new connection")
           
           if !storage.usePinpointRemoteServer {
               ppHost = storage.remoteHost
@@ -59,10 +59,7 @@ class ProtobufManager {
     }
     
     func sendMessage(x: Double, y: Double, acc: Double, name: String) async throws {
-        guard let connection = connection else {
-            logger.log(type: .Error, "Failed to create a network connection.")
-            return
-        }
+
         
         let currentTime = Date()
         let timestamp = Google_Protobuf_Timestamp(seconds: Int64(currentTime.timeIntervalSince1970))
@@ -82,6 +79,16 @@ class ProtobufManager {
         location.uwb.eph = acc
         location.uwb.locationSignature = 1
         traceletMessage.type = .location(location)
+        
+        
+        establishConnection()
+        
+        guard let connection = connection else {
+            logger.log(type: .Error, "Failed to create a network connection.")
+            return
+        }
+        
+        
         
         do {
             let binaryData = try traceletMessage.serializedData()

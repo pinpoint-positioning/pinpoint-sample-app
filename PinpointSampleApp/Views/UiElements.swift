@@ -34,9 +34,9 @@ struct ListItem: View {
 
 
 struct FloatingButton: View {
-    var action: () -> Void // Define a closure that takes no parameters and returns Void
-    var imageName: String // Define a parameter for the image system name
-    var backgroundColor: Color // Define a parameter for the button's background color
+    var action: () -> Void
+    var imageName: String
+    var backgroundColor: Color
     var size: CGSize
     
     var body: some View {
@@ -56,7 +56,6 @@ struct FloatingButton: View {
                 }
     }
 }
-
 
 
 
