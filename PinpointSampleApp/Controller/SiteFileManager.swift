@@ -19,6 +19,7 @@ public class SiteFileManager: ObservableObject {
 //    public init(){}
     @Published var siteFile = SiteData()
     @Published var floorImage = UIImage()
+
     
     let fileManager = FileManager()
     let logger = Logger.shared
@@ -137,7 +138,11 @@ public class SiteFileManager: ObservableObject {
         }
 
         siteFile = loadJson(siteFileName: fileNameWithoutExtension)
-        floorImage = getFloorImage(siteFileName: fileNameWithoutExtension)
+        do {
+            floorImage = try getFloorImage(siteFileName: fileNameWithoutExtension)
+        } catch {
+            print ("Wrong Sitefile format")
+        }
     }
     
     
@@ -215,7 +220,7 @@ public class SiteFileManager: ObservableObject {
     
     // Get the floor image file
     
-    public func getFloorImage(siteFileName:String) -> UIImage {
+    public func getFloorImage(siteFileName:String) throws -> UIImage {
         print("try get get sitfilename2:")
         print(siteFileName)
         var destinationURL = getDocumentsDirectory()
@@ -227,6 +232,7 @@ public class SiteFileManager: ObservableObject {
             let imageData = try Data(contentsOf: destinationURL)
             return UIImage(data: imageData) ?? UIImage()
         } catch {
+            throw error
             print("Error loading image : \(error)")
             return UIImage()
             

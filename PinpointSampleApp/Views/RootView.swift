@@ -56,6 +56,9 @@ struct RootView: View {
             .toast(isPresenting: $alerts.showNoWebDavAccount){
                 AlertToast(type: .error(.red), title: "No WebDAV configured!")
             }
+            .toast(isPresenting: $alerts.showLoading){
+                AlertToast(type: .loading, title: "Loading")
+            }
             
         }
     }

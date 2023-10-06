@@ -9,6 +9,7 @@ import SwiftUI
 import Charts
 import SDK
 import CoreBluetooth
+import AlertToast
 
 
 // ToDo -> Change site from siteID
@@ -49,6 +50,7 @@ struct FloorMapView: View {
     
     // Center Image
     @State private var centerAnchor: Bool = false
+    @State var showSiteFileImportAlert = false
   
     
     
@@ -86,9 +88,7 @@ struct FloorMapView: View {
                                 .border(Color("pinpoint_gray"), width: 2)
                                 .id("imagecenter")
                                 .task {
-                                    if sfm.siteFile.map.mapName == "" {
-                                        setSiteLocalFile(item: "UBIB-IdeenReich")
-                                    }
+  
                                     
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
                                     
@@ -97,8 +97,9 @@ struct FloorMapView: View {
                                         imageGeo.xOrigin = 100
                                         imageGeo.yOrigin = -100
                                     }
-                                    scrollView.scrollTo("imagecenter", anchor: .center)
+                                
                                     
+                                
                                 }
                            
                             
@@ -134,7 +135,12 @@ struct FloorMapView: View {
                                             image = img
                                         }
                                     } else {
-                                        image = sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
+                                        do {
+                                            image = try sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
+                                        } catch {
+                                            print (error)
+                                            showSiteFileImportAlert.toggle()
+                                        }
                                     }
 
                                     imageGeo.xOrigin = sfm.siteFile.map.mapFileOriginX
@@ -142,6 +148,7 @@ struct FloorMapView: View {
                                     meterToPixelRatio = sfm.siteFile.map.mapFileRes
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
                                     imageGeo.imagePosition = CGPoint.zero
+                                    scrollView.scrollTo("imagecenter", anchor: .center)
                                     
                                     
                                     Task {
@@ -167,15 +174,7 @@ struct FloorMapView: View {
                                         settings: $settings,
                                         circlePos: $currentPosition
                                     )
-                          
-       
 
-
-                                    
-
-               
-                                  
-                                    
                                     // MARK: - Ruler
                                     
                                     if (settings.showRuler) {
@@ -229,6 +228,9 @@ struct FloorMapView: View {
                 
             }
             .padding()
+        }
+        .toast(isPresenting: $showSiteFileImportAlert){
+            AlertToast(type: .error(.red), title: "Wrong Sitefile format!")
         }
     
         .sheet(isPresented: $isModalPresented, content: {

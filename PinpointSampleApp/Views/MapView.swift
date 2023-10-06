@@ -12,7 +12,7 @@ struct MapView: View {
                     Image("pinpoint-circle")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 2000, height: 2000) // Adjust size as needed
+                        .frame(width: 100, height: 100) // Adjust size as needed
                         .offset(x: 0, y: 150) // Adjust vertical offset as needed
                         .position(getMapImagePosition())
                 }

@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import AlertToast
 
 import SDK
 struct SitesList: View {
     
     @EnvironmentObject var sfm : SiteFileManager
+    @EnvironmentObject var alerts : AlertController
     
     @State var list = [String]()
     @State var selectedItem:String? = nil
@@ -18,6 +20,7 @@ struct SitesList: View {
     @State var showImporter = false
     @State var showLocalSiteFiles = false
     @State var showWebDavImporter = false
+    @State var showLoading = false
     @Environment(\.dismiss) var dismiss
     
     
@@ -25,7 +28,6 @@ struct SitesList: View {
         VStack {
             HStack{
                 Button() {
-                   // showLocalSiteFiles = true
                     showImporter = true
                 } label: {
                     HStack{
@@ -75,16 +77,19 @@ struct SitesList: View {
             }
             .padding()
             
-            
-            List(list, id: \.self, selection: $selectedItem) { item in
-                Button{
-                    selectedItem = item
-                    selectedSitefile = item
-                } label: {
-                    Text(item)
+            if showLoading {
+                ProgressView()
+            } else {
+                List(list, id: \.self, selection: $selectedItem) { item in
+                    Button{
+                        selectedItem = item
+                        selectedSitefile = item
+                    } label: {
+                        Text(item)
                         
+                    }
+                    .foregroundColor(selectedSitefile != item ? .black : CustomColor.pinpoint_orange)
                 }
-                .foregroundColor(selectedSitefile != item ? .black : CustomColor.pinpoint_orange)
             }
             
             // Load Button
@@ -93,14 +98,12 @@ struct SitesList: View {
                     setSiteFile(item: selectedSitefile)
                     dismiss()
                 }
-                
             }) {
                 Text("Load SiteFile")
             }
             .buttonStyle(.borderedProminent)
             .disabled(selectedSitefile == "" ? true : false)
             .padding()
- 
         }
         
         
@@ -113,35 +116,29 @@ struct SitesList: View {
         }) {
             RemoteSitesList()
         }
-        
-        
-        .sheet(isPresented: $showLocalSiteFiles) {
-           LocalSiteFileList()
-        }
+
   
         .navigationTitle("Import SiteFile")
         .navigationBarTitleDisplayMode(.inline)
-    
+
         .fileImporter(
             isPresented: $showImporter,
             allowedContentTypes: [.zip],
             allowsMultipleSelection: false
         ) { result in
             do {
+          
                 guard let selectedFile: URL = try result.get().first else { return }
-                
                 guard selectedFile.startAccessingSecurityScopedResource() else {
                     // Handle the failure here.
                     return
                 }
-                
                 let documentsUrl = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
                 let destinationUrl = documentsUrl.appendingPathComponent(selectedFile.lastPathComponent)
                 
                 if let dataFromURL = NSData(contentsOf: selectedFile) {
                     if dataFromURL.write(to: destinationUrl, atomically: true) {
                         let sfm = SiteFileManager()
-                        
                         Task {
                            _ =  await sfm.unarchiveFile(sourceFile: destinationUrl)
                             list = sfm.getSitefilesList()
@@ -154,12 +151,15 @@ struct SitesList: View {
                         print(error)
                     }
                 }
-                
                 selectedFile.stopAccessingSecurityScopedResource()
+             
             } catch {
+
                 print(error)
             }
         }
+        
+
    
     }
 
@@ -190,43 +190,9 @@ struct SitesList: View {
 
 
 
-import SwiftUI
-
-struct LocalSiteFileList: View {
-    @EnvironmentObject var sfm: SiteFileManager
-    @Environment(\.presentationMode) var presentationMode
-
-    var body: some View {
-        VStack {
-            List {
-                
-                //Pinpoint Office Map
-                Button(action: {
-                    setSiteLocalFile(item: "Pinpoint-Office")
-                    presentationMode.wrappedValue.dismiss() // Dismiss the view
-                }) {
-                    Text("Pinpoint-Office")
-                }
-                
-                Button(action: {
-                    setSiteLocalFile(item: "UBIB-IdeenReich")
-                    presentationMode.wrappedValue.dismiss() // Dismiss the view
-                }) {
-                    Text("UBIB-IdeenReich")
-                }
-            }
-        }
-    }
-
-    func setSiteLocalFile(item: String) {
-        sfm.loadLocalSiteFile(siteFileName: item)
-    }
-}
-
-
 struct LocalSiteFileList_Previews: PreviewProvider {
     static var previews: some View {
-        LocalSiteFileList()
+        SitesList()
     }
 }
 

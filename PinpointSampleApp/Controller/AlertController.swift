@@ -17,7 +17,8 @@ class AlertController:ObservableObject {
     @Published var showDisconnectedToast = false
     @Published var showNoTraceletInRange = false
     @Published var showNoWebDavAccount = false
-    
+    @Published var showLoading = false
+
     
     
     
