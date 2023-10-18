@@ -30,8 +30,7 @@ struct MainView: View {
                 VStack(alignment: .center){
                     StatusCircle()
                         .cornerRadius(10)
-                        .shadow(radius: 2)
-                    
+                        .shadow(radius: 2)                    
                     
                     SiteFileInformationView()
                         .cornerRadius(10)

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D105D2902AA21F7C0058EC88 /* ZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D105D28F2AA21F7C0058EC88 /* ZoomView.swift */; };
 		D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10FED9B2A14CD8300DC344E /* ConfigView.swift */; };
 		D10FED9E2A14F86500DC344E /* SitesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10FED9D2A14F86500DC344E /* SitesList.swift */; };
 		D1113C9E2A08EFF8002C4B35 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1113C9D2A08EFF8002C4B35 /* LogView.swift */; };
@@ -71,7 +70,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D105D28F2AA21F7C0058EC88 /* ZoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomView.swift; sourceTree = "<group>"; };
 		D10FED9B2A14CD8300DC344E /* ConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigView.swift; sourceTree = "<group>"; };
 		D10FED9D2A14F86500DC344E /* SitesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SitesList.swift; sourceTree = "<group>"; };
 		D1113C9D2A08EFF8002C4B35 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
@@ -154,6 +152,7 @@
 		D112270729B9EF8B00E49993 /* PinpointSampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				D1367B372AD96EC800F332CE /* Unused Views */,
 				D1CD4E9A2A9364370025A2DD /* tracelet.proto */,
 				D1CD4E9C2A9364680025A2DD /* tracelet.pb.swift */,
 				D19576BE29F7A6880072576F /* Info.plist */,
@@ -177,31 +176,37 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		D1367B372AD96EC800F332CE /* Unused Views */ = {
+			isa = PBXGroup;
+			children = (
+				D112270A29B9EF8B00E49993 /* MainView.swift */,
+				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
+				D139E79929F00F2D00E6119E /* PositionMonitor.swift */,
+				D139E79B29F00FF000E6119E /* CommandView.swift */,
+				D1113C9F2A090793002C4B35 /* DebugView.swift */,
+				D12462A92A0B948500CCFF50 /* ScanButton.swift */,
+				D1B56BBA2A125B6B00C074F4 /* MapView.swift */,
+				D10FED9B2A14CD8300DC344E /* ConfigView.swift */,
+				D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */,
+				D1B109002A42E61C0039B5ED /* InfoView.swift */,
+			);
+			path = "Unused Views";
+			sourceTree = "<group>";
+		};
 		D1569D8F29BA214F00D0E578 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				D1F967F02A1CA4AA00277310 /* FloorMapView.swift */,
 				D158C6542A9CB4AE0074E0E9 /* FloorMapOverlays.swift */,
-				D112270A29B9EF8B00E49993 /* MainView.swift */,
-				D112272129BA005D00E49993 /* ConsoleTextView.swift */,
-				D139E79929F00F2D00E6119E /* PositionMonitor.swift */,
-				D139E79B29F00FF000E6119E /* CommandView.swift */,
 				D139E79D29F0101E00E6119E /* SiteFileInformationView.swift */,
 				D1113C9D2A08EFF8002C4B35 /* LogView.swift */,
-				D1113C9F2A090793002C4B35 /* DebugView.swift */,
-				D12462A92A0B948500CCFF50 /* ScanButton.swift */,
-				D1B56BBA2A125B6B00C074F4 /* MapView.swift */,
-				D10FED9B2A14CD8300DC344E /* ConfigView.swift */,
 				D10FED9D2A14F86500DC344E /* SitesList.swift */,
-				D1B108FE2A3C890D0039B5ED /* StatusCircle.swift */,
-				D1B109002A42E61C0039B5ED /* InfoView.swift */,
 				D1B109052A4585750039B5ED /* RemoteSitesList.swift */,
 				D1C0E8092A5BF07E00C44E67 /* RulerView.swift */,
 				D1DCAED72A7CD6510094333A /* RootView.swift */,
 				D15D2BF12A80E08000E87875 /* DeviceList.swift */,
 				D158C6522A9CB3410074E0E9 /* SettingsView.swift */,
 				D18A5A8A2A9F3E120085EF3F /* ExpandablePanel.swift */,
-				D105D28F2AA21F7C0058EC88 /* ZoomView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -346,7 +351,6 @@
 				D1B109012A42E61C0039B5ED /* InfoView.swift in Sources */,
 				D1223B652A8B924D008A755E /* AlertController.swift in Sources */,
 				D158C6552A9CB4AE0074E0E9 /* FloorMapOverlays.swift in Sources */,
-				D105D2902AA21F7C0058EC88 /* ZoomView.swift in Sources */,
 				D10FED9C2A14CD8300DC344E /* ConfigView.swift in Sources */,
 				D139E79829EEA56800E6119E /* PositionChartData.swift in Sources */,
 				D1B56BBB2A125B6B00C074F4 /* MapView.swift in Sources */,

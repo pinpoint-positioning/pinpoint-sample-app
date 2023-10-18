@@ -21,7 +21,7 @@ struct FloorMapView: View {
     @EnvironmentObject var api : API
     @EnvironmentObject var sfm : SiteFileManager
     @EnvironmentObject var alerts : AlertController
-
+    
     
     @GestureState var gestureTranslation: CGSize = .zero
     @State var finalTranslation: CGSize = .zero
@@ -37,21 +37,21 @@ struct FloorMapView: View {
     @State private var showingScanResults = false
     @State private var discoveredDevices:[CBPeripheral] = []
     
-    @State private var isModalPresented = false
+    @State private var settingsPresented = false
     @State private var redirectToSiteFileView = false
     
     @State var siteListIsPresented = false
     
     @State private var showAlert = false
     @State private var scale = 0.6
-
+    
     @StateObject var storage = LocalStorageManager.shared
     
     
     // Center Image
     @State private var centerAnchor: Bool = false
     @State var showSiteFileImportAlert = false
-  
+    
     
     
     let pb = ProtobufManager.shared
@@ -60,63 +60,46 @@ struct FloorMapView: View {
     
     
     var body: some View {
-       
         
         ZStack(alignment:.bottomTrailing) {
-            Color("pinpoint_background")
-                .ignoresSafeArea()
             
-            // Container for the FloorImage and PositionTraceView
             VStack(alignment:.leading) {
-                ExpandablePanel()
                 
                 ScrollViewReader { scrollView in
                     ScrollView ([.horizontal, .vertical]){
                         
                         if api.scanState == .SCANNING{
-                            ZStack{
-
-                                ProgressView("Hold Tracelet close to phone")
-                            }
+                            
+                            HoldDeviceCloseView()
+                            
                         } else {
                             
+                            
+                            // MARK: - No Map Loaded View
+                            if sfm.siteFile.map.mapName == "" {
+                                NoMapLoadedView(siteListIsPresented: $siteListIsPresented)
+                            }
+                            
                             // MARK: - Floormap
-
+                            
                             Image(uiImage: image)
                                 .resizable()
-                             
                                 .border(Color("pinpoint_gray"), width: 2)
                                 .id("imagecenter")
-                                .task {
-  
-                                    
+                                .onAppear {
                                     imageGeo.imageSize = CGSize(width: image.size.width, height: image.size.height)
-                                    
-                                    if sfm.siteFile.map.mapName == "" {
-                                        meterToPixelRatio = 2
-                                        imageGeo.xOrigin = 100
-                                        imageGeo.yOrigin = -100
-                                    }
-                                
-                                    
-                                
+                                    centerAnchor.toggle()
                                 }
-                           
+                            
                             
                                 .onChange(of: centerAnchor) { newCenterAnchor in
                                     scrollView.scrollTo("imagecenter", anchor: .center)
                                     scale = 0.6
                                 }
-                                .onChange(of: api.bleState, perform: { _ in
-                                    Task {
-                                        await scan()
-                                    }
-                                    
-                                })
+                            
                                 .onChange(of: api.generalState, perform: { newValue in
                                     if newValue == .CONNECTED{
                                         Task {
-                                            
                                             // Set Channel of SiteFile to Tracelet if the sitefile is already loaded
                                             if sfm.siteFile.map.mapName != "" {
                                                 _ = await api.setChannel(channel: Int8(sfm.siteFile.map.uwbChannel))
@@ -129,20 +112,14 @@ struct FloorMapView: View {
                                     }
                                 })
                                 .onChange(of: sfm.siteFile) { newValue in
-                                    print(storage.eventMode)
-                                    if storage.eventMode {
-                                        if let img = sfm.getLocalFloorImage(siteFileName: sfm.siteFile.map.mapName){
-                                            image = img
-                                        }
-                                    } else {
-                                        do {
-                                            image = try sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
-                                        } catch {
-                                            print (error)
-                                            showSiteFileImportAlert.toggle()
-                                        }
+                                    do {
+                                        image = try sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
+                                    } catch {
+                                        print (error)
+                                        showSiteFileImportAlert.toggle()
                                     }
-
+                                    
+                                    
                                     imageGeo.xOrigin = sfm.siteFile.map.mapFileOriginX
                                     imageGeo.yOrigin = sfm.siteFile.map.mapFileOriginY
                                     meterToPixelRatio = sfm.siteFile.map.mapFileRes
@@ -174,7 +151,7 @@ struct FloorMapView: View {
                                         settings: $settings,
                                         circlePos: $currentPosition
                                     )
-
+                                    
                                     // MARK: - Ruler
                                     
                                     if (settings.showRuler) {
@@ -189,51 +166,76 @@ struct FloorMapView: View {
                                 }
                                 .scaleEffect(scale)
                                 .pinchToZoom()
-
+                            
                         }
-    
+                        
                     }
                     
                 }
             }
             
             
-
             
-            VStack(alignment: .trailing, spacing: 10){
+            VStack(alignment: .trailing){
                 
+                ButtonStack(scanAction: {
+                    Task {
+                            await scan()
            
-                // Center Button
-                FloatingButton(action: {
+                    }
+                },
+                            centerAction: {
                     centerImage()
-                }, imageName: "arrow.counterclockwise", backgroundColor: Color(uiColor: .systemGray5).opacity(0.8), size: CGSize(width: 20, height: 20))
-            
-                // Remote Position Button
-                FloatingButton(action: {
+                }, remotePosAction:{
                     if storage.remotePositioningEnabled == false {
+                        print("false")
                         showAlert = true
                     } else {
+                        print("true")
                         pb.closeConnection()
                         storage.remotePositioningEnabled = false
                     }
-                }, imageName: "square.and.arrow.up", backgroundColor: storage.remotePositioningEnabled ? Color(uiColor: .orange).opacity(0.8) : Color(uiColor: .systemGray5).opacity(0.8), size: CGSize(width: 20, height: 20))
-                .onChange(of: pb.success) { newValue in
-                    withAnimation {
-                        successBump.toggle()
-                    }
-                }
-
-                
-                
+                },  siteListAction: {
+                    siteListIsPresented.toggle()
+                }, size: 50)
                 
             }
-            .padding()
+            .offset(y:-10)
+            .padding(.vertical)
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    settingsPresented = true
+                } label: {
+                    Image(systemName: "gear")
+                }
+            }
+        }
+        
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Are you sure?"),
+                message: Text("You will share your position remotely!"),
+                primaryButton: .default(Text("Yes")) {
+                    // Set the state to on when confirmed
+                    storage.remotePositioningEnabled = true
+                    pb.establishConnection()
+                    
+                    
+                },
+                secondaryButton: .cancel(Text("No")) {
+                    // Set the state to off if canceled
+                    storage.remotePositioningEnabled = false
+                }
+            )
+        }
+        
         .toast(isPresenting: $showSiteFileImportAlert){
             AlertToast(type: .error(.red), title: "Wrong Sitefile format!")
         }
-    
-        .sheet(isPresented: $isModalPresented, content: {
+        
+        .sheet(isPresented: $settingsPresented, content: {
             SettingsView(mapSettings: $settings)
         })
         .sheet(isPresented: $showingScanResults) {
@@ -245,73 +247,16 @@ struct FloorMapView: View {
         .sheet(isPresented: $siteListIsPresented, content: {
             SitesList()
         })
-        .toolbar {
-            
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    Task {
-                        if api.generalState == .CONNECTED {
-                            api.disconnect()
-                        }
-                        else if api.generalState == .DISCONNECTED {
-                            await scan()
-                        }
-                    }
-                } label: {
-                    Image(systemName: "wave.3.right.circle")
-                        .foregroundColor(api.generalState == .CONNECTED ? .red : .black)
-                    
-                }
-                
-            }
-            
-            
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if !storage.eventMode {
-                    Button {
-                        siteListIsPresented.toggle()
-                    } label: {
-                        Image(systemName: "plus")
-                            .foregroundColor(Color.black)
-                        
-                    }
-                }
-            }
-            
-            
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    isModalPresented = true
-                } label: {
-                    Image(systemName: "gear")
-                        .foregroundColor(Color.black)
-                    
-                }
-            }
-            
-        }
-        
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("Are you sure?"),
-                message: Text("You will share your position remotely!"),
-                primaryButton: .default(Text("Yes")) {
-                    // Set the state to on when confirmed
-                    storage.remotePositioningEnabled = true
-                    pb.establishConnection()
-                  
-                    
-                },
-                secondaryButton: .cancel(Text("No")) {
-                    // Set the state to off if canceled
-                    storage.remotePositioningEnabled = false
-                }
-            )
-        }
-        
         
     }
-
+    func disconnect() {
+        api.disconnect()
+    }
+    
+    func stopScan() {
+        api.stopScan()
+    }
+    
     func centerImage() {
         centerAnchor.toggle() // Set it to an integer value (0 in this case)
     }
@@ -364,7 +309,7 @@ struct FloorMapView: View {
             }
         }
     }
-
+    
     private func updateImagePosition() {
         let positionX = finalTranslation.width + gestureTranslation.width
         let positionY = finalTranslation.height + gestureTranslation.height
@@ -388,4 +333,49 @@ struct FloorMapView: View {
 
 
 
+#Preview {
+    FloorMapView()
+        .environmentObject(API())
+        .environmentObject(SiteFileManager())
+        .environmentObject(AlertController())
+    
+    
+}
 
+struct HoldDeviceCloseView: View {
+    var body: some View {
+        VStack{
+            Image("contactless-icon")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 100, height: 100)
+            ProgressView("Hold Tracelet close to phone")
+        }
+    }
+}
+
+
+struct NoMapLoadedView: View {
+    @Binding var siteListIsPresented:Bool
+    
+    var body: some View {
+        VStack{
+            Image(systemName: "mappin.slash.circle")
+                .resizable()
+                .scaledToFill()
+                .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 100)
+            Text("No Map loaded")
+                .font(.headline)
+                .padding()
+            Spacer()
+                .frame(height: 50)
+            Button {
+                siteListIsPresented.toggle()
+            } label: {
+                Text("Load Map")
+            }
+            .buttonStyle(.borderedProminent)
+            
+        }
+    }
+}

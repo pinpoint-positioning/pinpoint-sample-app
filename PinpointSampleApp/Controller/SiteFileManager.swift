@@ -32,7 +32,7 @@ public class SiteFileManager: ObservableObject {
     
     // Unzip Sitefile to documentsfolder/sitefiles/sitefilename/
     
-    public func unarchiveFile(sourceFile: URL) async -> Bool {
+    public func unarchiveFile(sourceFile: URL) async throws {
         var destinationURL = getDocumentsDirectory()
         destinationURL.appendPathComponent("sitefiles")
 
@@ -54,14 +54,14 @@ public class SiteFileManager: ObservableObject {
                 for item in items {
                     print("Found \(item)")
                 }
-                return true
+               
             }
         } catch {
             print("Unzip error: \(error)")
-            return false
+            throw (error)            
         }
         
-        return true
+    
     }
     
 
@@ -131,7 +131,7 @@ public class SiteFileManager: ObservableObject {
     
     
     
-    func loadSiteFile(siteFileName: String) {
+    func loadSiteFile(siteFileName: String) throws{
         var fileNameWithoutExtension = siteFileName
         if siteFileName.lowercased().hasSuffix(".zip") {
             fileNameWithoutExtension = String(siteFileName.dropLast(4))
@@ -141,7 +141,7 @@ public class SiteFileManager: ObservableObject {
         do {
             floorImage = try getFloorImage(siteFileName: fileNameWithoutExtension)
         } catch {
-            print ("Wrong Sitefile format")
+            throw error
         }
     }
     
@@ -388,11 +388,12 @@ public class SiteFileManager: ObservableObject {
         @AppStorage("webdav-user") var webdavUser = ""
         @AppStorage("webdav-pw") var webdavPW = ""
         
-        public func listFilesInNextcloudFolder() async -> [String]? {
+        public func listFilesInNextcloudFolder() async throws -> [String]? {
             guard let serverURL =  URL(string: "\(webdavServer)/remote.php/dav/files/\(webdavUser)") else {return nil}
             let username = webdavUser
             let password = webdavPW
             let folderPath = "/sites"
+            let _ = print(webdavServer)
             
             // Create a session configuration with credentials
             let configuration = URLSessionConfiguration.default
@@ -421,9 +422,11 @@ public class SiteFileManager: ObservableObject {
                 } else {
                     // Parsing failed
                     print("Error parsing XML response")
+                    
                 }
             } catch {
                 print("Error: \(error.localizedDescription)")
+                throw error
             }
             return fileNames
         }

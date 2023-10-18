@@ -41,20 +41,18 @@ struct SitesList: View {
                 }
                 .padding(.trailing)
                 
-            
-                
                 Button{
                     showWebDavImporter.toggle()
                 }
             label: {
                 HStack{
-                    Image(systemName: "cloud")
+                    Image(systemName: "server.rack")
                         .resizable()
                         .scaledToFill()
                         .frame(width: 20, height: 20)
-                    Text("WebDAV")
+                    Text("Remote")
                 }
-              
+                
             }
                 
                 Spacer()
@@ -64,48 +62,63 @@ struct SitesList: View {
                         clearCache()
                         
                     }) {
-                        Image(systemName: "xmark.bin.fill")
-                            .resizable()
-                            .foregroundColor(.red)
-                            .scaledToFill()
-                            .frame(width: 20, height: 20)
                         Text("Delete all")
+                            .foregroundColor(.red)
                     }
+                    .disabled(list.isEmpty)
                     .padding()
-                
-                } 
+                    
+                }
             }
-            .padding()
-            
+            .padding(.horizontal)
+            Text("Imported Maps")
+                .font(.headline)
             if showLoading {
                 ProgressView()
+            }
+            
+            if list.isEmpty {
+                VStack {
+                    Spacer()
+                        .frame(height: 100)
+                    Image(systemName: "square.3.layers.3d.slash")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 100)
+                    Text("No Maps imported")
+                        .font(.headline)
+                        .padding()
+                    Spacer()
+                }
             } else {
+                
                 List(list, id: \.self, selection: $selectedItem) { item in
                     Button{
                         selectedItem = item
-                        selectedSitefile = item
+                        if let newItem = selectedItem {
+                            do {
+                                try setSiteFile(item: newItem)
+                                dismiss()
+                            } catch {
+                                print(error)
+                            }
+                      
+                        }
+                     
                     } label: {
                         Text(item)
                         
                     }
+           
                     .foregroundColor(selectedSitefile != item ? .black : CustomColor.pinpoint_orange)
                 }
-            }
-            
-            // Load Button
-            Button(action: {
-                if selectedSitefile != ""{
-                    setSiteFile(item: selectedSitefile)
-                    dismiss()
-                }
-            }) {
-                Text("Load SiteFile")
-            }
-            .buttonStyle(.borderedProminent)
-            .disabled(selectedSitefile == "" ? true : false)
-            .padding()
-        }
+                .scrollContentBackground(.hidden)
+                .listStyle(.insetGrouped)
         
+            }
+
+        }
+        .presentationDragIndicator(.visible)
         
         .task {
             list = sfm.getSitefilesList()
@@ -116,18 +129,16 @@ struct SitesList: View {
         }) {
             RemoteSitesList()
         }
-
-  
+        
         .navigationTitle("Import SiteFile")
         .navigationBarTitleDisplayMode(.inline)
-
         .fileImporter(
             isPresented: $showImporter,
             allowedContentTypes: [.zip],
             allowsMultipleSelection: false
         ) { result in
             do {
-          
+                
                 guard let selectedFile: URL = try result.get().first else { return }
                 guard selectedFile.startAccessingSecurityScopedResource() else {
                     // Handle the failure here.
@@ -140,11 +151,23 @@ struct SitesList: View {
                     if dataFromURL.write(to: destinationUrl, atomically: true) {
                         let sfm = SiteFileManager()
                         Task {
-                           _ =  await sfm.unarchiveFile(sourceFile: destinationUrl)
-                            list = sfm.getSitefilesList()
+                            do {
+                                try await sfm.unarchiveFile(sourceFile: destinationUrl)
+                                list = sfm.getSitefilesList()
+                            } catch {
+                                print("1")
+                                print(error)
+                                selectedFile.stopAccessingSecurityScopedResource()
+                                return
+                            }
+                            
+                            do {
+                                try sfm.loadSiteFile(siteFileName: selectedFile.lastPathComponent)
+                            } catch {
+                                print("3")
+                                print(error)
+                            }
                         }
-                  
-                        sfm.loadSiteFile(siteFileName: selectedFile.lastPathComponent)
                     } else {
                         print("error saving file")
                         let error = NSError(domain: "Error saving file", code: 1001, userInfo: nil)
@@ -152,24 +175,28 @@ struct SitesList: View {
                     }
                 }
                 selectedFile.stopAccessingSecurityScopedResource()
-             
+                
             } catch {
-
+                print("2")
                 print(error)
             }
         }
         
-
-   
-    }
-
-    
-    func setSiteFile(item: String) {
-        sfm.loadSiteFile(siteFileName: item)
+        
+        
     }
     
     
-
+    func setSiteFile(item: String) throws {
+        do {
+            try sfm.loadSiteFile(siteFileName: item)
+        } catch{
+            print(error)
+        }
+    }
+    
+    
+    
     
     func clearCache(){
         let fileManager = FileManager.default
@@ -193,6 +220,8 @@ struct SitesList: View {
 struct LocalSiteFileList_Previews: PreviewProvider {
     static var previews: some View {
         SitesList()
+            .environmentObject(SiteFileManager())
+            .environmentObject(AlertController())
     }
 }
 

@@ -11,26 +11,38 @@ import SDK
 struct SettingsView: View {
     @Binding var mapSettings: Settings
     @Environment(\.presentationMode) var presentationMode
-
-
+    
+    
     
     @State var updatedTraceletID:String = ""
-   
+    
     @EnvironmentObject var api:API
     @State var status = TL_StatusResponse()
     @State var version = ""
     @State var interval: Int = 1
     @State private var showIntervalSettings = false
     @State private var showChannelAlert = false
-   
+    let logger = Logger.shared
+    
     @StateObject var storage = LocalStorageManager.shared
-
-
+    
+    
     var body: some View {
         @State var role = parseRole(byte: Int8(status.role) ?? 0)
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(header: Text("Settings")) {
+                    
+                    if api.generalState == .CONNECTED {
+                        Button{
+                         disconnect()
+                        } label: {
+                            Text("Disconnect")
+                                .buttonStyle(.borderedProminent)
+                                .tint(.red)
+                        }
+                    }
+                    
                     Stepper(value: $mapSettings.previousPositions, in: 0...10, label: {
                         Text("Previous Positions: \(mapSettings.previousPositions)")
                     })
@@ -50,49 +62,46 @@ struct SettingsView: View {
                         Text("Show Satlets")
                     }
                 }
-     
-                Section(header: Text("Remote Positioning")) {
-                    
-                    Toggle(isOn: $storage.usePinpointRemoteServer) {
-                                   Text("Use Pinpoint Demo Server")
-                               }
-
-                    VStack(alignment: .leading){
-                        Text("Tracelet Name")
-                            .font(.footnote)
-                        TextField("Tracelet Name", text: $updatedTraceletID)
+                
+                
+                
+                Section(header: Text("WebDAV Settings")) {
+                    HStack {
+                        VStack(alignment: .leading){
+                            Text("Server")
+                                .font(.footnote)
+                           
+                            TextField("Server-Adress", text: $storage.webdavServer)
+                                    .keyboardType(.URL)
+                                    .autocapitalization(.none)
+                       
+                        }
                     }
-                    
                     VStack(alignment: .leading){
-                        Text("Remote Host")
+                        Text("User")
                             .font(.footnote)
-                        TextField("Remote Host", text: $storage.remoteHost)
-                            .disabled(storage.usePinpointRemoteServer)
+                        TextField("Username", text: $storage.webdavUser)
                     }
-                    
                     VStack(alignment: .leading){
-                        Text("Remote Port")
+                        Text("Password")
                             .font(.footnote)
-                        TextField("Remote Port", value: $storage.remotePort, formatter: NumberFormatter())
-                            .disabled(storage.usePinpointRemoteServer)
+                        TextField("Password", text: $storage.webdavPW)
                     }
-                    
                 }
                 
-                .task {
-                    updatedTraceletID = storage.traceletID
-                }
+                
+                
                 
                 Section(header: Text("Tracelet Info")) {
-
-                        ListItem(header: "Adress", subText: $status.address, symbol: "tag.fill")
+                    
+                    ListItem(header: "Adress", subText: $status.address, symbol: "tag.fill")
                     ListItem(header: "Role", subText: .constant(role), symbol: "person.fill")
-                        ListItem(header: "Version", subText: $version, symbol: "info.circle.fill")
-   
+                    ListItem(header: "Version", subText: $version, symbol: "info.circle.fill")
+                    
                 }
                 
-
-
+                
+                
                 Section(header: Text("Site Info")) {
                     
                     ListItem(header: "PanID", subText: $status.panID, symbol: "square.fill")
@@ -117,9 +126,9 @@ struct SettingsView: View {
                                 api.startPositioning()
                             }
                         }
-                            Spacer()
+                        Spacer()
                     }
-
+                    
                     
                     
                     HStack {
@@ -135,66 +144,117 @@ struct SettingsView: View {
                             Task {
                                 print("submit")
                                 print(newValue)
-                                 api.setPositioningInterval(interval: Int8(newValue))
+                                api.setPositioningInterval(interval: Int8(newValue))
                             }
                         }
-                            Spacer()
+                        Spacer()
+                    }
+
+                }
+                
+                
+                
+                Section(header: Text("Remote Positioning")) {
+                    Link("More information about Remote Positioning", destination: URL(string: "https://pinpoint.de")!)
+                        .font(.footnote)
+                    
+                    VStack(alignment: .leading){
+                        Text("Tracelet Name")
+                            .font(.footnote)
+                        TextField("Tracelet Name", text: $updatedTraceletID)
                     }
                     
-                    LogPreview()
+                    VStack(alignment: .leading){
+                        Text("Remote Host")
+                            .font(.footnote)
+                        TextField("Remote Host", text: $storage.remoteHost)
+                            .disabled(storage.usePinpointRemoteServer)
+                    }
+                    
+                    VStack(alignment: .leading){
+                        Text("Remote Port")
+                            .font(.footnote)
+                        TextField("Remote Port", value: $storage.remotePort, formatter: NumberFormatter())
+                            .disabled(storage.usePinpointRemoteServer)
+                    }
+                    
+                }
+                
+                .task {
+                    updatedTraceletID = storage.traceletID
+                    
+                    do {
+                        status = try await getStatus()
+                        version = await getVersion()
+                    } catch {
+                        logger.log(type: .Warning, error.localizedDescription)
+                    }
+                    
+                
+                }
+                
+                Section(header: Text("Debug")) {
                     NavigationLink {
                         MainView()
                     } label: {
                         Text("More Debug Options")
                     }
-                    Toggle(isOn: $storage.eventMode) {
-                        Text("Event Mode")
-                    }
-       
-
-                    }
+                    LogPreview()
+                }
                 
                 Section(header: Text("Contact")) {
                     Link("Visit us at PinPoint.de", destination: URL(string: "https://pinpoint.de")!)
                     Link("Privacy Policy", destination: URL(string: "https://easylocate.gitlab.io/easylocate-mobile-app/")!)
-
+                    
                 }
                 
                 
                 
-                    Section(header: Text("WebDAV Settings")) {
-                        VStack(alignment: .leading){
-                            Text("Server")
-                                .font(.footnote)
-                            TextField("Server", text: $storage.webdavServer)
-                                .keyboardType(.URL)
-                                .autocapitalization(.none)
-                        }
-                        VStack(alignment: .leading){
-                            Text("User")
-                                .font(.footnote)
-                            TextField("Username", text: $storage.webdavUser)
-                        }
-                        VStack(alignment: .leading){
-                            Text("Password")
-                                .font(.footnote)
-                            TextField("Password", text: $storage.webdavPW)
-                        }
-                        
-                    }
-                }
+            }
             
-            .navigationTitle("Map Settings")
+            .navigationTitle("Settings")
             .navigationBarItems(trailing: Button("Done") {
+                if !storage.webdavServer.hasPrefix("https://") {
+                    storage.webdavServer = "https://" + storage.webdavServer
+                }
                 storage.traceletID = updatedTraceletID
                 presentationMode.wrappedValue.dismiss()
             })
         }
+        .presentationDragIndicator(.visible)
     }
+    
+    
+  
+    func getStatus() async throws -> TL_StatusResponse {
+        if let status = await api.getStatus() {
+            return status
+        } else {
+            throw CustomError.statusNotFound
+        }
+    }
+
+    func disconnect() {
+        api.disconnect()
+    }
+    
+    func getVersion() async -> String {
+        if let version = await api.getVersion() {
+            return version
+        } else {
+            return ""
+        }
+    }
+    
 }
+
+
+
+
 
 struct Settings_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(mapSettings: .constant(Settings()))
+            .environmentObject(API())
     }
 }

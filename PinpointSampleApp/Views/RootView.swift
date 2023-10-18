@@ -16,13 +16,8 @@ struct RootView: View {
     var body: some View {
         NavigationStack{
             ZStack{
-                Color("pinpoint_background")
-                //   .edgesIgnoringSafeArea([.top, .leading , .trailing])
-                
-                
                 FloorMapView()
             }
-            
             
             .onAppear {
                 // Set Remote Positioning to false at start
@@ -38,7 +33,7 @@ struct RootView: View {
             .navigationTitle("Pinpoint Positioning")
              .navigationBarTitleDisplayMode(.inline)
              .toolbarBackground(
-                 Color.orange,
+                Color.orange.opacity(0.9),
                  for: .navigationBar)
              .toolbarBackground(.visible, for: .navigationBar)
 

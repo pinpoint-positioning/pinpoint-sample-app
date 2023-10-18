@@ -32,5 +32,10 @@ struct Settings {
     var showSatlets:Bool = false
 }
 
+enum CustomError: Error {
+    case statusNotFound
+    case otherError(description: String) // You can also include additional information if needed
+}
+
 
 
