@@ -112,13 +112,8 @@ struct FloorMapView: View {
                                     }
                                 })
                                 .onChange(of: sfm.siteFile) { newValue in
-                                    do {
-                                        image = try sfm.getFloorImage(siteFileName: sfm.siteFile.map.mapName)
-                                    } catch {
-                                        print (error)
-                                        showSiteFileImportAlert.toggle()
-                                    }
-                                    
+                                   
+                                    image = sfm.floorImage                                                                    
                                     
                                     imageGeo.xOrigin = sfm.siteFile.map.mapFileOriginX
                                     imageGeo.yOrigin = sfm.siteFile.map.mapFileOriginY

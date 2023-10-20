@@ -65,7 +65,20 @@ public class SiteFileManager: ObservableObject {
     }
     
 
+
     
+    
+    public func getMapName(from fileURL: URL) throws -> String {
+        do {
+            let data = try Data(contentsOf: fileURL)
+            let decoder = JSONDecoder()
+            let jsonData = try decoder.decode(SiteData.self, from: data)
+            return jsonData.map.mapName
+        } catch {
+            print("Error: \(error)")
+            throw error
+        }
+    }
     
     public func getSitefilesList() -> [String] {
         var destinationURL = getDocumentsDirectory()
@@ -103,16 +116,18 @@ public class SiteFileManager: ObservableObject {
                     case "png" :
                         do {
                             try fileManager.moveItem(atPath: path.appendingPathComponent(item).path, toPath: path.appendingPathComponent("floorplan.png").path)
-                            //  logger.log(type: .Info, "Copied file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path) ")
-                        } catch _ as NSError {
-                            //  logger.log(type: .Error, "Error while copy file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path): \(error)")
+                            logger.log(type: .Info, "Copied file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path) ")
+                        } catch {
+                            logger.log(type: .Error, "Error while copy file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path): \(error)")
                         }
                     case "json" :
                         do {
-                            try fileManager.moveItem(atPath: path.appendingPathComponent(item).path, toPath: path.appendingPathComponent("sitedata.json").path)
-                            //     logger.log(type: .Info, "Copied file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("sitedata.json").path) ")
-                        } catch _ as NSError {
-                            //  logger.log(type: .Error, "Error while copy file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path): \(error)")
+                             try fileManager.moveItem(atPath: path.appendingPathComponent(item).path, toPath: path.appendingPathComponent("sitedata.json").path)
+                             logger.log(type: .Info, "Copied file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("sitedata.json").path) ")
+
+                            
+                        } catch  {
+                            logger.log(type: .Error, "Error while copy file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path): \(error)")
                         }
                     default:
                         break
@@ -139,6 +154,7 @@ public class SiteFileManager: ObservableObject {
 
         siteFile = loadJson(siteFileName: fileNameWithoutExtension)
         do {
+            logger.log(type: .Info, "Sitefile loaded:  \(fileNameWithoutExtension)")
             floorImage = try getFloorImage(siteFileName: fileNameWithoutExtension)
         } catch {
             throw error
@@ -149,8 +165,8 @@ public class SiteFileManager: ObservableObject {
     func loadLocalSiteFile(siteFileName: String) {
 
         siteFile = loadLocalJson(siteFileName: siteFileName)
-        print(siteFile)
         if let localImage = getLocalFloorImage(siteFileName: siteFileName) {
+            logger.log(type: .Info, "Sitefile loaded:  \(siteFileName)")
             floorImage = localImage
         }
     }
@@ -166,10 +182,12 @@ public class SiteFileManager: ObservableObject {
                 let jsonData = try JSONDecoder().decode(SiteData.self, from: asset.data)
                 return jsonData
             } catch {
-                print("Error decoding JSON: \(error)")
+                logger.log(type: .Error, "Error decoding JSON: \(error)")
+                
             }
         } else {
-            print("JSON file not found: \(siteFileName)")
+            logger.log(type: .Error, "JSON file not found: \(siteFileName)")
+          
             return SiteData()
         }
         
@@ -182,11 +200,9 @@ public class SiteFileManager: ObservableObject {
     public func getLocalFloorImage(siteFileName: String) -> UIImage? {
     
         if let image = UIImage(named: siteFileName) {
-            print(image)
-            print("have image")
             return image
         } else {
-           print("error loading local image")
+            logger.log(type: .Error, "error loading local image")
             return nil
         }
     }
@@ -209,7 +225,7 @@ public class SiteFileManager: ObservableObject {
             return jsonData
             
         } catch {
-            print("error:\(error)")
+            logger.log(type: .Error, "error loading json: \(error)")
             return SiteData()
         }
 
@@ -221,8 +237,6 @@ public class SiteFileManager: ObservableObject {
     // Get the floor image file
     
     public func getFloorImage(siteFileName:String) throws -> UIImage {
-        print("try get get sitfilename2:")
-        print(siteFileName)
         var destinationURL = getDocumentsDirectory()
         destinationURL.appendPathComponent("sitefiles")
         destinationURL.appendPathComponent(siteFileName)
@@ -230,12 +244,11 @@ public class SiteFileManager: ObservableObject {
         
         do {
             let imageData = try Data(contentsOf: destinationURL)
+            logger.log(type: .Info, "Loaded Floormap: \(imageData)")
             return UIImage(data: imageData) ?? UIImage()
         } catch {
+            logger.log(type: .Info, "Error loading image : \(error)")          
             throw error
-            print("Error loading image : \(error)")
-            return UIImage()
-            
         }
   
     }

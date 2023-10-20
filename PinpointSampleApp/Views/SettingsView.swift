@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State var updatedTraceletID:String = ""
     
     @EnvironmentObject var api:API
+    @EnvironmentObject var sfm : SiteFileManager
     @State var status = TL_StatusResponse()
     @State var version = ""
     @State var interval: Int = 1
@@ -43,24 +44,31 @@ struct SettingsView: View {
                         }
                     }
                     
+  
                     Stepper(value: $mapSettings.previousPositions, in: 0...10, label: {
                         Text("Previous Positions: \(mapSettings.previousPositions)")
                     })
                     
+                    
                     Toggle(isOn: $mapSettings.showRuler) {
                         Text("Show Ruler")
                     }
+                    .disabled(!siteFileLoaded())
                     
                     Toggle(isOn: $mapSettings.showOrigin) {
                         Text("Show Origin")
                     }
+                    .disabled(!siteFileLoaded())
                     
                     Toggle(isOn: $mapSettings.showAccuracyRange) {
                         Text("Show Accuracy")
                     }
+                    .disabled(!siteFileLoaded())
+                    
                     Toggle(isOn: $mapSettings.showSatlets) {
                         Text("Show Satlets")
                     }
+                    .disabled(!siteFileLoaded())
                 }
                 
                 
@@ -225,7 +233,11 @@ struct SettingsView: View {
     }
     
     
-  
+    func siteFileLoaded() -> Bool {
+        return sfm.siteFile.map.mapName != ""
+    }
+    
+    
     func getStatus() async throws -> TL_StatusResponse {
         if let status = await api.getStatus() {
             return status

@@ -189,6 +189,7 @@ struct SitesList: View {
     
     func setSiteFile(item: String) throws {
         do {
+            print("setSiteFIle:  \(item)")
             try sfm.loadSiteFile(siteFileName: item)
         } catch{
             print(error)
