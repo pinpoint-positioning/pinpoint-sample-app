@@ -44,14 +44,18 @@ struct SettingsView: View {
                         }
                     }
                     
-  
+                    if !siteFileLoaded() {
+                        Text("Load a map to enable options")                            
+                            .foregroundColor(.red)
+                    }
                     Stepper(value: $mapSettings.previousPositions, in: 0...10, label: {
                         Text("Previous Positions: \(mapSettings.previousPositions)")
                     })
+                    .disabled(!siteFileLoaded())
                     
                     
                     Toggle(isOn: $mapSettings.showRuler) {
-                        Text("Show Ruler")
+                        Text("Show Grid")
                     }
                     .disabled(!siteFileLoaded())
                     

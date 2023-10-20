@@ -13,6 +13,7 @@ struct SitesList: View {
     
     @EnvironmentObject var sfm : SiteFileManager
     @EnvironmentObject var alerts : AlertController
+    let logger = Logger.shared
     
     @State var list = [String]()
     @State var selectedItem:String? = nil
@@ -21,6 +22,7 @@ struct SitesList: View {
     @State var showLocalSiteFiles = false
     @State var showWebDavImporter = false
     @State var showLoading = false
+    @State var showSiteFileImportAlert = false
     @Environment(\.dismiss) var dismiss
     
     
@@ -70,7 +72,8 @@ struct SitesList: View {
                     
                 }
             }
-            .padding(.horizontal)
+            .padding()
+            
             Text("Imported Maps")
                 .font(.headline)
             if showLoading {
@@ -100,7 +103,7 @@ struct SitesList: View {
                                 try setSiteFile(item: newItem)
                                 dismiss()
                             } catch {
-                                print(error)
+                                showSiteFileImportAlert.toggle()
                             }
                       
                         }
@@ -122,6 +125,10 @@ struct SitesList: View {
         
         .task {
             list = sfm.getSitefilesList()
+        }
+        
+        .toast(isPresenting: $showSiteFileImportAlert){
+            AlertToast(type: .error(.red), title: "Wrong Sitefile format!")
         }
         
         .sheet(isPresented: $showWebDavImporter, onDismiss: {
@@ -182,8 +189,6 @@ struct SitesList: View {
             }
         }
         
-        
-        
     }
     
     
@@ -192,7 +197,11 @@ struct SitesList: View {
             print("setSiteFIle:  \(item)")
             try sfm.loadSiteFile(siteFileName: item)
         } catch{
-            print(error)
+            // If failed, load empty data. to avoid showing the previous map
+            sfm.floorImage = UIImage()
+            sfm.siteFile = SiteData()
+            logger.log(type: .Error, "Error setting SiteFile: \(error)" )
+            throw error
         }
     }
     

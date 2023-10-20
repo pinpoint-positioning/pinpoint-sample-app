@@ -186,13 +186,13 @@ struct AccuracyCircle: View {
 
             
             VStack {
-                Text("x: \(String(format: "%.1f", coords.rawX))")
-                Text("y: \(String(format: "%.1f", coords.rawY))")
+//                Text("x: \(String(format: "%.1f", coords.rawX))")
+//                Text("y: \(String(format: "%.1f", coords.rawY))")
                 Text("acc: \(String(format: "%.1f", coords.acc))")
             }
             .foregroundColor(.blue)
             .font(.footnote)
-            .offset(y: 40)
+            .offset(y: 30)
         }
         
     }

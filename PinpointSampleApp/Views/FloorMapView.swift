@@ -45,12 +45,11 @@ struct FloorMapView: View {
     @State private var showAlert = false
     @State private var scale = 0.6
     
-    @StateObject var storage = LocalStorageManager.shared
-    
+    @StateObject var storage = LocalStorageManager.shared    
     
     // Center Image
     @State private var centerAnchor: Bool = false
-    @State var showSiteFileImportAlert = false
+
     
     
     
@@ -226,9 +225,7 @@ struct FloorMapView: View {
             )
         }
         
-        .toast(isPresenting: $showSiteFileImportAlert){
-            AlertToast(type: .error(.red), title: "Wrong Sitefile format!")
-        }
+  
         
         .sheet(isPresented: $settingsPresented, content: {
             SettingsView(mapSettings: $settings)

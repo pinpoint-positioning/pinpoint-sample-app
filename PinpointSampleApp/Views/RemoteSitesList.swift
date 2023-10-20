@@ -24,6 +24,8 @@ struct RemoteSitesList: View {
     
     var body: some View {
             ZStack{
+
+                
                 VStack{
                     Text("Available Maps")
                         .font(.headline)
@@ -68,14 +70,20 @@ struct RemoteSitesList: View {
                         .scrollContentBackground(.hidden)
                         
                         
-                        if !isDownloadSuccessful {
-                            Color.gray
-                                .opacity(0.5)
-                            ProgressView()
-                            
-                        }
+      
                     }
                 }
+                
+                
+                
+                if !isDownloadSuccessful {
+                    Color.gray
+                        .opacity(0.5)
+                    ProgressView()
+                    
+                }
+                
+                
             }
             .presentationDragIndicator(.visible)
             
