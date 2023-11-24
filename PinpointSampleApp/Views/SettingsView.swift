@@ -45,7 +45,7 @@ struct SettingsView: View {
                     }
                     
                     if !siteFileLoaded() {
-                        Text("Load a map to enable options")                            
+                        Text("Load a floor plan to enable options")
                             .foregroundColor(.red)
                     }
                     Stepper(value: $mapSettings.previousPositions, in: 0...10, label: {
@@ -104,24 +104,24 @@ struct SettingsView: View {
                 
                 
                 
-                Section(header: Text("Tracelet Info")) {
-                    
-                    ListItem(header: "Adress", subText: $status.address, symbol: "tag.fill")
-                    ListItem(header: "Role", subText: .constant(role), symbol: "person.fill")
-                    ListItem(header: "Version", subText: $version, symbol: "info.circle.fill")
-                    
-                }
+//                Section(header: Text("Tracelet Info")) {
+//                    
+//                    ListItem(header: "Adress", subText: $status.address, symbol: "tag.fill")
+//                    ListItem(header: "Role", subText: .constant(role), symbol: "person.fill")
+//                    ListItem(header: "Version", subText: $version, symbol: "info.circle.fill")
+//                    
+//                }
                 
                 
                 
-                Section(header: Text("Site Info")) {
-                    
-                    ListItem(header: "PanID", subText: $status.panID, symbol: "square.fill")
-                    ListItem(header: "SiteID", subText: $status.siteIDe, symbol: "square.dashed")
-                    ListItem(header: "Channel", subText: .constant("tbd"), symbol: "dot.radiowaves.left.and.right")
-                    
-                }
-                
+//                Section(header: Text("Site Info")) {
+//                    
+//                    ListItem(header: "PanID", subText: $status.panID, symbol: "square.fill")
+//                    ListItem(header: "SiteID", subText: $status.siteIDe, symbol: "square.dashed")
+//                    ListItem(header: "Channel", subText: .constant("tbd"), symbol: "dot.radiowaves.left.and.right")
+//                    
+//                }
+//                
                 Section(header: Text("Tracelet Settings")) {
                     
                     
@@ -143,50 +143,50 @@ struct SettingsView: View {
                     
                     
                     
-                    HStack {
-                        Picker("Select interval", selection: $interval) {
-                            Text("1 x 250ms").tag(1)
-                            Text("2 x 250ms").tag(2)
-                            Text("3 x 250ms").tag(3)
-                            Text("4 x 250ms").tag(4)
-                            Text("5 x 250ms").tag(5)
-                        }
-                        .pickerStyle(.automatic)
-                        .onChange(of: interval) { newValue in
-                            Task {
-                                print("submit")
-                                print(newValue)
-                                api.setPositioningInterval(interval: Int8(newValue))
-                            }
-                        }
-                        Spacer()
-                    }
+//                    HStack {
+//                        Picker("Select interval", selection: $interval) {
+//                            Text("1 x 250ms").tag(1)
+//                            Text("2 x 250ms").tag(2)
+//                            Text("3 x 250ms").tag(3)
+//                            Text("4 x 250ms").tag(4)
+//                            Text("5 x 250ms").tag(5)
+//                        }
+//                        .pickerStyle(.automatic)
+//                        .onChange(of: interval) { newValue in
+//                            Task {
+//                                print("submit")
+//                                print(newValue)
+//                                api.setPositioningInterval(interval: Int8(newValue))
+//                            }
+//                        }
+//                        Spacer()
+//                    }
 
                 }
                 
                 
                 
                 Section(header: Text("Remote Positioning")) {
-                    Link("More information about Remote Positioning", destination: URL(string: "https://pinpoint.de")!)
-                        .font(.footnote)
+//                    Link("More information about Remote Positioning", destination: URL(string: "https://pinpoint.de")!)
+//                        .font(.footnote)
                     
                     VStack(alignment: .leading){
                         Text("Tracelet Name")
                             .font(.footnote)
-                        TextField("Tracelet Name", text: $updatedTraceletID)
+                        TextField(UIDevice.current.name, text: $updatedTraceletID)
                     }
                     
                     VStack(alignment: .leading){
                         Text("Remote Host")
                             .font(.footnote)
-                        TextField("Remote Host", text: $storage.remoteHost)
+                        TextField("192.168.0.1", text: $storage.remoteHost)
                             .disabled(storage.usePinpointRemoteServer)
                     }
                     
                     VStack(alignment: .leading){
                         Text("Remote Port")
                             .font(.footnote)
-                        TextField("Remote Port", value: $storage.remotePort, formatter: NumberFormatter())
+                        TextField("8081", value: $storage.remotePort, formatter: NumberFormatter())
                             .disabled(storage.usePinpointRemoteServer)
                     }
                     
@@ -205,14 +205,14 @@ struct SettingsView: View {
                 
                 }
                 
-                Section(header: Text("Debug")) {
-                    NavigationLink {
-                        MainView()
-                    } label: {
-                        Text("More Debug Options")
-                    }
-                    LogPreview()
-                }
+//                Section(header: Text("Debug")) {
+//                    NavigationLink {
+//                        MainView()
+//                    } label: {
+//                        Text("More Debug Options")
+//                    }
+//                    LogPreview()
+//                }
                 
                 Section(header: Text("Contact")) {
                     Link("Visit us at PinPoint.de", destination: URL(string: "https://pinpoint.de")!)

@@ -52,7 +52,7 @@ struct SitesList: View {
                         .resizable()
                         .scaledToFill()
                         .frame(width: 20, height: 20)
-                    Text("Remote")
+                    Text("Cloud")
                 }
                 
             }

@@ -22,16 +22,22 @@ struct RootView: View {
             .onAppear {
                 // Set Remote Positioning to false at start
                 storage.remotePositioningEnabled = false
-                let tabBarAppearance = UITabBarAppearance()
-                tabBarAppearance.configureWithDefaultBackground()
-                UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-                
             }
             .environmentObject(api)
             .environmentObject(sfm)
             .environmentObject(alerts)
-            .navigationTitle("Pinpoint Positioning")
-             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    HStack{
+                        Image("pinpoint-circle")
+                            .resizable()
+                            .frame(width: 30 , height: 30)
+                        Text("Pinpoint Positioning")
+                            .font(.headline)
+                            .foregroundColor(CustomColor.pinpoint_gray)
+                    }
+                }
+            }
              .toolbarBackground(
                 Color.orange.opacity(0.9),
                  for: .navigationBar)
@@ -56,6 +62,7 @@ struct RootView: View {
             }
             
         }
+        
     }
     
     

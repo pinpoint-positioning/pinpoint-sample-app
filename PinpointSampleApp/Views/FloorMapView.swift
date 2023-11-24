@@ -77,6 +77,7 @@ struct FloorMapView: View {
                             // MARK: - No Map Loaded View
                             if sfm.siteFile.map.mapName == "" {
                                 NoMapLoadedView(siteListIsPresented: $siteListIsPresented)
+                               
                             }
                             
                             // MARK: - Floormap
@@ -164,7 +165,7 @@ struct FloorMapView: View {
                         }
                         
                     }
-                    
+  
                 }
             }
             
@@ -202,7 +203,8 @@ struct FloorMapView: View {
                 Button {
                     settingsPresented = true
                 } label: {
-                    Image(systemName: "gear")
+                    Image(systemName: "gearshape.fill")
+                        .foregroundColor(CustomColor.pinpoint_gray)
                 }
             }
         }
@@ -352,11 +354,19 @@ struct NoMapLoadedView: View {
     
     var body: some View {
         VStack{
-            Image(systemName: "mappin.slash.circle")
-                .resizable()
-                .scaledToFill()
-                .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 100)
-            Text("No Map loaded")
+            ZStack{
+                Image(systemName: "map.circle")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 100)
+                Capsule()
+                    .frame(width: 135, height: 10)
+                    .rotationEffect(Angle(degrees: 145))
+            }
+            .foregroundColor(CustomColor.pinpoint_gray)
+
+             
+            Text("No floor plan loaded")
                 .font(.headline)
                 .padding()
             Spacer()
@@ -364,10 +374,11 @@ struct NoMapLoadedView: View {
             Button {
                 siteListIsPresented.toggle()
             } label: {
-                Text("Load Map")
+                Text("Load floor plan")
             }
             .buttonStyle(.borderedProminent)
             
         }
+        
     }
 }

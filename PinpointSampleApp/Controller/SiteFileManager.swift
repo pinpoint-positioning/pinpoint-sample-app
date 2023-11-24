@@ -103,35 +103,34 @@ public class SiteFileManager: ObservableObject {
     
     // rename floorplan and json file to standardized names
     
-    func moveAndRenameFiles (path:URL) -> [String]? {
+    func moveAndRenameFiles(path: URL) -> [String]? {
+        let path = path
+        let imageFileTypes = ["png", "jpg", "jpeg"]
         
-        let path =  path
         do {
             let items = try fileManager.contentsOfDirectory(atPath: path.path)
             
             for item in items {
                 let fileType = NSURL(fileURLWithPath: item).pathExtension
                 if let fileType = fileType {
-                    switch fileType {
-                    case "png" :
+                    switch fileType.lowercased() {
+                    case "json":
                         do {
-                            try fileManager.moveItem(atPath: path.appendingPathComponent(item).path, toPath: path.appendingPathComponent("floorplan.png").path)
-                            logger.log(type: .Info, "Copied file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path) ")
+                            try fileManager.moveItem(atPath: path.appendingPathComponent(item).path, toPath: path.appendingPathComponent("sitedata.json").path)
+                            logger.log(type: .Info, "Moved JSON file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("sitedata.json").path)")
                         } catch {
-                            logger.log(type: .Error, "Error while copy file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path): \(error)")
+                            logger.log(type: .Error, "Error while moving JSON file from \(path.appendingPathComponent(item).path): \(error)")
                         }
-                    case "json" :
+                    case let type where imageFileTypes.contains(type):
                         do {
-                             try fileManager.moveItem(atPath: path.appendingPathComponent(item).path, toPath: path.appendingPathComponent("sitedata.json").path)
-                             logger.log(type: .Info, "Copied file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("sitedata.json").path) ")
-
-                            
-                        } catch  {
-                            logger.log(type: .Error, "Error while copy file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent("floorplan.png").path): \(error)")
+                            let newFileName = "floorplan." + fileType
+                            try fileManager.moveItem(atPath: path.appendingPathComponent(item).path, toPath: path.appendingPathComponent(newFileName).path)
+                            logger.log(type: .Info, "Renamed and moved image file from \(path.appendingPathComponent(item).path) to \(path.appendingPathComponent(newFileName).path)")
+                        } catch {
+                            logger.log(type: .Error, "Error while renaming and moving image file from \(path.appendingPathComponent(item).path): \(error)")
                         }
                     default:
                         break
-                        
                     }
                 }
             }
@@ -139,10 +138,9 @@ public class SiteFileManager: ObservableObject {
         } catch {
             print(error)
             return nil
-            
         }
-        
     }
+
     
     
     
@@ -236,22 +234,28 @@ public class SiteFileManager: ObservableObject {
     
     // Get the floor image file
     
-    public func getFloorImage(siteFileName:String) throws -> UIImage {
+    public func getFloorImage(siteFileName: String) throws -> UIImage {
         var destinationURL = getDocumentsDirectory()
         destinationURL.appendPathComponent("sitefiles")
         destinationURL.appendPathComponent(siteFileName)
-        destinationURL.appendPathComponent("floorplan.png")
-        
+
+        let floorplanFiles = try FileManager.default.contentsOfDirectory(at: destinationURL, includingPropertiesForKeys: nil)
+            .filter { $0.lastPathComponent.lowercased().hasPrefix("floorplan") }
+
+        guard let floorplanFile = floorplanFiles.first else {
+            throw NSError(domain: "YourErrorDomain", code: 0, userInfo: [NSLocalizedDescriptionKey: "No floorplan image found"])
+        }
+
         do {
-            let imageData = try Data(contentsOf: destinationURL)
+            let imageData = try Data(contentsOf: floorplanFile)
             logger.log(type: .Info, "Loaded Floormap: \(imageData)")
             return UIImage(data: imageData) ?? UIImage()
         } catch {
-            logger.log(type: .Info, "Error loading image : \(error)")          
+            logger.log(type: .Info, "Error loading image : \(error)")
             throw error
         }
-  
     }
+
     
     // "PinPoint_Debug"
     // "https://connect.pinpoint.de"
@@ -270,6 +274,7 @@ public class SiteFileManager: ObservableObject {
         // extract the last folder name
         if let url = URL(string: site) {
             lastFolderName = url.lastPathComponent
+            logger.log(type: .Info, "Opening Folder: \(lastFolderName)")
         } else {
             logger.log(type: .Error, "invalid url")
             return false
@@ -278,8 +283,13 @@ public class SiteFileManager: ObservableObject {
         do {
             let resources = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<[WebDAVFile]?, Error>) in
                 wd.listFiles(atPath: directoryURL, account: account, password: webdavPW) { resources, error in
+                    if resources == nil {
+                        self.logger.log(type: .Error, "Could not list files in directory. Resources = \(String(describing: resources)), Dir-Path: \(directoryURL)")
+                    }
+
                     if let error = error {
                         continuation.resume(throwing: error)
+                        self.logger.log(type: .Error, "Error getting documents directory: \(error)")
                     } else {
                         continuation.resume(returning: resources)
                     }
@@ -292,7 +302,7 @@ public class SiteFileManager: ObservableObject {
             }
             
             let destinationDirectoryURL = documentsDirectory.appendingPathComponent("sitefiles/\(lastFolderName)")
-            
+
             do {
                 // Create a directory in the documents directory to save the files
                 try FileManager.default.createDirectory(at: destinationDirectoryURL, withIntermediateDirectories: true, attributes: nil)
@@ -300,6 +310,7 @@ public class SiteFileManager: ObservableObject {
                 logger.log(type: .Error, "Error creating destination directory: \(error)")
                 return false
             }
+
             
             // Download and save JSON files
             if let jsonResources = resources?.filter({ $0.fileName.lowercased().hasSuffix(".json") }) {
@@ -307,7 +318,7 @@ public class SiteFileManager: ObservableObject {
                     let destinationURL = destinationDirectoryURL.appendingPathComponent("sitedata.json")
                     do {
                         let data = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<Data?, Error>) in
-                            wd.download(fileAtPath: jsonResource.path, account: account, password: "123undlos!!!") { data, error in
+                            wd.download(fileAtPath: jsonResource.path, account: account, password: webdavPW) { data, error in
                                 if let error = error {
                                     continuation.resume(throwing: error)
                                 } else {
@@ -329,33 +340,55 @@ public class SiteFileManager: ObservableObject {
                 }
             }
             
-            // Download and save PNG files
-            if let pngResources = resources?.filter({ $0.fileName.lowercased().hasSuffix(".png") }) {
-                for pngResource in pngResources {
-                    let destinationURL = destinationDirectoryURL.appendingPathComponent("floorplan.png")
+            // Download and save image files
+            let allowedFileTypes = ["png", "jpg", "jpeg"]
+
+            if let imageResources = resources?.filter({ resource in
+                let lowercasedFileName = resource.fileName.lowercased()
+                return allowedFileTypes.contains { lowercasedFileName.hasSuffix(".\($0)") }
+            }) {
+                for imageResource in imageResources {
+                    let fileExtension = (imageResource.fileName as NSString).pathExtension.lowercased()
+                    let destinationFileName: String
+                    logger.log(type: .Info, "Accessing file type: \(fileExtension)")
+                    // Determine the destination file name based on the file extension
+                    switch fileExtension {
+                    case "png":
+                        destinationFileName = "floorplan.png"
+                    case "jpg", "jpeg":
+                        destinationFileName = "floorplan.jpg"
+                    default:
+                        // Handle other file types as needed
+                        destinationFileName = "floorplan.png"
+                    }
+                    logger.log(type: .Info, "Openened file: \(destinationFileName)")
+
+                    let destinationURL = destinationDirectoryURL.appendingPathComponent(destinationFileName)
                     do {
                         let data = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<Data?, Error>) in
-                            wd.download(fileAtPath: pngResource.path, account: account, password: "123undlos!!!") { data, error in
+                            wd.download(fileAtPath: imageResource.path, account: account, password: webdavPW) { data, error in
                                 if let error = error {
+                                    self.logger.log(type: .Error, "Error Accessing flor map: \(error)")
                                     continuation.resume(throwing: error)
                                 } else {
                                     continuation.resume(returning: data)
                                 }
                             }
                         }
-                        
+
                         if let data = data {
                             try data.write(to: destinationURL)
-                            logger.log(type: .Info, "PNG file saved successfully at: \(destinationURL)")
+                            logger.log(type: .Info, "Image file saved successfully at: \(destinationURL)")
                         } else {
                             return false
                         }
                     } catch {
-                        logger.log(type: .Error, "Error saving PNG file: \(error)")
+                        logger.log(type: .Error, "Error saving image file: \(error)")
                         return false
                     }
                 }
             }
+
             
             return true // All downloads were successful
         } catch {
@@ -406,7 +439,7 @@ public class SiteFileManager: ObservableObject {
             let username = webdavUser
             let password = webdavPW
             let folderPath = "/sites"
-            let _ = print(webdavServer)
+
             
             // Create a session configuration with credentials
             let configuration = URLSessionConfiguration.default

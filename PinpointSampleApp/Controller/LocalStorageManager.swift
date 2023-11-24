@@ -16,7 +16,7 @@ class LocalStorageManager: ObservableObject{
     @AppStorage("webdav-user") var webdavUser = ""
     @AppStorage("webdav-pw") var webdavPW = ""
     @AppStorage("remote-positioning") var remotePositioningEnabled = false
-    @AppStorage("tracelet-id") var traceletID:String = "\(UUID())"
+    @AppStorage("tracelet-id") var traceletID:String = UIDevice.current.name
     @AppStorage("remote-host") var remoteHost = ""
     @AppStorage("remote-port") var remotePort = 8081
     @AppStorage ("channel")  var channel:Int = 5

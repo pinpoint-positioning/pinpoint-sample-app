@@ -14,10 +14,12 @@ import WebDAV
 struct RemoteSitesList: View {
     @EnvironmentObject var sfm:SiteFileManager
     @EnvironmentObject var alerts : AlertController
+    @StateObject var storage = LocalStorageManager.shared
     @State private var sites = [String]()
     @State private var selectedSite: String?
     @State private var isDownloadSuccessful = true
     @State private var isLoading = true
+    @State private var showSettings = false
     @Environment(\.dismiss) var dismiss
     
     
@@ -39,16 +41,19 @@ struct RemoteSitesList: View {
                     // Show Empty List
                     if sites.isEmpty && !isLoading {
                         VStack {
-                            Spacer()
-                                .frame(height: 100)
                             Image(systemName: "square.3.layers.3d.slash")
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, height: 100)
-                            Text("No Maps available at remote server")
+                            Text("Can`t connect to WebDAV-Server")
                                 .font(.headline)
-                            Text("Check you remote credentials")
+                            Text("Check your credentials")
                                 .font(.footnote)
+                            WebDavCreds()
+                            Button("Save credentials"){
+                                loadWebDavSites()
+                            }
+                            .buttonStyle(.borderedProminent)
                             
                             Spacer()
                         }
@@ -86,27 +91,68 @@ struct RemoteSitesList: View {
                 
             }
             .presentationDragIndicator(.visible)
-            
+        
+
             
             .onAppear() {
-                Task{
-                    do {
-                        isLoading = true
-                        if let foundSites = try await NextcloudFileLister().listFilesInNextcloudFolder() {
-                            sites = foundSites
-                        } else {
-                            print("nothing found")
-                        }
-                    } catch {
-                        print(error)
-                    }
-                    isLoading = false
-                }
+            loadWebDavSites()
             }
         
     }
     
+    func loadWebDavSites() {
+        Task{
+            do {
+                isLoading = true
+                if let foundSites = try await NextcloudFileLister().listFilesInNextcloudFolder() {
+                    sites = foundSites
+                } else {
+                    print("nothing found")
+                }
+            } catch {
+                print(error)
+            }
+            isLoading = false
+        }
+    }
+    
 }
+struct WebDavCreds: View {
+    @StateObject var storage = LocalStorageManager.shared
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        VStack{
+
+            Form{
+                Section(header: Text("WebDAV Settings")) {
+                    HStack {
+                        VStack(alignment: .leading){
+                            Text("Server")
+                                .font(.footnote)
+                            
+                            TextField("Server-Adress", text: $storage.webdavServer)
+                                .keyboardType(.URL)
+                                .autocapitalization(.none)
+                            
+                        }
+                    }
+                    VStack(alignment: .leading){
+                        Text("User")
+                            .font(.footnote)
+                        TextField("Username", text: $storage.webdavUser)
+                    }
+                    VStack(alignment: .leading){
+                        Text("Password")
+                            .font(.footnote)
+                        TextField("Password", text: $storage.webdavPW)
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 struct Account:WebDAVAccount {
     var username: String?
