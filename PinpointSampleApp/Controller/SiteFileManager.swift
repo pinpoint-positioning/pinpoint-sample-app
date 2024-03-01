@@ -269,9 +269,9 @@ public class SiteFileManager: ObservableObject {
         let wd = WebDAV()
         let account = Account(username: webdavUser, baseURL: webdavServer)
         var lastFolderName = ""
-        let directoryURL = "\(site)"
+        let directoryURL = site.removingPercentEncoding ?? site
         
-        // extract the last folder name
+        // extract the last folder nameƒ
         if let url = URL(string: site) {
             lastFolderName = url.lastPathComponent
             logger.log(type: .Info, "Opening Folder: \(lastFolderName)")
@@ -281,19 +281,30 @@ public class SiteFileManager: ObservableObject {
         }
         
         do {
+          
             let resources = try await withUnsafeThrowingContinuation { (continuation: UnsafeContinuation<[WebDAVFile]?, Error>) in
-                wd.listFiles(atPath: directoryURL, account: account, password: webdavPW) { resources, error in
-                    if resources == nil {
-                        self.logger.log(type: .Error, "Could not list files in directory. Resources = \(String(describing: resources)), Dir-Path: \(directoryURL)")
+                
+                    wd.listFiles(atPath: directoryURL, account: account, password: webdavPW) { resources, error in
+                        
+                        print("enc")
+                        print(directoryURL)
+                        
+                        print("res")
+                        print(webdavServer + directoryURL)
+                        print(account)
+                        
+                        if resources == nil {
+                            self.logger.log(type: .Error, "Could not list files in directory. Resources = \(String(describing: resources)), Dir-Path: \(directoryURL)")
+                        }
+                        
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                            self.logger.log(type: .Error, "Error getting documents directory: \(error)")
+                        } else {
+                            continuation.resume(returning: resources)
+                        }
                     }
-
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                        self.logger.log(type: .Error, "Error getting documents directory: \(error)")
-                    } else {
-                        continuation.resume(returning: resources)
-                    }
-                }
+                
             }
             
             guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {

@@ -138,9 +138,18 @@ struct SettingsView: View {
                                 api.startPositioning()
                             }
                         }
+                 
+                        
                         Spacer()
                     }
                     
+                    Button {
+                        Task{
+                             await api.setSiteID(siteID: 0x1234)
+                        }
+                    } label: {
+                        Text("Set SiteID")
+                    }
                     
                     
 //                    HStack {
