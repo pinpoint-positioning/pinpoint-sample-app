@@ -13,7 +13,7 @@ struct SitesList: View {
     
     @EnvironmentObject var sfm : SiteFileManager
     @EnvironmentObject var alerts : AlertController
-    let logger = Logger.shared
+    let logger = Logging.shared
     
     @State var list = [String]()
     @State var selectedItem:String? = nil
@@ -200,7 +200,7 @@ struct SitesList: View {
             // If failed, load empty data. to avoid showing the previous map
             sfm.floorImage = UIImage()
             sfm.siteFile = SiteData()
-            logger.log(type: .Error, "Error setting SiteFile: \(error)" )
+            logger.log(type: .error, "Error setting SiteFile: \(error)" )
             throw error
         }
     }

@@ -23,7 +23,7 @@ struct SettingsView: View {
     @State var interval: Int = 1
     @State private var showIntervalSettings = false
     @State private var showChannelAlert = false
-    let logger = Logger.shared
+    let logger = Logging.shared
     
     @StateObject var storage = LocalStorageManager.shared
     
@@ -208,7 +208,7 @@ struct SettingsView: View {
                         status = try await getStatus()
                         version = await getVersion()
                     } catch {
-                        logger.log(type: .Warning, error.localizedDescription)
+                        logger.log(type: .warning, error.localizedDescription)
                     }
                     
                 

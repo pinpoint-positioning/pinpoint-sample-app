@@ -55,7 +55,7 @@ struct FloorMapView: View {
     
     let pb = ProtobufManager.shared
     @State var successBump = false
-    let logger = Logger()
+    let logger = Logging()
     
     
     var body: some View {
@@ -285,7 +285,7 @@ struct FloorMapView: View {
                                     api.setPositioningInterval(interval: 1)
                                 }
                             } catch {
-                                logger.log(type: .Error, error.localizedDescription)
+                                logger.log(type: .error, error.localizedDescription)
                                 
                             }
                             

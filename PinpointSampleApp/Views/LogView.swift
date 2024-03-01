@@ -44,7 +44,7 @@ struct LogView: View {
 
                 Button("Clear Log") {
                     
-                    API.shared.clearLogFile()
+                    Logging.shared.clearLogFile()
                     logFileContents = ""
                 }
                 .buttonStyle(.bordered)

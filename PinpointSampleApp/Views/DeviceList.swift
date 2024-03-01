@@ -14,7 +14,7 @@ struct DeviceListView: View {
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var api:API
     @Binding var discoveredDevices:[CBPeripheral]
-    let logger = Logger.shared
+    let logger = Logging.shared
     @State var eyeIconOpacity = 1.0
     
     var body: some View {
@@ -34,10 +34,10 @@ struct DeviceListView: View {
                                     
                                     do {
                                         let success = try await api.connectAndStartPositioning(device: device)
-                                        logger.log(type: .Info, "ConnectAndStartPositioning OK")
+                                        logger.log(type: .info, "ConnectAndStartPositioning OK")
                                     }
                                     catch {
-                                        logger.log(type: .Error, error.localizedDescription)
+                                        logger.log(type: .error, error.localizedDescription)
                                     }
                                     
                                     
@@ -56,7 +56,7 @@ struct DeviceListView: View {
                                         do {
                                             try await api.connect(device: device)
                                         } catch {
-                                            logger.log(type: .Error, error.localizedDescription)
+                                            logger.log(type: .error, error.localizedDescription)
                                         }
                                         api.showMe(tracelet: device)
                                         

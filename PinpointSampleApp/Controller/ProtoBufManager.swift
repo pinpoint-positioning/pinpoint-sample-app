@@ -7,7 +7,7 @@ class ProtobufManager {
     var storage = LocalStorageManager.shared
     static let shared = ProtobufManager()
     var success = false
-    let logger = Logger.shared
+    let logger = Logging.shared
     var ppHost = "pinpoint.feste-ip.net"
     var ppPort = 21526
     var connection: NWConnection? // Store the connection as an instance variable
@@ -19,10 +19,10 @@ class ProtobufManager {
     
     func establishConnection() {
           if isConnectionEstablished {
-              logger.log(type: .Info, "Using existing connection")
+              logger.log(type: .info, "Using existing connection")
               return
           }
-        logger.log(type: .Info, "Create new connection")
+        logger.log(type: .info, "Create new connection")
           
           if !storage.usePinpointRemoteServer {
               ppHost = storage.remoteHost
@@ -38,12 +38,12 @@ class ProtobufManager {
               switch newState {
               case .ready:
                   self?.isConnectionEstablished = true
-                  self?.logger.log(type: .Info, "Connection established.")
+                  self?.logger.log(type: .info, "Connection established.")
               case .failed(let error):
                   self?.isConnectionEstablished = false
-                  self?.logger.log(type: .Error, "Connection failed with error: \(error)")
+                  self?.logger.log(type: .error, "Connection failed with error: \(error)")
               default:
-                  self?.logger.log(type: .Error, "Connection  could not be established")
+                  self?.logger.log(type: .error, "Connection  could not be established")
                   break
               }
           }
@@ -55,7 +55,7 @@ class ProtobufManager {
     func closeConnection() {
         connection?.cancel()
         isConnectionEstablished = false
-        logger.log(type: .Info, "Connection closed.")
+        logger.log(type: .info, "Connection closed.")
     }
     
     func sendMessage(x: Double, y: Double, acc: Double, name: String) async throws {
@@ -84,7 +84,7 @@ class ProtobufManager {
         establishConnection()
         
         guard let connection = connection else {
-            logger.log(type: .Error, "Failed to create a network connection.")
+            logger.log(type: .error, "Failed to create a network connection.")
             return
         }
         
@@ -96,14 +96,14 @@ class ProtobufManager {
             
             connection.send(content: packedData, completion: .contentProcessed { error in
                 if let error = error {
-                    self.logger.log(type: .Error, "Failed to send protobuf-message: \(error)")
+                    self.logger.log(type: .error, "Failed to send protobuf-message: \(error)")
                 } else {
                     self.success.toggle()
-                    self.logger.log(type: .Info, "Message sent successfully.")
+                    self.logger.log(type: .info, "Message sent successfully.")
                 }
             })
         } catch {
-            self.logger.log(type: .Error, "Failed to send protobuf-message: \(error)")
+            self.logger.log(type: .error, "Failed to send protobuf-message: \(error)")
         }
     }
 

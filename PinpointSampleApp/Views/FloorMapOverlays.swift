@@ -50,7 +50,7 @@ struct PositionTraceView: View {
     @GestureState private var gestureScale: CGFloat = 1.0
     @State private var finalScale: CGFloat = 1.0
     let pb = ProtobufManager.shared
-    let logger = Logger()
+    let logger = Logging()
     @Binding var circlePos:CGPoint
     @StateObject var storage = LocalStorageManager.shared
     
@@ -99,7 +99,7 @@ struct PositionTraceView: View {
                             do {
                                 try await pb.sendMessage(x: position.x, y: position.y, acc: position.acc, name: storage.traceletID)
                             } catch {
-                                logger.log(type: .Error, error.localizedDescription)
+                                logger.log(type: .error, error.localizedDescription)
                             }
                         }
                         
